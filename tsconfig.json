@@ -5,17 +5,10 @@
     "strict": true,
     "baseUrl": ".", // needed for paths
     "paths": {
-      "-app/*": ["src/app/*"],
-      "-ui/*": ["src/ui/*"],
-      "-components/*": ["src/components/*"],
-      "-segments/*": ["src/segments/*"],
-      "-hooks/*": ["src/hooks/*"],
-      "-utils/*": ["src/utils/*"],
-      "-screens/*": ["src/screens/*"],
-      "-tools/*": ["src/tools/*"],
-      "-styles/*": ["src/styles/*"],
-      "-typings/*": ["src/typings/*"],
-      "-theme/*": ["src/theme/*"]
+      "~screens/*": ["src/app/screens/*"],
+      "~utils/*": ["src/utils/*"],
+      "~ui/*": ["src/ui/*"],
+      "~styles/*": ["src/styles/*"]
     }
   },
   "ts-node": {

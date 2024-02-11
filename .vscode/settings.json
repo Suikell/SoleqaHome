@@ -1,0 +1,47 @@
+{
+  "javascript.validate.enable": true,
+  "typescript.validate.enable": true,
+  "typescript.format.enable": false,
+  // prefers path aliases, otherwise uses relative imports
+  // tsImportSorter extension sorts imports from different origins
+  // based on the import path format
+  // it helpes us to keep track of imports
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  // https://github.com/daidodo/tsimportsorter
+  "tsImportSorter.configuration.groupRules": ["macro$", {}, "^[~]", "^[.]"],
+  "tsImportSorter.configuration.keepUnused": ["macro$", "lingui$"],
+  "tsImportSorter.configuration.formatExports": false, // let me sort exported stories pls
+  "tsImportSorter.configuration.sortRules": {
+    "paths": ["_", "aA"],
+    "names": ["_", "aA"]
+  },
+  "tsImportSorter.configuration.hasSemicolon": false,
+  // https://github.com/daidodo/format-imports/wiki/Line-Wrapping-Style
+  "tsImportSorter.configuration.wrappingStyle": {
+    "maxBindingNamesPerLine": 0,
+    "maxDefaultAndBindingNamesPerLine": 0
+  },
+  "eslint.workingDirectories": ["apps", "modules"],
+  // https://github.com/redhat-developer/vscode-yaml/issues/586
+  "yaml.schemas": {
+    "https://unpkg.com/graphql-config@4.0.1/config-schema.json": ".graphqlrc.yaml"
+  },
+  "conventionalCommits.autoCommit": false,
+  "conventionalCommits.lineBreak": "\\n",
+  "conventionalCommits.promptScopes": false,
+  "todo-tree.filtering.excludeGlobs": [
+    "**/vendor/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.next/**",
+    "**/*.map"
+  ],
+  "git.allowNoVerifyCommit": true,
+  "git.confirmNoVerifyCommit": false
+}

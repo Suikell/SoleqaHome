@@ -1,0 +1,26 @@
+{
+  "recommendations": [
+    "formulahendry.auto-rename-tag",
+    "aaron-bond.better-comments",
+    "streetsidesoftware.code-spell-checker",
+    "mikestead.dotenv",
+    "editorconfig.editorconfig",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "kumar-harsh.graphql-for-vscode",
+    "atlassian.atlascode",
+    "dozerg.tsimportsorter",
+    "ms-vsliveshare.vsliveshare",
+    "pkief.material-icon-theme",
+    "johnpapa.vscode-peacock",
+    "esbenp.prettier-vscode",
+    "visualstudioexptteam.vscodeintellicode",
+    "lihui.vs-color-picker",
+    "styled-components.vscode-styled-components",
+    "mrorz.language-gettext",
+    "vivaxy.vscode-conventional-commits",
+    "arturock.gitstash",
+    "hediet.vscode-drawio",
+    "gruntfuggly.todo-tree"
+  ]
+}
