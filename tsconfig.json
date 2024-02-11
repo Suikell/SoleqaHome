@@ -1,0 +1,29 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "module": "esnext", // needed for dynamic imports
+    "strict": true,
+    "baseUrl": ".", // needed for paths
+    "paths": {
+      "-app/*": ["src/app/*"],
+      "-ui/*": ["src/ui/*"],
+      "-components/*": ["src/components/*"],
+      "-segments/*": ["src/segments/*"],
+      "-hooks/*": ["src/hooks/*"],
+      "-utils/*": ["src/utils/*"],
+      "-screens/*": ["src/screens/*"],
+      "-tools/*": ["src/tools/*"],
+      "-styles/*": ["src/styles/*"],
+      "-typings/*": ["src/typings/*"],
+      "-theme/*": ["src/theme/*"]
+    }
+  },
+  "ts-node": {
+    // these options are overrides used only by ts-node
+    // used for gqlgen.ts scripts in package.json
+    // https://github.com/TypeStrong/ts-node/issues/922#issuecomment-673155000
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}
