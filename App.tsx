@@ -1,17 +1,84 @@
 import 'react-native-gesture-handler'
 
+import {
+  DefaultTheme as NavTheme,
+  NavigationContainer,
+} from '@react-navigation/native'
 import * as React from 'react'
-import { Text } from 'react-native'
-import { PaperProvider } from 'react-native-paper'
+import {
+  adaptNavigationTheme,
+  DefaultTheme,
+  PaperProvider,
+} from 'react-native-paper'
+import { GqlProvider } from 'src/app/graphql/GqlProvider'
+
+import { Navigation } from '~navigation/components/Navigation'
+
+const darkTheme = {
+  colors: {
+    primary: 'rgb(111, 219, 169)',
+    onPrimary: 'rgb(0, 56, 36)',
+    primaryContainer: 'rgb(0, 82, 54)',
+    onPrimaryContainer: 'rgb(139, 247, 195)',
+    secondary: 'rgb(180, 204, 189)',
+    onSecondary: 'rgb(32, 53, 42)',
+    secondaryContainer: 'rgb(54, 75, 64)',
+    onSecondaryContainer: 'rgb(208, 232, 216)',
+    tertiary: 'rgb(165, 205, 222)',
+    onTertiary: 'rgb(6, 53, 67)',
+    tertiaryContainer: 'rgb(36, 76, 90)',
+    onTertiaryContainer: 'rgb(192, 233, 251)',
+    error: 'rgb(255, 180, 171)',
+    onError: 'rgb(105, 0, 5)',
+    errorContainer: 'rgb(147, 0, 10)',
+    onErrorContainer: 'rgb(255, 180, 171)',
+    background: 'rgb(25, 28, 26)',
+    onBackground: 'rgb(225, 227, 223)',
+    surface: 'rgb(25, 28, 26)',
+    onSurface: 'rgb(225, 227, 223)',
+    surfaceVariant: 'rgb(64, 73, 67)',
+    onSurfaceVariant: 'rgb(192, 201, 193)',
+    outline: 'rgb(138, 147, 140)',
+    outlineVariant: 'rgb(64, 73, 67)',
+    shadow: 'rgb(0, 0, 0)',
+    scrim: 'rgb(0, 0, 0)',
+    inverseSurface: 'rgb(225, 227, 223)',
+    inverseOnSurface: 'rgb(46, 49, 47)',
+    inversePrimary: 'rgb(0, 108, 73)',
+    elevation: {
+      level0: 'transparent',
+      level1: 'rgb(29, 38, 33)',
+      level2: 'rgb(32, 43, 37)',
+      level3: 'rgb(35, 49, 42)',
+      level4: 'rgb(35, 51, 43)',
+      level5: 'rgb(37, 55, 46)',
+    },
+    surfaceDisabled: 'rgba(225, 227, 223, 0.12)',
+    onSurfaceDisabled: 'rgba(225, 227, 223, 0.38)',
+    backdrop: 'rgba(42, 50, 45, 0.4)',
+  },
+}
+
+const theme = {
+  ...DefaultTheme,
+  colors: darkTheme.colors, // Copy it from the color codes scheme and then use it here
+}
+
+const { DarkTheme } = adaptNavigationTheme({ reactNavigationDark: NavTheme })
+
+const navTheme = {
+  ...DarkTheme,
+  dark: true,
+}
 
 const App: React.FC = () => {
   return (
-    // TODO - use theme from PaperProvider instead of creating own ThemeProvider
-    <PaperProvider>
-      {/* <ThemeProvider> */}
-        <Text>App</Text>
-        {/* <Navigation/> */}
-      {/* </ThemeProvider> */}
+    <PaperProvider theme={theme}>
+      <NavigationContainer theme={navTheme}>
+        <GqlProvider>
+          <Navigation />
+        </GqlProvider>
+      </NavigationContainer>
     </PaperProvider>
   )
 }

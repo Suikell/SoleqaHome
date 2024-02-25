@@ -49,6 +49,13 @@ declare type Children = React.PropsWithChildren<{}>
 declare type RequiredChildren = Required<React.PropsWithChildren<{}>>
 
 /**
+ * use to describe that the component does not expect any children prop (so that we wouldn't pass any by accident)
+ */
+declare type NoChildren = {
+  children?: never
+}
+
+/**
  * removes `null` and `undefined` options from the type, making it strictly defined
  */
 
