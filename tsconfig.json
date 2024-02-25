@@ -8,7 +8,10 @@
       "~screens/*": ["src/app/screens/*"],
       "~utils/*": ["src/utils/*"],
       "~ui/*": ["src/ui/*"],
-      "~styles/*": ["src/styles/*"]
+      "~styles/*": ["src/styles/*"],
+      "~navigation/*": ["src/app/navigation/*"],
+      "~graphql/*": ["src/graphql/*"],
+      "~images/*": ["src/images/*"]
     }
   },
   "ts-node": {
