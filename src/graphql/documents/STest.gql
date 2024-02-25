@@ -1,0 +1,3 @@
+subscription STest {
+  countSeconds(upTo: 10)
+}
