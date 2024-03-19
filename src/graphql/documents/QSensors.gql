@@ -1,0 +1,9 @@
+query QSensors {
+  categories: allMainframes {
+    id
+    name
+    sensors {
+      ...FSensorBase
+    }
+  }
+}
