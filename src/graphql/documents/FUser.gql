@@ -1,0 +1,7 @@
+fragment FUser on UserType {
+  id
+  email
+  firstName
+  lastName
+  profileImage
+}

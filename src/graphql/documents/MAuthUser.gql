@@ -1,0 +1,8 @@
+mutation MAuthUser($email: String!, $password: String!) {
+  login: tokenAuth(email: $email, password: $password) {
+    token
+    user {
+      ...FUser
+    }
+  }
+}

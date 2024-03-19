@@ -1,0 +1,17 @@
+query QCategories {
+  categories: allMainframes {
+    ...FCategoryBase
+
+    favoriteSensors: sensors(favorite: true) {
+      ...FSensorBase
+    }
+
+    criticalSensors: sensors(critical: true) {
+      ...FSensorBase
+    }
+
+    favoriteActuators: actuators(favorite: true) {
+      ...FActuatorBase
+    }
+  }
+}

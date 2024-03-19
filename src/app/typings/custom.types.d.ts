@@ -5,7 +5,7 @@
 /**
  * Simple string alias for a more concise typings involving ID of entities.
  */
-declare type ID = string
+declare type ID = number
 
 /**
  * Either specified type or null
@@ -49,6 +49,13 @@ declare type Children = React.PropsWithChildren<{}>
 declare type RequiredChildren = Required<React.PropsWithChildren<{}>>
 
 /**
+ * use to describe that the component does not expect any children prop (so that we wouldn't pass any by accident)
+ */
+declare type NoChildren = {
+  children?: never
+}
+
+/**
  * removes `null` and `undefined` options from the type, making it strictly defined
  */
 
@@ -65,6 +72,11 @@ declare type OmitSafe<TObject, TKeys extends keyof TObject> = Omit<
   TObject,
   TKeys
 >
+
+/**
+ * The closes we can get to `any` without `any`.
+ */
+declare type Anything = string | number | {} | []
 
 /**
  * A safe version of the Exclude utility type,

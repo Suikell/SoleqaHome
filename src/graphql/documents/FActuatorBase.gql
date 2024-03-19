@@ -1,0 +1,9 @@
+fragment FActuatorBase on ActuatorNodeType {
+  id
+  name
+  favorite
+  currentState
+  category: mainframe {
+    id
+  }
+}

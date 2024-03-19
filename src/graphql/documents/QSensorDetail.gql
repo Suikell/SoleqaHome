@@ -1,0 +1,13 @@
+query QSensorDetail($sensorId: Int!) {
+  sensor: sensorNode(id: $sensorId) {
+    id
+    currentValue
+    batteryLevel
+    isOnline
+    unitType
+
+    # criticalOver
+    # criticalUnder
+    # optimalValue
+  }
+}
