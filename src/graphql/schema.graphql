@@ -33,6 +33,20 @@ enum ActuatorTypeEnum {
   WATER_PUMP
 }
 
+type DailyLogValuesType {
+  createdAt: DateTime!
+  date: Date!
+  sensorValues(householdId: Int, limit: Int, sensorType: String): [SensorValueType!]
+  updatedAt: DateTime!
+}
+
+"""
+The `Date` scalar type represents a Date
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar Date
+
 """
 The `DateTime` scalar type represents a DateTime
 value as specified by
@@ -58,7 +72,7 @@ type HouseholdType {
 }
 
 type MainframeType {
-  actuators: [ActuatorNodeType!]!
+  actuators(favorite: Boolean): [ActuatorNodeType!]
   batteryLevel: Float
   createdAt: DateTime!
   deviceId: String!
@@ -68,7 +82,7 @@ type MainframeType {
   isOnline: Boolean!
   lastOnline: DateTime
   name: String
-  sensors: [SensorNodeType!]!
+  sensors(critical: Boolean, favorite: Boolean): [SensorNodeType!]
   systemVersion: String
   type: NodeTypeEnum
   uid: UUID!
@@ -77,6 +91,10 @@ type MainframeType {
 
 type Mutation {
   refreshToken(token: String): Refresh
+  setCriticalOverValue(sensorId: Int!, value: Float!): SetCriticalOverMutation
+  setCriticalUnderValue(sensorId: Int!, value: Float!): SetCriticalUnderMutation
+  setFavoriteActuator(actuatorId: Int!, favorite: Boolean!): SetFavoriteMutation
+  setFavoriteSensor(favorite: Boolean!, sensorId: Int!): SetFavoriteMutation
   tokenAuth(email: String!, password: String!): ObtainJSONWebToken
   userProfileImageUpload(profileImage: Upload!): UserProfileImageMutation
   verifyToken(token: String): Verify
@@ -115,38 +133,24 @@ type PageInfo {
 }
 
 type Query {
-  actuatorNode(
-    """The ID of the object"""
-    id: ID!
-  ): ActuatorNodeType
-  allActuatorNodes(mainframeId: Int!): [ActuatorNodeType!]
+  actuatorNode(id: Int!): ActuatorNodeType
+  allActuatorNodes(favorite: Boolean, mainframeId: Int!): [ActuatorNodeType!]
   allHouseholds: [HouseholdType!]
   allMainframes: [MainframeType!]
   allSensorConditions(groupId: Int!): [SensorConditionType!]
-  allSensorNodes(mainframeId: Int!): [SensorNodeType!]
+  allSensorNodes(critical: Boolean, favorite: Boolean, mainframeId: Int!): [SensorNodeType!]
   allThresholdGroups(householdId: Int!): [ThresholdGroupType!]
   allUsers: [UserType!]
-  household(
-    """The ID of the object"""
-    id: ID!
-  ): HouseholdType
-  mainframe(
-    """The ID of the object"""
-    id: ID!
-  ): MainframeType
+  dailyLogValues(date: Date!): DailyLogValuesType
+  household(id: Int!): HouseholdType
+  mainframe(id: Int!): MainframeType
   sensorCondition(
     """The ID of the object"""
     id: ID!
   ): SensorConditionType
-  sensorNode(
-    """The ID of the object"""
-    id: ID!
-  ): SensorNodeType
+  sensorNode(id: Int!): SensorNodeType
   thresholdGroup(id: Int!): ThresholdGroupType
-  user(
-    """The ID of the object"""
-    id: ID!
-  ): UserType
+  user(id: Int!): UserType
 }
 
 type Refresh {
@@ -169,6 +173,8 @@ type SensorConditionType {
 type SensorNodeType {
   batteryLevel: Float
   createdAt: DateTime!
+  criticalOver: Float
+  criticalUnder: Float
   currentValue: Float
   deviceId: String!
   favorite: Boolean!
@@ -185,6 +191,7 @@ type SensorNodeType {
   uid: UUID!
   unitType: UnitTypeEnum
   updatedAt: DateTime!
+  values: [SensorValueType!]
 }
 
 enum SensorOperatorEnum {
@@ -204,6 +211,27 @@ enum SensorTypeEnum {
   SOIL_PH
   TEMPERATURE
   UNASSIGNED
+}
+
+type SensorValueType {
+  createdAt: DateTime!
+  dailyLog: DailyLogValuesType!
+  id: Int
+  sensor: SensorNodeType!
+  updatedAt: DateTime!
+  value: Float!
+}
+
+type SetCriticalOverMutation {
+  success: Boolean
+}
+
+type SetCriticalUnderMutation {
+  success: Boolean
+}
+
+type SetFavoriteMutation {
+  success: Boolean
 }
 
 type Subscription {

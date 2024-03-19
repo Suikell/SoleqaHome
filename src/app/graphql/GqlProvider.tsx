@@ -17,7 +17,7 @@ type TProps = RequiredChildren
 
 // !change when starting ngrok
 // !ngrok http http://localhost:8000 (port based on BE)
-const NGROK = `6b47-83-240-63-190.ngrok-free.app`
+const NGROK = `49d1-83-240-63-190.ngrok-free.app`
 
 /**
  * GQL BE connection provider
@@ -81,7 +81,19 @@ export const GqlProvider: React.FC<TProps> = ({ children }) => {
 
     const gqlClient = new ApolloClient({
       link: splitLink,
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache({
+        typePolicies: {
+          Order: {
+            fields: {
+              items: {
+                merge: (prev, updated) => {
+                  return updated
+                },
+              },
+            },
+          },
+        },
+      }),
     })
 
     setClient(gqlClient)
@@ -97,5 +109,3 @@ export const GqlProvider: React.FC<TProps> = ({ children }) => {
     </ApolloProvider>
   )
 }
-
-// <GqlProvider>  <UserForm users> </GqlProvider>
