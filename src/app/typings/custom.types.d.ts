@@ -5,7 +5,7 @@
 /**
  * Simple string alias for a more concise typings involving ID of entities.
  */
-declare type ID = string
+declare type ID = number
 
 /**
  * Either specified type or null
@@ -72,6 +72,11 @@ declare type OmitSafe<TObject, TKeys extends keyof TObject> = Omit<
   TObject,
   TKeys
 >
+
+/**
+ * The closes we can get to `any` without `any`.
+ */
+declare type Anything = string | number | {} | []
 
 /**
  * A safe version of the Exclude utility type,

@@ -9,12 +9,23 @@ import {
   adaptNavigationTheme,
   DefaultTheme,
   PaperProvider,
+  useTheme,
 } from 'react-native-paper'
 import { GqlProvider } from 'src/app/graphql/GqlProvider'
 
 import { Navigation } from '~navigation/components/Navigation'
 
+export const BG_COLOR = 'rgb(25, 28, 26)'
+
 const darkTheme = {
+  custom: {
+    optimal: `#FFDE89`,
+    optimalFocus: `#fce9bb`,
+    critical: `#FF7373`,
+    criticalFocus: `#ffa4a4`,
+    overlay: `#6CC8FF`,
+    overlayFocus: `#bbe6ff`,
+  },
   colors: {
     primary: 'rgb(111, 219, 169)',
     onPrimary: 'rgb(0, 56, 36)',
@@ -32,7 +43,7 @@ const darkTheme = {
     onError: 'rgb(105, 0, 5)',
     errorContainer: 'rgb(147, 0, 10)',
     onErrorContainer: 'rgb(255, 180, 171)',
-    background: 'rgb(25, 28, 26)',
+    background: BG_COLOR,
     onBackground: 'rgb(225, 227, 223)',
     surface: 'rgb(25, 28, 26)',
     onSurface: 'rgb(225, 227, 223)',
@@ -61,6 +72,7 @@ const darkTheme = {
 
 const theme = {
   ...DefaultTheme,
+  custom: darkTheme.custom,
   colors: darkTheme.colors, // Copy it from the color codes scheme and then use it here
 }
 
@@ -70,6 +82,12 @@ const navTheme = {
   ...DarkTheme,
   dark: true,
 }
+
+export type AppTheme = typeof theme
+
+export const useAppTheme = () => useTheme<AppTheme>()
+
+// TODO ? - https://reactnative.dev/docs/statusbar
 
 const App: React.FC = () => {
   return (
