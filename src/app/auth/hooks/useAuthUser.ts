@@ -1,37 +1,51 @@
 import * as React from 'react'
 
-import { TMAuthUserVariables, useMAuthUser } from '~graphql/generated/graphql'
+import {
+  TFUser,
+  TMAuthUserVariables,
+  useMAuthUser,
+} from '~graphql/generated/graphql'
 
 export type TLogin = TMAuthUserVariables
 
-type TSignInResult = {
-  wasSuccess: boolean
-  message: string
+// type TSignInResult = {
+//   wasSuccess: boolean
+//   message: string
+// }
+
+type TProps = {
+  setToken: ReactSetState<Nullable<string>>
 }
 
 /**
  * Handles login in form submit & validation
  */
-export const useLoginUser = () => {
-  const [submitting, setSubmitting] = React.useState(false)
-  const [signInResult, setSignInResult] =
-    React.useState<Nullable<TSignInResult>>(null)
+export const useAuthUser = ({ setToken }: TProps) => {
+  // const [signInResult, setSignInResult] =
+  //   React.useState<Nullable<TSignInResult>>(null)
+
+  const [user, setUser] = React.useState<Nullable<TFUser>>(null)
 
   const [mLogin, { data, error, loading }] = useMAuthUser()
 
   React.useEffect(() => {
-    if (!loading && error) {
-      console.log('why?')
-      setSubmitting(false)
-      // TODO return signInResult and based on that show a snackBar (prop visible) wrapped in the portal
-    }
-  }, [error, loading])
+    if (!data) return
+    // if error, show toast?
+
+    const login = data.login
+    if (!login) return
+
+    setToken(login.token)
+    setUser(login.user)
+  }, [data, setToken])
+
+  const logoutUser = React.useCallback(() => {
+    setUser(null)
+    setToken(null)
+  }, [setToken])
 
   const validateUser = React.useCallback(
     async (formValues: TLogin) => {
-      setSubmitting(true)
-      setSignInResult(null)
-
       const { email, password } = formValues
 
       // fast client-side validations
@@ -58,13 +72,14 @@ export const useLoginUser = () => {
         variables: { email, password },
       })
 
+      console.log('after', data)
+      console.log('error', error)
+      console.log('loading2', loading)
+
       if (!loading && error) {
         console.log('whor here?')
-        setSubmitting(false)
         return
       }
-
-      setSubmitting(false)
 
       return data
     },
@@ -73,7 +88,7 @@ export const useLoginUser = () => {
 
   console.log('loading', loading)
   console.log('error', error)
-  return { validateUser, submitting, signInResult }
+  return { logoutUser, validateUser, loading, user }
 }
 
 // * HELPERS

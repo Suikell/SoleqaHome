@@ -3,4 +3,5 @@ fragment FUser on UserType {
   email
   firstName
   lastName
+  profileImage
 }
