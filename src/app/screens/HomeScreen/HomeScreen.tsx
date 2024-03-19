@@ -1,15 +1,17 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Appbar, Button } from 'react-native-paper'
-import { useAuthCtx } from 'src/app/auth/contexts/AuthProvider'
+import { Appbar, Text } from 'react-native-paper'
+import { CategoriesProvider } from 'src/app/shared/contexts/CategoriesProvider'
 
 import { Title } from '~screens/HomeScreen/components/Title'
 import { Test } from '~screens/HomeScreen/Test'
-import { SensorCard } from '~ui/SensorCard/SensorCard'
+import { FavoriteActuators } from '~ui/Actuator/components/FavoriteActuators'
+import { CategoryNavigation } from '~ui/Category/CategoryNavigation'
+import { FavoriteSensors } from '~ui/Sensor/components/FavoriteSensors'
 import { shrink } from '~utils/helpers/shrink'
 
 export const HomeScreen = () => {
-  const { logout } = useAuthCtx()
+  // const { logout } = useAuthCtx()
 
   const [is, setIs] = React.useState(false)
 
@@ -20,32 +22,38 @@ export const HomeScreen = () => {
   }, [is])
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header dark style={styles.header}>
-        <Title />
-        <Appbar.Action icon={`bell-outline`} />
-      </Appbar.Header>
+    <CategoriesProvider>
+      <View style={styles.container}>
+        <Appbar.Header dark style={styles.header}>
+          <Title />
+          <Appbar.Action icon={`bell-outline`} />
+        </Appbar.Header>
+        <View style={styles.content}>
+          <CategoryNavigation />
+          {/* <Button onPress={() => setIs(true)}>Toggle subscription</Button> */}
 
-      <Button onPress={() => setIs(true)}>Toggle subscription</Button>
+          {is && <Test />}
 
-      {is && <Test />}
-
-      <View style={styles.sensors}>
-        <SensorCard />
-        <SensorCard />
+          {/* <SensorList showOnlyCritical /> */}
+          <Text variant={`titleLarge`}>Favourites</Text>
+          <FavoriteSensors />
+          <FavoriteActuators />
+          {/* <Button onPress={logout}>Logout</Button> */}
+        </View>
       </View>
-      <Button onPress={logout}>Logout</Button>
-    </View>
+    </CategoriesProvider>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     justifyContent: 'space-between',
   },
-  sensors: {
+  content: {
     margin: shrink(48),
+    gap: shrink(48),
+  },
+  sensors: {
     flexDirection: `row`,
     justifyContent: `space-between`,
   },

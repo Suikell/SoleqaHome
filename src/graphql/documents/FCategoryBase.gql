@@ -1,0 +1,6 @@
+fragment FCategoryBase on MainframeType {
+  id
+  name
+  isOnline
+  batteryLevel
+}

@@ -1,0 +1,13 @@
+fragment FSensorBase on SensorNodeType {
+  id
+  name
+  favorite
+  unitType
+  currentValue
+  values {
+    ...FSensorValues
+  }
+  category: mainframe {
+    id
+  }
+}
