@@ -1,32 +1,23 @@
 import { useAppTheme } from 'App'
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
 
+import { FlexRow } from '~ui/Layout/FlexRow'
 import { shrink } from '~utils/helpers/shrink'
 
-type TProps = NoChildren & {
-  state?: Nullable<boolean>
+type TProps = {
+  isOnline?: Nullable<boolean>
 }
 
-export const Online: React.FC<TProps> = ({ state }) => {
+export const Online: React.FC<TProps> = ({ isOnline }) => {
   const theme = useAppTheme()
 
-  const stateText = state ? `online` : `offline`
-  const color = state ? theme.colors.primary : theme.colors.error
+  const stateText = isOnline ? `online` : `offline`
+  const color = isOnline ? theme.colors.primary : theme.colors.error
   return (
-    <View style={styles.row}>
+    <FlexRow justifyContent={`space-between`} paddingRight={shrink(8)}>
       <Text variant={`titleMedium`}>{stateText}</Text>
       <Icon size={20} source={`checkbox-blank-circle`} color={color} />
-    </View>
+    </FlexRow>
   )
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: `row`,
-    justifyContent: `space-between`,
-    alignItems: `center`,
-    paddingRight: shrink(8),
-  },
-})
