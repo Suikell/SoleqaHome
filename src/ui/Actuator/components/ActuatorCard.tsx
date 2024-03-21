@@ -1,42 +1,46 @@
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Switch, Text } from 'react-native-paper'
-import { useDeviceUpdatersCtx } from 'src/app/shared/contexts/CategoriesProvider'
 
 import { TFActuatorBase } from '~graphql/generated/graphql'
-import { Card } from '~ui/Cards/Card'
+import { useNavigation } from '~navigation/hooks/useNavigation'
+import { DeviceCard } from '~ui/Cards/DeviceCard'
+import { Switch } from '~ui/Switch/Switch'
 
 type TProps = NoChildren & {
   actuator: TFActuatorBase
+  setFavoriteActuatorValue: (
+    actuator: TFActuatorBase,
+    favorite: boolean,
+  ) => void
 }
 
-export const ActuatorCard: React.FC<TProps> = ({ actuator }) => {
-  const { setFavoriteActuatorValue } = useDeviceUpdatersCtx()
+export const ActuatorCard: React.FC<TProps> = ({
+  actuator,
+  setFavoriteActuatorValue,
+}) => {
+  const navigation = useNavigation()
+
+  const onCardPress = () => {
+    if (!actuator.id || !actuator.name || !actuator.currentState) return null
+
+    navigation.navigate('ActuatorDetail', {
+      actuatorId: actuator.id,
+      name: actuator.name,
+      state: actuator.currentState,
+    })
+  }
 
   const setFavorite = () => {
     setFavoriteActuatorValue(actuator, !actuator.favorite)
   }
 
   return (
-    <Card
+    <DeviceCard
+      onPress={onCardPress}
       label={actuator.name}
       favorite={actuator.favorite}
       setFavorite={setFavorite}
     >
-      <View style={styles.content}>
-        <Text variant={`labelLarge`}>State:</Text>
-        <Switch value={actuator.currentState || false} />
-      </View>
-    </Card>
+      <Switch state={actuator.currentState} />
+    </DeviceCard>
   )
 }
-
-const styles = StyleSheet.create({
-  content: {
-    alignItems: `center`,
-    flexDirection: `row`,
-    justifyContent: `space-between`,
-    marginHorizontal: 16,
-    marginBottom: 16,
-  },
-})
