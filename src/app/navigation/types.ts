@@ -6,6 +6,11 @@ export type TRootStackParamList = {
     sensorId: ID
     name: string
   }
+  ActuatorDetail: {
+    actuatorId: ID
+    name: string
+    state: boolean
+  }
 }
 
 export type TScreenName = keyof TRootStackParamList

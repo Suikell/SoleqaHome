@@ -1,0 +1,13 @@
+query QActuatorDetail($actuatorId: Int!) {
+  actuator: actuatorNode(id: $actuatorId) {
+    id
+    currentState
+    batteryLevel
+    isOnline
+    manualOverride
+    thresholdGroups {
+      id
+      name
+    }
+  }
+}
