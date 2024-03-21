@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 
 import { TFSensorBase } from '~graphql/generated/graphql'
 import { useNavigation } from '~navigation/hooks/useNavigation'
-import { Card } from '~ui/Cards/Card'
+import { DeviceCard } from '~ui/Cards/DeviceCard'
 import { SensorValue } from '~ui/Sensor/components/SensorValue'
 import { SparkLine } from '~ui/Sensor/components/SparkLine'
 import { shrink } from '~utils/helpers/shrink'
@@ -17,8 +17,6 @@ export const SensorCard: React.FC<TProps> = ({
   setFavoriteSensorValue,
   sensor,
 }) => {
-  console.log('i am waiting')
-
   const navigation = useNavigation()
 
   const setFavorite = () => {
@@ -26,7 +24,7 @@ export const SensorCard: React.FC<TProps> = ({
   }
 
   const onCardPress = () => {
-    if (!sensor.id || !sensor.name) return null
+    if (!sensor) return null
 
     navigation.navigate('SensorDetail', {
       sensorId: sensor.id,
@@ -35,7 +33,7 @@ export const SensorCard: React.FC<TProps> = ({
   }
 
   return (
-    <Card
+    <DeviceCard
       onPress={onCardPress}
       label={sensor.name}
       favorite={sensor.favorite}
@@ -49,7 +47,7 @@ export const SensorCard: React.FC<TProps> = ({
         />
         <SparkLine sensorValues={sensor.values} />
       </View>
-    </Card>
+    </DeviceCard>
   )
 }
 
