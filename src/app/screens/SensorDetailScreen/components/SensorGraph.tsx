@@ -1,6 +1,10 @@
 import { SkiaChart, SVGRenderer } from '@wuba/react-native-echarts'
 import { CustomChart, LineChart } from 'echarts/charts'
-import { GridComponent } from 'echarts/components'
+import {
+  DataZoomComponent,
+  GridComponent,
+  TooltipComponent,
+} from 'echarts/components'
 import * as echarts from 'echarts/core'
 import { EChartsType } from 'echarts/core'
 import {
@@ -9,15 +13,34 @@ import {
   CustomSeriesRenderItemReturn,
 } from 'echarts/types/dist/shared'
 import React, { useEffect, useRef } from 'react'
-import { Dimensions, StyleSheet, View } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useTheme } from 'react-native-paper'
 
 import { shrink } from '~utils/helpers/shrink'
 
-echarts.use([SVGRenderer, LineChart, GridComponent, CustomChart])
+echarts.use([
+  SVGRenderer,
+  TooltipComponent,
+  LineChart,
+  GridComponent,
+  DataZoomComponent,
+  CustomChart,
+])
 
 const generateRandomValue = (min: number, max: number) => {
-  return Math.random() * (max - min) + min
+  const value = Math.random() * (max - min) + min
+  return parseFloat(value.toFixed(2))
+}
+
+const getDays = (days: number) => {
+  const result = []
+  for (let i = 0; i < days; i += 1) {
+    const date = new Date()
+    date.setDate(date.getDate() - i)
+    result.push(date.toLocaleDateString())
+  }
+  return result
 }
 
 const generateData = (count: number) => {
@@ -34,7 +57,10 @@ const generateData = (count: number) => {
 const data = generateData(30)
 
 const getAverage = (data: number[][]) => {
-  const result = data.map((item) => (item[1] + item[2]) / 2)
+  const result = data.map((item) => {
+    const average = (item[1] + item[2]) / 2
+    return parseFloat(average.toFixed(2))
+  })
   return result
 }
 
@@ -74,12 +100,40 @@ export const SensorGraph = () => {
 
   useEffect(() => {
     const option = {
+      tooltip: {
+        backgroundColor: theme.colors.surfaceVariant,
+        textStyle: {
+          color: theme.colors.onSurface,
+        },
+
+        formatter: '{b} {c0}_{c1}_{c2},{c3}',
+        animation: false,
+        trigger: 'axis',
+        // Whether confine tooltip content in the view rect of chart instance.
+        // Useful when tooltip is cut because of 'overflow: hidden' set on outer dom of chart instance, or because of narrow screen on mobile.
+        confine: true,
+        axisPointer: {
+          type: 'cross',
+        },
+        // position(
+        //   pos: [number, number],
+        //   params: Anything,
+        //   el: Anything,
+        //   elRect: Anything,
+        //   size: {
+        //     contentSize: Anything
+        //     viewSize: [number, number]
+        //   },
+        // ) {
+        //   const obj: Record<string, number> = { top: 10 }
+        //   obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30
+        //   return obj
+        // },
+      },
+
       xAxis: {
         show: false,
-        data: [
-          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-        ],
+        data: getDays(30),
         z: 10,
       },
       yAxis: [
@@ -120,17 +174,7 @@ export const SensorGraph = () => {
 
       series: [
         {
-          name: 'area',
-          type: 'line',
-          encode: { x: 'time', y: 'area' },
-          showSymbol: false,
-          lineStyle: { opacity: 0 },
-          itemStyle: { color: theme.colors.primary },
-          areaStyle: { opacity: 0.1 },
-          data: getAverage(data),
-        },
-        {
-          name: 'test',
+          name: 'points',
           type: 'custom',
           renderItem,
 
@@ -141,11 +185,21 @@ export const SensorGraph = () => {
           //   areaStyle: { opacity: 0.15 },
 
           encode: {
-            x: 1,
+            x: 0,
             y: [1, 2],
             tooltip: [1, 2],
           },
           data,
+        },
+        {
+          name: 'average',
+          type: 'line',
+          encode: { x: 'time', y: 'area' },
+          showSymbol: false,
+          lineStyle: { opacity: 0 },
+          itemStyle: { color: theme.colors.primary },
+          areaStyle: { opacity: 0.1 },
+          data: getAverage(data),
         },
       ],
     }
@@ -162,9 +216,9 @@ export const SensorGraph = () => {
   }, [theme, windowWidth])
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <SkiaChart ref={skiaRef} />
-    </View>
+    </GestureHandlerRootView>
   )
 }
 
