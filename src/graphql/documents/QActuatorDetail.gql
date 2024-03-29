@@ -5,9 +5,13 @@ query QActuatorDetail($actuatorId: Int!) {
     batteryLevel
     isOnline
     manualOverride
-    thresholdGroups {
+    thresholdGroupActuators {
       id
-      name
+      priority
+      thresholdGroup {
+        id
+        name
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ import { TFActuatorBase } from '~graphql/generated/graphql'
 import { useNavigation } from '~navigation/hooks/useNavigation'
 import { DeviceCard } from '~ui/Cards/DeviceCard'
 import { Switch } from '~ui/Switch/Switch'
+import { isDefined } from '~utils/helpers/isDefined'
 
 type TProps = NoChildren & {
   actuator: TFActuatorBase
@@ -20,7 +21,8 @@ export const ActuatorCard: React.FC<TProps> = ({
   const navigation = useNavigation()
 
   const onCardPress = () => {
-    if (!actuator.id || !actuator.name || !actuator.currentState) return null
+    if (!isDefined(actuator.name) || !isDefined(actuator.currentState))
+      return null
 
     navigation.navigate('ActuatorDetail', {
       actuatorId: actuator.id,

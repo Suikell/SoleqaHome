@@ -4,7 +4,6 @@ import { Appbar, Text } from 'react-native-paper'
 
 import { ActuatorsScreenContent } from '~screens/ActuatorsScreen/components/ActuatorsScreenContent'
 import { ActuatorCategoriesProvider } from '~screens/ActuatorsScreen/contexts/ActuatorCategoriesProvider'
-import { ManualControlModal } from '~ui/Actuator/components/ManualControlModal'
 import { shrink } from '~utils/helpers/shrink'
 
 export const ActuatorsScreen = () => {
@@ -19,7 +18,6 @@ export const ActuatorsScreen = () => {
         {/* TODO <Appbar.Action icon="magnify" onPress={() => {}} /> */}
       </Appbar.Header>
       <ActuatorsScreenContent />
-      <ManualControlModal />
     </ActuatorCategoriesProvider>
   )
 }

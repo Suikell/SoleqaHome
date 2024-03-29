@@ -5,12 +5,12 @@ import {
   useQActuatorDetail,
 } from '~graphql/generated/graphql'
 
-type TActuator = TQActuatorDetail['actuator']
+export type TActuator = Defined<TQActuatorDetail['actuator']>
 
 // TODO load in provider
 // add mutations for editing sensor and sensor values (optimal, critical, ...)
 export const useLoadActuatorDetail = (actuatorId: ID) => {
-  const [actuator, setActuator] = React.useState<TActuator>(null)
+  const [actuator, setActuator] = React.useState<TActuator | null>(null)
 
   const { data, error, loading } = useQActuatorDetail({
     variables: { actuatorId },
