@@ -1,6 +1,0 @@
-query QTest {
-  allThresholdGroups(householdId: 1) {
-    id
-    name
-  }
-}

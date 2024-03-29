@@ -1,3 +1,0 @@
-fragment FSensorValues on SensorValueType {
-  value
-}

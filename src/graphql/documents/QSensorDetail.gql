@@ -5,9 +5,5 @@ query QSensorDetail($sensorId: Int!) {
     batteryLevel
     isOnline
     unitType
-
-    # criticalOver
-    # criticalUnder
-    # optimalValue
   }
 }

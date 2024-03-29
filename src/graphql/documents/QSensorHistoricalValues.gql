@@ -1,0 +1,16 @@
+query QSensorHistoricalValues(
+  $sensorId: Int!
+  $endDatetime: DateTime
+  $dateRangeType: DateRangeTypeEnum
+) {
+  values: sensorValuesForDateRange(
+    sensorId: $sensorId
+    endDatetime: $endDatetime
+    dateRangeType: $dateRangeType
+  ) {
+    startDate
+    max: maxValue
+    min: minValue
+    average: avgValue
+  }
+}

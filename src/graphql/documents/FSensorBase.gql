@@ -5,7 +5,7 @@ fragment FSensorBase on SensorNodeType {
   unitType
   currentValue
   values {
-    ...FSensorValues
+    avgValue
   }
   category: mainframe {
     id
