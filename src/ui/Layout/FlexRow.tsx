@@ -19,6 +19,9 @@ type TProps = RequiredChildren & {
   paddingVertical?: FlexStyle['paddingVertical']
   paddingHorizontal?: FlexStyle['paddingHorizontal']
   gap?: FlexStyle['gap']
+  height?: FlexStyle['height']
+  width?: FlexStyle['width']
+  alignSelf?: FlexStyle['alignSelf']
 }
 
 export const FlexRow: React.FC<TProps> = ({ children, ...style }) => {

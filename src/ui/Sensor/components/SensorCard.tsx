@@ -1,12 +1,10 @@
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
 
 import { TFSensorBase } from '~graphql/generated/graphql'
 import { useNavigation } from '~navigation/hooks/useNavigation'
 import { DeviceCard } from '~ui/Cards/DeviceCard'
 import { SensorValue } from '~ui/Sensor/components/SensorValue'
 import { SparkLine } from '~ui/Sensor/components/SparkLine'
-import { shrink } from '~utils/helpers/shrink'
 
 type TProps = NoChildren & {
   sensor: TFSensorBase
@@ -24,7 +22,7 @@ export const SensorCard: React.FC<TProps> = ({
   }
 
   const onCardPress = () => {
-    if (!sensor) return null
+    if (!sensor || !sensor.name) return null
 
     navigation.navigate('SensorDetail', {
       sensorId: sensor.id,
@@ -39,27 +37,12 @@ export const SensorCard: React.FC<TProps> = ({
       favorite={sensor.favorite}
       setFavorite={setFavorite}
     >
-      <View style={styles.container}>
-        <SensorValue
-          value={sensor.currentValue}
-          unitType={sensor.unitType}
-          valueFontWeight={`600`}
-        />
-        <SparkLine sensorValues={sensor.values} />
-      </View>
+      <SensorValue
+        value={sensor.currentValue}
+        unitType={sensor.unitType}
+        valueFontWeight={`600`}
+      />
+      <SparkLine sensorValues={sensor.values} />
     </DeviceCard>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    gap: shrink(16),
-  },
-  valueContainer: {
-    marginHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    justifyContent: `center`,
-    gap: shrink(16),
-  },
-})

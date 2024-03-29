@@ -8,10 +8,11 @@ import { useEffect, useRef } from 'react'
 import { Dimensions, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
-import { TFSensorValues } from '~graphql/generated/graphql'
+import { TFSensorBase } from '~graphql/generated/graphql'
+import { isDefined } from '~utils/helpers/isDefined'
 import { shrink } from '~utils/helpers/shrink'
 
-type TSensorValues = Nullable<RoA<TFSensorValues>>
+type TSensorValues = TFSensorBase['values']
 
 type TProps = NoChildren & {
   sensorValues: TSensorValues
@@ -33,17 +34,12 @@ const name = 'testName'
 
 const getData = (values: TSensorValues) => {
   if (!values) return []
-  const groupSize = Math.ceil(values.length / 20)
-  const result = []
 
-  for (let i = 0; i < values.length; i += groupSize) {
-    const group = values.slice(i, i + groupSize)
-    const sum = group.reduce((acc, curr) => acc + curr.value, 0)
-    const avg = sum / group.length
-    result.push(avg)
-  }
-
-  return result
+  const filteredValues = values.map((value) => {
+    if (!isDefined(value)) return null
+    return value.avgValue
+  })
+  return filteredValues
 }
 
 export const SparkLine = ({ sensorValues }: TProps) => {
@@ -92,7 +88,7 @@ export const SparkLine = ({ sensorValues }: TProps) => {
       chart = echarts.init(skiaRef.current, 'light', {
         renderer: 'svg',
         width: width + 20,
-        height: 60,
+        height: 50,
       })
       chart.setOption(option, true)
     }
