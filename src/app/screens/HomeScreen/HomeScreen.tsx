@@ -4,7 +4,6 @@ import { Appbar, Text } from 'react-native-paper'
 import { CategoriesProvider } from 'src/app/shared/contexts/CategoriesProvider'
 
 import { Title } from '~screens/HomeScreen/components/Title'
-import { Test } from '~screens/HomeScreen/Test'
 import { FavoriteActuators } from '~ui/Actuator/components/FavoriteActuators'
 import { CategoryNavigation } from '~ui/Category/CategoryNavigation'
 import { FavoriteSensors } from '~ui/Sensor/components/FavoriteSensors'
@@ -13,13 +12,13 @@ import { shrink } from '~utils/helpers/shrink'
 export const HomeScreen = () => {
   // const { logout } = useAuthCtx()
 
-  const [is, setIs] = React.useState(false)
+  // const [is, setIs] = React.useState(false)
 
-  React.useEffect(() => {
-    if (is) {
-      setIs(false)
-    }
-  }, [is])
+  // React.useEffect(() => {
+  //   if (is) {
+  //     setIs(false)
+  //   }
+  // }, [is])
 
   return (
     <CategoriesProvider>
@@ -32,12 +31,14 @@ export const HomeScreen = () => {
           <CategoryNavigation />
           {/* <Button onPress={() => setIs(true)}>Toggle subscription</Button> */}
 
-          {is && <Test />}
+          {/* {is && <Test />} */}
 
           {/* <SensorList showOnlyCritical /> */}
+          {/* <ScrollView> */}
           <Text variant={`titleLarge`}>Favourites</Text>
           <FavoriteSensors />
           <FavoriteActuators />
+          {/* </ScrollView> */}
           {/* <Button onPress={logout}>Logout</Button> */}
         </View>
       </View>
@@ -52,10 +53,6 @@ const styles = StyleSheet.create({
   content: {
     margin: shrink(48),
     gap: shrink(48),
-  },
-  sensors: {
-    flexDirection: `row`,
-    justifyContent: `space-between`,
   },
   header: {
     justifyContent: 'space-between',

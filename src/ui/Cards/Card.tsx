@@ -1,45 +1,52 @@
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Card as PaperCard, IconButton, Text } from 'react-native-paper'
+import { DimensionValue, StyleSheet, View } from 'react-native'
+import { Card as PaperCard, Text } from 'react-native-paper'
 
-import { isDefined } from '~utils/helpers/isDefined'
 import { shrink } from '~utils/helpers/shrink'
 
 type TProps = Children & {
-  label: Nullable<string>
-  favorite?: boolean
-  setFavorite: () => void
+  title?: Nullable<string>
+  titleWidth?: DimensionValue
+  titleStyle?: PropsOf<typeof Text>['style']
+  rightAction?: Nullable<React.ReactNode>
   onPress?: PropsOf<typeof PaperCard>['onPress']
+  cardStyle?: PropsOf<typeof PaperCard>['style']
 }
 
 export const Card: React.FC<TProps> = ({
-  label,
+  title,
   onPress,
-  favorite,
+  cardStyle,
+  titleStyle,
   children,
-  setFavorite,
+  rightAction,
+  titleWidth = `65%`,
 }) => {
   return (
-    <PaperCard mode={`contained`} style={styles.container} onPress={onPress}>
-      <View style={styles.titleContainer}>
-        <Text
-          numberOfLines={1}
-          variant={`titleMedium`}
-          style={{
-            width: `65%`,
-            overflow: `hidden`,
-          }}
-        >
-          {label}
-        </Text>
-        {isDefined(favorite) && (
-          <IconButton
-            onPress={setFavorite}
-            icon={`cards-heart${favorite ? `` : `-outline`}`}
-          />
-        )}
-      </View>
-      <View>{children}</View>
+    <PaperCard
+      mode={`contained`}
+      style={[styles.container, cardStyle]}
+      onPress={onPress}
+    >
+      {title && (
+        <View style={styles.titleContainer}>
+          <Text
+            numberOfLines={1}
+            variant={`titleMedium`}
+            style={[
+              {
+                width: titleWidth,
+                overflow: `hidden`,
+              },
+              titleStyle,
+            ]}
+          >
+            {title}
+          </Text>
+          {rightAction}
+        </View>
+      )}
+      {children}
     </PaperCard>
   )
 }
@@ -50,14 +57,9 @@ const styles = StyleSheet.create({
     width: `48%`,
   },
   titleContainer: {
-    alignSelf: `flex-start`,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginLeft: shrink(48),
-  },
-
-  name: {
-    marginLeft: shrink(16),
   },
 })

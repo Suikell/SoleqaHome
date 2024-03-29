@@ -7,6 +7,7 @@ import { BottomNavigation } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { TRootStackParamList } from '~navigation/types'
+import { ActuatorDetailScreen } from '~screens/ActuatorDetailScreen/ActuatorDetailScreen'
 import { ActuatorsScreen } from '~screens/ActuatorsScreen/ActuatorsScreen'
 import { GroupsScreen } from '~screens/GroupsScreen/GroupsScreen'
 import { HomeScreen } from '~screens/HomeScreen/HomeScreen'
@@ -125,6 +126,7 @@ export const Navigation = () => {
     >
       <Stack.Screen name="HomeTabs" component={HomeTabs} />
       <Stack.Screen name="SensorDetail" component={SensorDetailScreen} />
+      <Stack.Screen name="ActuatorDetail" component={ActuatorDetailScreen} />
     </Stack.Navigator>
   )
 }

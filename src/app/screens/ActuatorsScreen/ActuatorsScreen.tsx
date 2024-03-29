@@ -1,32 +1,24 @@
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { Appbar, Text } from 'react-native-paper'
 
+import { ActuatorsScreenContent } from '~screens/ActuatorsScreen/components/ActuatorsScreenContent'
+import { ActuatorCategoriesProvider } from '~screens/ActuatorsScreen/contexts/ActuatorCategoriesProvider'
 import { shrink } from '~utils/helpers/shrink'
 
 export const ActuatorsScreen = () => {
   // const { sensorCategories, setSensorFavoriteValue } = useLoadSensors()
 
   return (
-    <>
+    <ActuatorCategoriesProvider>
       <Appbar.Header style={styles.header}>
         <Text variant={`headlineSmall`} style={styles.label}>
           Actuators
         </Text>
         {/* TODO <Appbar.Action icon="magnify" onPress={() => {}} /> */}
       </Appbar.Header>
-      <View style={styles.content}>
-        {/* {sensorCategories &&
-      sensorCategories.map((category) => (
-        <SensorList
-          key={category.id}
-          label={category.name}
-          sensors={category.sensors}
-          setFavoriteSensorValue={setSensorFavoriteValue}
-        />
-      ))} */}
-      </View>
-    </>
+      <ActuatorsScreenContent />
+    </ActuatorCategoriesProvider>
   )
 }
 
@@ -36,9 +28,5 @@ const styles = StyleSheet.create({
   },
   label: {
     marginLeft: shrink(48),
-  },
-  content: {
-    margin: shrink(48),
-    gap: shrink(48),
   },
 })

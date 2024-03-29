@@ -19,8 +19,6 @@ export const SensorList: React.FC<TProps> = ({
   sensors,
   setFavoriteSensorValue,
 }) => {
-  console.log('i am waiting in SensorList.tsx')
-
   if (!isDefined(sensors) || sensors.length === 0) {
     return null
   }

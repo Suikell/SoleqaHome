@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
+import { Text } from 'react-native-paper'
 
 import { TFActuatorBase } from '~graphql/generated/graphql'
 import { ActuatorCard } from '~ui/Actuator/components/ActuatorCard'
@@ -7,20 +8,35 @@ import { isDefined } from '~utils/helpers/isDefined'
 import { shrink } from '~utils/helpers/shrink'
 
 type TProps = {
-  actuators?: RoA<TFActuatorBase>
+  label?: Nullable<string>
+  actuators?: Nullable<RoA<TFActuatorBase>>
+  setFavoriteActuatorValue: PropsOf<
+    typeof ActuatorCard
+  >['setFavoriteActuatorValue']
 }
 
-export const ActuatorList: React.FC<TProps> = ({ actuators }) => {
+export const ActuatorList: React.FC<TProps> = ({
+  label,
+  actuators,
+  setFavoriteActuatorValue,
+}) => {
   if (!isDefined(actuators) || actuators.length === 0) {
     return null
   }
 
   return (
-    <View style={styles.sensors}>
-      {actuators.map((actuator) => (
-        <ActuatorCard key={actuator.id} actuator={actuator} />
-      ))}
-    </View>
+    <>
+      {label && <Text variant={`titleLarge`}>{label}</Text>}
+      <View style={styles.sensors}>
+        {actuators.map((actuator) => (
+          <ActuatorCard
+            key={actuator.id}
+            actuator={actuator}
+            setFavoriteActuatorValue={setFavoriteActuatorValue}
+          />
+        ))}
+      </View>
+    </>
   )
 }
 
