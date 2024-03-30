@@ -5,11 +5,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import { Text, Tooltip } from 'react-native-paper'
 
 import { GraphInput } from '~screens/SensorDetailScreen/components/GraphInput'
 import { OverlayControl } from '~screens/SensorDetailScreen/components/OverlayControl'
@@ -20,6 +20,7 @@ import {
   useGraphControlCtx,
   useGraphValuesCtx,
 } from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
+import { Headline } from '~ui/Text/Headline'
 import { shrink } from '~utils/helpers/shrink'
 
 type TProps = NoChildren
@@ -27,9 +28,14 @@ type TProps = NoChildren
 export const SensorDetailContent: React.FC<TProps> = () => {
   const { custom: customColors } = useAppTheme()
 
-  const { criticalUnder, criticalOver } = useGraphValuesCtx()
+  const { criticalUnder, criticalOver, selectedPeriod } = useGraphValuesCtx()
   const { setCriticalUnder, setCriticalOver } = useGraphControlCtx()
   const [isKeyboardVisible, setKeyboardVisible] = React.useState(false)
+
+  const [isPeriodOverlayCollapsed, setIsPeriodOverlayCollapsed] =
+    React.useState(true)
+
+  React.useEffect(() => setIsPeriodOverlayCollapsed(true), [selectedPeriod])
 
   return (
     <KeyboardAvoidingView
@@ -46,41 +52,66 @@ export const SensorDetailContent: React.FC<TProps> = () => {
           }}
         >
           <SensorInfoValues />
-          <PeriodNavigation />
 
-          <Pressable pointerEvents={isKeyboardVisible ? `none` : `auto`}>
-            <SensorGraph />
-          </Pressable>
-          <View style={styles.content}>
-            {/* TODO - better tooltip, with icon (i) */}
-
-            {/* OVERLAY */}
-            <OverlayControl />
-
-            {/* CRITICAL */}
-            <Tooltip
-              title="priorsoakropakspdokapodkoakdopakswopdkapoity"
-              enterTouchDelay={0.1}
+          <Pressable
+            onPress={() => {
+              if (!isPeriodOverlayCollapsed) {
+                setIsPeriodOverlayCollapsed(true)
+              }
+            }}
+          >
+            <PeriodNavigation />
+            <ScrollView
+              contentContainerStyle={{
+                // scrollView doesnt count with height of the collapsible box,
+                // this extra padding helps it to scroll trough the whole content
+                paddingBottom: 200,
+              }}
             >
-              <Text variant="titleSmall">Set critical values</Text>
-            </Tooltip>
-            <GraphInput
-              label={`Critical over`}
-              value={criticalOver}
-              outLineColor={customColors.criticalOver}
-              activeOutlineColor={customColors.criticalOverFocus}
-              onChangeValue={setCriticalOver}
-              setKeyboardVisible={setKeyboardVisible}
-            />
-            <GraphInput
-              label={`Critical under`}
-              value={criticalUnder}
-              outLineColor={customColors.criticalUnder}
-              activeOutlineColor={customColors.criticalUnderFocus}
-              onChangeValue={setCriticalUnder}
-              setKeyboardVisible={setKeyboardVisible}
-            />
-          </View>
+              <Pressable
+                pointerEvents={
+                  isKeyboardVisible || !isPeriodOverlayCollapsed
+                    ? `none`
+                    : `auto`
+                }
+              >
+                <SensorGraph />
+              </Pressable>
+
+              {/* TODO - better tooltip, with icon (i) */}
+
+              {/* OVERLAY */}
+              <OverlayControl
+                isCollapsed={isPeriodOverlayCollapsed}
+                setIsCollapsed={setIsPeriodOverlayCollapsed}
+              />
+
+              {/* CRITICAL */}
+
+              <Pressable
+                style={styles.critical}
+                pointerEvents={!isPeriodOverlayCollapsed ? `none` : undefined}
+              >
+                <Headline text={`Set critical values`} />
+                <GraphInput
+                  label={`Critical over`}
+                  value={criticalOver}
+                  outLineColor={customColors.criticalOver}
+                  activeOutlineColor={customColors.criticalOverFocus}
+                  onChangeValue={setCriticalOver}
+                  setKeyboardVisible={setKeyboardVisible}
+                />
+                <GraphInput
+                  label={`Critical under`}
+                  value={criticalUnder}
+                  outLineColor={customColors.criticalUnder}
+                  activeOutlineColor={customColors.criticalUnderFocus}
+                  onChangeValue={setCriticalUnder}
+                  setKeyboardVisible={setKeyboardVisible}
+                />
+              </Pressable>
+            </ScrollView>
+          </Pressable>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -88,7 +119,7 @@ export const SensorDetailContent: React.FC<TProps> = () => {
 }
 
 const styles = StyleSheet.create({
-  content: {
+  critical: {
     margin: shrink(48),
     gap: shrink(48),
   },

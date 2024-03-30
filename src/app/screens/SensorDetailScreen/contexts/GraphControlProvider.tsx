@@ -15,12 +15,16 @@ export type TCritical = Pick<
 type TContext = TCritical & {
   loading: boolean
   selectedPeriod: TDateRangeTypeEnum
+  overlayDateTime: Date
+  isOverlayVisible: boolean
 }
 
 type TContextUpdaters = {
   setSelectedPeriod: (period: TDateRangeTypeEnum) => void
   setCriticalOver: (value?: number) => void
   setCriticalUnder: (value?: number) => void
+  setOverlayDateTime: (date: Date) => void
+  setIsOverlayVisible: (visible: boolean) => void
 }
 
 const [Provider, useGraphValuesCtx] = createContext<TContext>(`GraphValues`)
@@ -38,6 +42,9 @@ export const GraphControlProvider: React.FC<TProps> = ({
   sensorId,
   children,
 }) => {
+  const [overlayDateTime, setOverlayDateTimeValue] = React.useState(new Date())
+  const [isOverlayVisible, setIsOverlayVisibleValue] = React.useState(false)
+
   const [selectedPeriod, setSelectedPeriodValue] =
     React.useState<TDateRangeTypeEnum>(`HOUR`)
 
@@ -65,12 +72,44 @@ export const GraphControlProvider: React.FC<TProps> = ({
     setSelectedPeriodValue(period)
   }, [])
 
+  const setOverlayDateTime = React.useCallback(
+    (date: Date) => {
+      setOverlayDateTimeValue(date)
+    },
+    [setOverlayDateTimeValue],
+  )
+
+  const setIsOverlayVisible = React.useCallback((visible: boolean) => {
+    setIsOverlayVisibleValue(visible)
+  }, [])
+
   const updaters = React.useMemo(() => {
-    return { setCriticalOver, setCriticalUnder, setSelectedPeriod }
-  }, [setCriticalOver, setCriticalUnder, setSelectedPeriod])
+    return {
+      setCriticalOver,
+      setCriticalUnder,
+      setSelectedPeriod,
+      setOverlayDateTime,
+      setIsOverlayVisible,
+    }
+  }, [
+    setCriticalOver,
+    setCriticalUnder,
+    setIsOverlayVisible,
+    setOverlayDateTime,
+    setSelectedPeriod,
+  ])
 
   return (
-    <Provider value={{ selectedPeriod, criticalOver, criticalUnder, loading }}>
+    <Provider
+      value={{
+        selectedPeriod,
+        criticalOver,
+        criticalUnder,
+        overlayDateTime,
+        isOverlayVisible,
+        loading,
+      }}
+    >
       <UpdatersProvider value={updaters}>{children}</UpdatersProvider>
     </Provider>
   )
