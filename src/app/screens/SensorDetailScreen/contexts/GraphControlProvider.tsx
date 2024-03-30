@@ -8,7 +8,7 @@ import {
 import { useSensorUpdaters } from '~screens/SensorDetailScreen/hooks/useSensorUpdaters'
 import { createContext } from '~utils/context/createContext'
 
-type TCritical = Pick<
+export type TCritical = Pick<
   Defined<TQSensorGraphValues['sensor']>,
   'criticalOver' | 'criticalUnder'
 >
@@ -52,7 +52,6 @@ export const GraphControlProvider: React.FC<TProps> = ({
 
   React.useEffect(() => {
     if (error || !data || !data.sensor) {
-      console.log('error', error)
       return
     }
     const sensor = data.sensor

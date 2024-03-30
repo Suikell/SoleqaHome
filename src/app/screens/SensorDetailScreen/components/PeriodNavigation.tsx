@@ -19,7 +19,7 @@ export const PeriodNavigation: React.FC<TProps> = () => {
   const { setSelectedPeriod } = useGraphControlCtx()
 
   return (
-    <FlexRow marginVertical={shrink(60)} alignSelf={`center`} gap={shrink(32)}>
+    <FlexRow marginVertical={shrink(36)} alignSelf={`center`} gap={shrink(32)}>
       {options.map((option) => (
         <Button
           key={option}

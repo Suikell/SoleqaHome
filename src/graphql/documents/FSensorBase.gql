@@ -2,7 +2,7 @@ fragment FSensorBase on SensorNodeType {
   id
   name
   favorite
-  unitType
+  unitType: unitTypeStr
   currentValue
   values {
     avgValue

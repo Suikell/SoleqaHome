@@ -9,10 +9,16 @@ import {
   useQSensorHistoricalValues,
 } from '../../../graphql/generated/graphql'
 
-type TValues = Defined<TQSensorHistoricalValues['values']>
+type TData = Defined<TQSensorHistoricalValues['data']>
+type TValues = Defined<TData['values']>
+type TMinMax = {
+  min: TData['minValue']
+  max: TData['maxValue']
+}
 
 export const useLoadHistoricalValues = () => {
   const [values, setValues] = React.useState<TValues>([])
+  const [minMax, setMinMax] = React.useState<TMinMax>({ min: null, max: null })
 
   const { sensor } = useSensorCtx()
   const { selectedPeriod } = useGraphValuesCtx()
@@ -27,20 +33,25 @@ export const useLoadHistoricalValues = () => {
   }, [sensor.id, selectedPeriod])
 
   console.log('variables', variables)
-  const { data, error, loading } = useQSensorHistoricalValues({
+  const {
+    data: result,
+    error,
+    loading,
+  } = useQSensorHistoricalValues({
     skip: !variables,
     variables,
   })
 
   React.useEffect(() => {
-    if (error || !data) {
-      console.log('data', data)
-      console.log('error', error)
+    if (error || !result || !result.data) {
       return
     }
 
-    setValues(data.values || [])
-  }, [data, error])
+    console.log('result', result.data.minValue)
+    console.log('result', result.data.maxValue)
+    setValues(result.data.values || [])
+    setMinMax({ min: result.data.minValue, max: result.data.maxValue })
+  }, [error, result])
 
-  return { values, loading }
+  return { minMax, values, loading }
 }

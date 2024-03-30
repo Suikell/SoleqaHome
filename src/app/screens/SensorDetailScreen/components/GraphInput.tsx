@@ -1,6 +1,6 @@
 import { useAppTheme } from 'App'
 import * as React from 'react'
-import { Pressable } from 'react-native'
+import { Platform, Pressable } from 'react-native'
 import { Icon, TextInput } from 'react-native-paper'
 
 import { FlexRow } from '~ui/Layout/FlexRow'
@@ -24,11 +24,11 @@ export const GraphInput: React.FC<TProps> = ({
   setKeyboardVisible,
 }) => {
   const theme = useAppTheme()
-  const [inputValue, setInputValue] = React.useState<string | undefined>()
+  const [inputValue, setInputValue] = React.useState<string>('')
   const [iconColor, setIconColor] = React.useState(theme.colors.outline)
 
   React.useEffect(() => {
-    const stringValue = value ? value.toString() : undefined
+    const stringValue = value ? value.toString() : ''
 
     setInputValue(stringValue)
   }, [value])
@@ -36,22 +36,38 @@ export const GraphInput: React.FC<TProps> = ({
   return (
     <FlexRow>
       <TextInput
+        dense
+        maxLength={15}
         style={{ width: `100%` }}
         label={label}
         value={inputValue}
-        keyboardType={`numeric`}
+        keyboardType={
+          Platform.OS === 'ios' ? `numbers-and-punctuation` : `decimal-pad`
+        }
         outlineColor={outLineColor}
         activeOutlineColor={activeOutlineColor}
         onTouchStart={() => {
           setKeyboardVisible(true)
         }}
-        onChangeText={(text) => setInputValue(text)}
+        onChangeText={(text) => {
+          // regex to check if the input is a number, handling both comma and dot as decimal separator
+          // also allows to end with a comma or dot
+          const isNumber = /^-?\d*([.,]\d{0,2})?$/
+          const isValid = isNumber.test(text)
+
+          if (!isValid) {
+            return
+          }
+          setInputValue(text)
+        }}
         onEndEditing={() => {
           if (!inputValue) {
             onChangeValue()
           } else {
-            const withReplacedComma = inputValue.replace(',', '.')
+            const withReplacedComma = inputValue?.replace(',', '.')
             const numberValue = parseFloat(withReplacedComma)
+
+            setInputValue(numberValue.toString())
             onChangeValue(numberValue)
           }
           setKeyboardVisible(false)

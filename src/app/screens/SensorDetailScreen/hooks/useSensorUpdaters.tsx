@@ -11,9 +11,6 @@ export const useSensorUpdaters = (sensorId: ID) => {
 
   const setCriticalOver = React.useCallback(
     async (value?: number) => {
-      // TODO - when BE repairs
-      if (!value) return
-
       const { data, errors } = await mSetCriticalOver({
         variables: { sensorId, value },
         refetchQueries: ['QSensorGraphValues'],
@@ -32,9 +29,6 @@ export const useSensorUpdaters = (sensorId: ID) => {
 
   const setCriticalUnder = React.useCallback(
     async (value?: number) => {
-      // TODO - when BE repairs
-      if (!value) return
-
       const { data, errors } = await mSetCriticalUnder({
         variables: { sensorId, value },
         refetchQueries: ['QSensorGraphValues'],

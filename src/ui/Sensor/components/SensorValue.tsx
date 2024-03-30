@@ -3,7 +3,7 @@ import { StyleSheet, TextStyle, View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 import { TFSensorBase } from '~graphql/generated/graphql'
-import { getUnit } from '~utils/helpers/getUnit'
+import { formatSensorValue } from '~ui/Sensor/helpers/formatSensorValue'
 import { shrink } from '~utils/helpers/shrink'
 
 type TProps = NoChildren & {
@@ -21,7 +21,6 @@ export const SensorValue: React.FC<TProps> = ({
   unitVariant = `titleLarge`,
   valueFontWeight,
 }) => {
-  const formattedValue = value ? value.toFixed(1).replace(/\.0$/, '') : null
   return (
     <View style={styles.valueContainer}>
       <Text
@@ -29,9 +28,9 @@ export const SensorValue: React.FC<TProps> = ({
         variant={valueVariant}
         style={{ fontWeight: valueFontWeight }}
       >
-        {formattedValue}
+        {formatSensorValue(value)}
       </Text>
-      <Text variant={unitVariant}>{getUnit(unitType)}</Text>
+      <Text variant={unitVariant}>{unitType}</Text>
     </View>
   )
 }

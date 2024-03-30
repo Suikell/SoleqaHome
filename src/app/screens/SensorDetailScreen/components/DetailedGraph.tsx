@@ -14,19 +14,26 @@ import {
   CustomSeriesRenderItemAPI,
   CustomSeriesRenderItemParams,
   CustomSeriesRenderItemReturn,
+  TopLevelFormatterParams,
 } from 'echarts/types/dist/shared'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Dimensions } from 'react-native'
 
 import { TDateRangeTypeEnum } from '~graphql/generated/graphql'
 import { useGraphValuesCtx } from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
+import { useSensorCtx } from '~screens/SensorDetailScreen/contexts/SensorDetailProvider'
+import { formatSensorValue } from '~ui/Sensor/helpers/formatSensorValue'
 import { useLoadHistoricalValues } from '~ui/Sensor/hooks/useLoadHistoricalValues'
 import { isDefined } from '~utils/helpers/isDefined'
 
-type TValues = ReturnType<typeof useLoadHistoricalValues>['values']
+type TReturnValues = ReturnType<typeof useLoadHistoricalValues>
+type TValues = TReturnValues['values']
+type TMinMax = TReturnValues['minMax']
 
 type TProps = NoChildren & {
   values: TValues
+  min: TMinMax['min']
+  max: TMinMax['max']
 }
 
 echarts.use([
@@ -39,8 +46,8 @@ echarts.use([
   CustomChart,
 ])
 
-export const DetailedGraph: React.FC<TProps> = ({ values }) => {
-  const numberOfValues = values.length
+export const DetailedGraph: React.FC<TProps> = ({ min, max, values }) => {
+  const { sensor } = useSensorCtx()
   const { criticalUnder, criticalOver, selectedPeriod } = useGraphValuesCtx()
   const windowWidth = Dimensions.get('window').width
   const windowHeight = Dimensions.get('window').height
@@ -48,120 +55,159 @@ export const DetailedGraph: React.FC<TProps> = ({ values }) => {
   const skiaRef = useRef<HTMLElement>(null)
   const theme = useAppTheme()
 
-  useEffect(() => {
+  const criticalValues = React.useMemo(() => {
+    const lines = []
+    lines.push({
+      name: 'min',
+      type: 'min',
+    })
+    if (criticalOver) {
+      lines.push({
+        name: 'critical over',
+        yAxis: criticalOver,
+        label: {
+          padding: [2, 4, 2, 0],
+
+          position: 'insideEndTop',
+          color: theme.custom.criticalOver,
+        },
+        lineStyle: { color: theme.custom.criticalOver },
+      })
+    }
+    if (criticalUnder) {
+      lines.push({
+        label: {
+          padding: [2, 4, 2, 0],
+
+          position: 'insideEndTop',
+          color: theme.custom.criticalUnder,
+        },
+        name: 'critical under',
+        yAxis: criticalUnder,
+        lineStyle: { color: theme.custom.criticalUnder },
+      })
+    }
+    if (min) {
+      lines.push({
+        name: 'min',
+        yAxis: min,
+        label: {
+          padding: [2, 0, 2, 4],
+
+          position: 'insideStartTop',
+        },
+        lineStyle: {
+          type: 'solid',
+          color: theme.colors.outline,
+        },
+      })
+    }
+    if (max) {
+      lines.push({
+        name: 'max',
+        yAxis: max,
+
+        label: {
+          padding: [2, 0, 2, 4],
+
+          position: 'insideStartTop',
+        },
+        lineStyle: {
+          type: 'solid',
+          color: theme.colors.outline,
+        },
+      })
+    }
+    return lines
+  }, [criticalOver, criticalUnder, max, min, theme])
+
+  React.useEffect(() => {
     const option = {
+      // toolbox to reset data
       tooltip: {
         backgroundColor: theme.colors.surfaceVariant,
         textStyle: {
           color: theme.colors.onSurface,
         },
+        formatter: (params: TopLevelFormatterParams) => {
+          if (!Array.isArray(params)) return
+          if (params.length < 2) return
+          const minMaxObject = params[0]
+          const averageObject = params[1]
 
-        // formatter: '{b} {c0}_{c1}_{c2},{c3}',
-        animation: false,
+          if (!Array.isArray(minMaxObject.data)) return
+
+          const dateTime = minMaxObject.name
+          const min = minMaxObject.data[1]
+          const max = minMaxObject.data[2]
+          const average = averageObject.value
+
+          const formattedMin = getFormattedToolTipValue(min)
+          const formattedMax = getFormattedToolTipValue(max)
+          // .value can be even more types than the value from data -_-
+          const formattedAverage = getFormattedToolTipValue(average.toString())
+
+          return `Time: ${dateTime}\nMin: ${formattedMin} ${sensor.unitType}\nMax: ${formattedMax} ${sensor.unitType}\nAverage: ${formattedAverage} ${sensor.unitType}`
+        },
+        // animation: false,
+        axisPointer: {
+          type: 'cross',
+          lineStyle: {
+            color: theme.colors.tertiary,
+          },
+          crossStyle: {
+            color: theme.colors.tertiary,
+          },
+          label: {
+            backgroundColor: theme.colors.surfaceVariant,
+            // color: 'green',
+          },
+        },
         trigger: 'axis',
         // Whether confine tooltip content in the view rect of chart instance.
         // Useful when tooltip is cut because of 'overflow: hidden' set on outer dom of chart instance, or because of narrow screen on mobile.
         confine: true,
-        axisPointer: {
-          type: 'cross',
-        },
-        // position(
-        //   pos: [number, number],
-        //   params: Anything
-        //   el: Anything,
-        //   elRect: Anything,
-        //   size: {
-        //     contentSize: Anything
-        //     viewSize: [number, number]
-        //   },
-        // ) {
-        //   const obj: Record<string, number> = { top: 10 }
-        //   obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30
-        //   return obj
-        // },
       },
 
       xAxis: {
-        // show: false,
+        // animation: false,
         data: getDateValues(values, selectedPeriod),
-        // z: 10,
       },
-      yAxis: [
-        {
-          splitLine: {
-            lineStyle: {
-              color: theme.colors.secondary,
-              opacity: 0.1,
-            },
-            // show: false,
-          },
-          // z: 100,
-
-          // // // numbers on the left
-          // axisLabel: {
-          //   show: true,
-          //   // backgroundColor: theme.colors.background,
-          //   // inside: true,
-          //   margin: 26,
-          //   align: 'center',
-          //   // color: theme.colors.onSurface,
-          //   width: 44,
-          //   padding: [16, 0, 0, 0],
-          //   formatter: '{value} ppm', // formatterCallback
-          // },
-
-          type: 'value',
-          scale: true,
+      yAxis: {
+        scale: true,
+        // animation: false,
+        splitLine: {
+          show: false,
         },
-      ],
+      },
 
       grid: {
-        right: -20,
+        right: 0,
         left: 0,
-        top: 0,
-        // bottom: 0,
+        top: 14,
+        bottom: 20,
       },
 
       series: [
         {
-          type: 'line',
-          showSymbol: false,
-          lineStyle: {
-            color: theme.custom.criticalUnder,
-          },
-          data: new Array(numberOfValues).fill(criticalUnder),
-        },
-        {
-          type: 'line',
-          showSymbol: false,
-          lineStyle: {
-            color: theme.custom.criticalOver,
-          },
-          data: new Array(numberOfValues).fill(criticalOver),
-        },
-        // For optimal/critical lines
-        //  ======================================
-        //  ======================================
-        // {
-        //   name: 'area',
-        //   type: 'line',
-        //   encode: { x: 'time', y: 'area' },
-        //   showSymbol: false,
-        //   lineStyle: { opacity: 0 },
-        //   itemStyle: { color: theme.colors.primary },
-        //   areaStyle: { opacity: 0.1 },
-        //   data: getAverage(values),
-        // },
-        {
           name: 'points',
           type: 'custom',
           renderItem,
+          markLine: {
+            animation: false,
+            symbol: 'none',
+            label: {
+              color: theme.colors.onSurface,
+              distance: 0,
+              formatter: `{c} ${sensor.unitType}`,
+            },
+            lineStyle: {
+              type: 'dotted',
+            },
+            data: criticalValues,
+          },
 
           dimensions: ['lowest', 'highest'],
-
-          // lineStyle: { width: 5 },
-          // itemStyle: { color: theme.colors.primary },
-          // areaStyle: { opacity: 0.15 },
 
           encode: {
             // x: 0,
@@ -174,9 +220,12 @@ export const DetailedGraph: React.FC<TProps> = ({ values }) => {
           name: 'average',
           type: 'line',
 
-          // encode: { x: 'time', y: 'area' },
+          // TODO - is sensor updated - animation:false
+          // animation: false,
+          itemStyle: {
+            color: theme.colors.primary,
+          },
           showSymbol: false,
-          //   lineStyle: { opacity: 0 },
           lineStyle: {
             color: theme.colors.primary,
           },
@@ -191,19 +240,17 @@ export const DetailedGraph: React.FC<TProps> = ({ values }) => {
         renderer: 'svg',
         width: windowWidth,
         height: windowHeight / 3.5,
-        // height: 500,
       })
       chart.setOption(option, true)
     }
     return () => chart?.dispose()
   }, [
-    criticalOver,
-    criticalUnder,
-    numberOfValues,
+    criticalValues,
     selectedPeriod,
+    sensor.unitType,
     theme,
-    windowHeight,
     values,
+    windowHeight,
     windowWidth,
   ])
 
@@ -217,17 +264,17 @@ const getMinMaxValues = (values: TValues) => {
       return [index, item.min, item.max]
     })
     .filter(isDefined)
-
   return result
 }
 
 const getAverage = (values: TValues) => {
-  return values
+  const res = values
     .map((item) => {
       if (!item) return null
       return item.average
     })
     .filter(isDefined)
+  return res
 }
 
 const renderItem = (
@@ -260,14 +307,14 @@ const renderItem = (
 }
 
 const getDateValues = (values: TValues, period: TDateRangeTypeEnum) => {
-  const result = values
+  return values
     .map((value) => {
-      if (!value) return null
-      return getTimeFormat(value?.startDate, period)
+      if (!value) {
+        return null
+      }
+      return getTimeFormat(value.startDate, period)
     })
     .filter(isDefined)
-  console.log('result', result)
-  return result
 }
 
 const getTimeFormat = (date: Date, period: TDateRangeTypeEnum) => {
@@ -277,6 +324,12 @@ const getTimeFormat = (date: Date, period: TDateRangeTypeEnum) => {
   return format(date, 'dd.MM')
 }
 
-// const getCriticalData = (max, min, value: number) => {
-// new Array(numberOfValues).fill(criticalUnder),
-// }
+/**
+ * Echarts do not support typescript fully, so we need to do some magic typescript casting.
+ * Returns the formatted value (min/max/average) for the tooltip.
+ *
+ * The value is always a number, but the function is typed to accept string, number and Date because of the echarts tooltip params.
+ */
+const getFormattedToolTipValue = (value: string | number | Date) => {
+  return formatSensorValue(parseFloat(value.toString()))
+}
