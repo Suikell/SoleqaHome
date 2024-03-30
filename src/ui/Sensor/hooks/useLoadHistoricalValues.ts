@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { useGraphValuesCtx } from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
 import { useSensorCtx } from '~screens/SensorDetailScreen/contexts/SensorDetailProvider'
+import { useLoadOverlayData } from '~ui/Sensor/hooks/useLoadOverlayData'
 
 import {
   TQSensorHistoricalValues,
@@ -11,6 +12,7 @@ import {
 
 type TData = Defined<TQSensorHistoricalValues['data']>
 type TValues = Defined<TData['values']>
+
 type TMinMax = {
   min: TData['minValue']
   max: TData['maxValue']
@@ -32,7 +34,6 @@ export const useLoadHistoricalValues = () => {
     }
   }, [sensor.id, selectedPeriod])
 
-  console.log('variables', variables)
   const {
     data: result,
     error,
@@ -42,16 +43,16 @@ export const useLoadHistoricalValues = () => {
     variables,
   })
 
+  const { overlayValues } = useLoadOverlayData()
+
   React.useEffect(() => {
     if (error || !result || !result.data) {
       return
     }
 
-    console.log('result', result.data.minValue)
-    console.log('result', result.data.maxValue)
     setValues(result.data.values || [])
     setMinMax({ min: result.data.minValue, max: result.data.maxValue })
   }, [error, result])
 
-  return { minMax, values, loading }
+  return { minMax, values, overlayValues, loading }
 }

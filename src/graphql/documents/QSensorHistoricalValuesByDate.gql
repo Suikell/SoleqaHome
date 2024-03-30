@@ -1,17 +1,15 @@
-query QSensorHistoricalValues(
+query QSensorHistoricalValuesByDate(
   $sensorId: Int!
   $dateRangeType: DateRangeTypeEnum
+  $endDatetime: DateTime
 ) {
   data: sensorValuesForDateRange(
     sensorId: $sensorId
     dateRangeType: $dateRangeType
+    endDatetime: $endDatetime
   ) {
-    minValue
-    maxValue
     values {
       startDate
-      max: maxValue
-      min: minValue
       average: avgValue
     }
   }
