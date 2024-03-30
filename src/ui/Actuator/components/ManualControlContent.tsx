@@ -1,56 +1,46 @@
-import { TAppTheme } from 'App'
 import React from 'react'
-import { Pressable, StyleSheet } from 'react-native'
-import { Button, Switch, Text } from 'react-native-paper'
+import { Switch, Text } from 'react-native-paper'
 
+import { CollapsibleContent } from '~ui/Collapsible/CollapsibleContent'
 import { DateTimePicker } from '~ui/DateTimePicker/DateTimePicker'
 import { FlexRow } from '~ui/Layout/FlexRow'
 import { shrink } from '~utils/helpers/shrink'
-import { useStylesWithTheme } from '~utils/hooks/useStylesWithTheme'
 
 type TProps = NoChildren & {
   closeContent: () => void
 }
 
-export const ManualControlContent: React.FC<TProps> = ({ closeContent }) => {
-  const styles = useStylesWithTheme(styleCreator)
+const DESCRIPTION = `When the state is changed manually it overrides trigger groups. The
+actuator state stays set based on this setting even when trigger
+conditions are met.`
 
+export const ManualControlContent: React.FC<TProps> = ({ closeContent }) => {
+  const onConfirm = React.useCallback(() => {
+    // TODO
+    console.log('confirm')
+  }, [])
   return (
-    <Pressable style={styles.modal} pointerEvents={`box-none`}>
-      <Text variant={`titleLarge`}>Manual control</Text>
-      <Text variant={`bodyMedium`}>
-        When the state is changed manually it overrides trigger groups. The
-        actuator state stays set based on this setting even when trigger
-        conditions are met.
-      </Text>
+    <CollapsibleContent
+      title={`Manual control`}
+      description={DESCRIPTION}
+      onConfirm={onConfirm}
+      onCancel={closeContent}
+    >
       <FlexRow marginTop={shrink(16)} justifyContent={`space-between`}>
         <Text variant={`titleMedium`}>Actuator state should be:</Text>
         <Switch />
       </FlexRow>
 
-      <DateTimePicker />
-      <FlexRow justifyContent={`flex-end`} gap={shrink(48)}>
-        <Button mode={`contained`}>Confirm</Button>
-        <Button
-          onPress={() => {
-            closeContent()
-          }}
-        >
-          Cancel
-        </Button>
-      </FlexRow>
-    </Pressable>
+      <DateTimePicker
+        title={<Text variant={`titleMedium`}>Turn on until:</Text>}
+        validDateRange={{
+          startDate: new Date(),
+        }}
+        onSetDate={(date) => console.log(date)}
+      />
+    </CollapsibleContent>
   )
 }
-
-const styleCreator = (theme: TAppTheme) =>
-  StyleSheet.create({
-    modal: {
-      backgroundColor: theme.colors.surfaceVariant,
-      padding: shrink(60),
-      gap: shrink(48),
-    },
-  })
 
 // import * as React from 'react'
 // import { useState } from 'react'
