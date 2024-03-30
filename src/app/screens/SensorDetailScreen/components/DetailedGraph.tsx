@@ -27,13 +27,15 @@ import { useLoadHistoricalValues } from '~ui/Sensor/hooks/useLoadHistoricalValue
 import { isDefined } from '~utils/helpers/isDefined'
 
 type TReturnValues = ReturnType<typeof useLoadHistoricalValues>
+type TOverlayValues = TReturnValues['overlayValues']
 type TValues = TReturnValues['values']
 type TMinMax = TReturnValues['minMax']
 
 type TProps = NoChildren & {
-  values: TValues
   min: TMinMax['min']
   max: TMinMax['max']
+  values: TValues
+  overlayValues: TOverlayValues
 }
 
 echarts.use([
@@ -46,9 +48,15 @@ echarts.use([
   CustomChart,
 ])
 
-export const DetailedGraph: React.FC<TProps> = ({ min, max, values }) => {
+export const DetailedGraph: React.FC<TProps> = ({
+  min,
+  max,
+  values,
+  overlayValues,
+}) => {
   const { sensor } = useSensorCtx()
-  const { criticalUnder, criticalOver, selectedPeriod } = useGraphValuesCtx()
+  const { criticalUnder, criticalOver, selectedPeriod, isOverlayVisible } =
+    useGraphValuesCtx()
   const windowWidth = Dimensions.get('window').width
   const windowHeight = Dimensions.get('window').height
 
@@ -137,7 +145,6 @@ export const DetailedGraph: React.FC<TProps> = ({ min, max, values }) => {
 
           if (!Array.isArray(minMaxObject.data)) return
 
-          const dateTime = minMaxObject.name
           const min = minMaxObject.data[1]
           const max = minMaxObject.data[2]
           const average = averageObject.value
@@ -147,7 +154,18 @@ export const DetailedGraph: React.FC<TProps> = ({ min, max, values }) => {
           // .value can be even more types than the value from data -_-
           const formattedAverage = getFormattedToolTipValue(average.toString())
 
-          return `Time: ${dateTime}\nMin: ${formattedMin} ${sensor.unitType}\nMax: ${formattedMax} ${sensor.unitType}\nAverage: ${formattedAverage} ${sensor.unitType}`
+          const formattedText = `Min: ${formattedMin}${sensor.unitType}\nMax: ${formattedMax}${sensor.unitType}\nAverage: ${formattedAverage}${sensor.unitType}`
+
+          if (params.length === 3) {
+            const overlayObject = params[2]
+            const overlayAverageValue = overlayObject.value
+            const overlayAverage = getFormattedToolTipValue(
+              overlayAverageValue.toString(),
+            )
+            return `${formattedText}\nOverlay: ${overlayAverage}${sensor.unitType}`
+          }
+
+          return formattedText
         },
         // animation: false,
         axisPointer: {
@@ -169,10 +187,30 @@ export const DetailedGraph: React.FC<TProps> = ({ min, max, values }) => {
         confine: true,
       },
 
-      xAxis: {
-        // animation: false,
-        data: getDateValues(values, selectedPeriod),
-      },
+      xAxis: [
+        {
+          // animation: false,
+          data: getDateValues(values, selectedPeriod),
+        },
+        {
+          show: isOverlayVisible,
+
+          name: 'Overlay time axis',
+          nameLocation: 'center',
+          // nameGap: 15,
+          nameTextStyle: {
+            color: theme.custom.overlay,
+            // verticalAlign: 'bottom',
+
+            padding: 10,
+            backgroundColor: theme.colors.surface,
+          },
+          data: getDateValues(overlayValues, selectedPeriod),
+          axisTick: {
+            inside: true,
+          },
+        },
+      ],
       yAxis: {
         scale: true,
         // animation: false,
@@ -184,7 +222,7 @@ export const DetailedGraph: React.FC<TProps> = ({ min, max, values }) => {
       grid: {
         right: 0,
         left: 0,
-        top: 14,
+        top: 40,
         bottom: 20,
       },
 
@@ -232,6 +270,22 @@ export const DetailedGraph: React.FC<TProps> = ({ min, max, values }) => {
           areaStyle: { color: theme.colors.primary, opacity: 0.15 },
           data: getAverage(values),
         },
+        {
+          name: 'overlay',
+          type: 'line',
+
+          // TODO - is sensor updated - animation:false
+          // animation: false,
+          // itemStyle: {
+          //   // color: theme.colors.,
+          // },
+          showSymbol: false,
+          lineStyle: {
+            color: theme.custom.overlay,
+          },
+          // areaStyle: { color: theme.colors.primary, opacity: 0.15 },
+          data: getAverage(overlayValues),
+        },
       ],
     }
     let chart: EChartsType
@@ -246,6 +300,8 @@ export const DetailedGraph: React.FC<TProps> = ({ min, max, values }) => {
     return () => chart?.dispose()
   }, [
     criticalValues,
+    isOverlayVisible,
+    overlayValues,
     selectedPeriod,
     sensor.unitType,
     theme,
@@ -267,7 +323,7 @@ const getMinMaxValues = (values: TValues) => {
   return result
 }
 
-const getAverage = (values: TValues) => {
+const getAverage = (values: TValues | TOverlayValues) => {
   const res = values
     .map((item) => {
       if (!item) return null
@@ -306,7 +362,10 @@ const renderItem = (
   }
 }
 
-const getDateValues = (values: TValues, period: TDateRangeTypeEnum) => {
+const getDateValues = (
+  values: TValues | TOverlayValues,
+  period: TDateRangeTypeEnum,
+) => {
   return values
     .map((value) => {
       if (!value) {

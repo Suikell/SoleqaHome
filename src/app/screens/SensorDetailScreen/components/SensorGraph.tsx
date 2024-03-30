@@ -8,7 +8,7 @@ import { useLoadHistoricalValues } from '~ui/Sensor/hooks/useLoadHistoricalValue
 type TProps = NoChildren
 
 export const SensorGraph: React.FC<TProps> = () => {
-  const { values, minMax, loading } = useLoadHistoricalValues()
+  const { loading, values, minMax, overlayValues } = useLoadHistoricalValues()
   const windowHeight = Dimensions.get('window').height
 
   if (loading) {
@@ -20,8 +20,11 @@ export const SensorGraph: React.FC<TProps> = () => {
   }
 
   return (
-    // <View style={{ height: 250 }}>
-    <DetailedGraph max={minMax.max} min={minMax.min} values={values} />
-    // </View>
+    <DetailedGraph
+      values={values}
+      max={minMax.max}
+      min={minMax.min}
+      overlayValues={overlayValues}
+    />
   )
 }
