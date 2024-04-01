@@ -1,26 +1,25 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
+import { useCategoriesCtx } from 'src/app/shared/contexts/CategoriesProvider'
 
-import { TFActuatorBase } from '~graphql/generated/graphql'
 import { ActuatorCard } from '~ui/Actuator/components/ActuatorCard'
-import { isDefined } from '~utils/helpers/isDefined'
 import { shrink } from '~utils/helpers/shrink'
 
 type TProps = {
   label?: Nullable<string>
-  actuators?: Nullable<RoA<TFActuatorBase>>
-  setFavoriteActuatorValue: PropsOf<
-    typeof ActuatorCard
-  >['setFavoriteActuatorValue']
+  actuatorIds?: RoA<ID>
+  onlyFavorite?: boolean
 }
 
 export const ActuatorList: React.FC<TProps> = ({
   label,
-  actuators,
-  setFavoriteActuatorValue,
+  actuatorIds,
+  onlyFavorite,
 }) => {
-  if (!isDefined(actuators) || actuators.length === 0) {
+  const { actuators } = useCategoriesCtx()
+
+  if (actuators.length === 0) {
     return null
   }
 
@@ -28,13 +27,16 @@ export const ActuatorList: React.FC<TProps> = ({
     <>
       {label && <Text variant={`titleLarge`}>{label}</Text>}
       <View style={styles.sensors}>
-        {actuators.map((actuator) => (
-          <ActuatorCard
-            key={actuator.id}
-            actuator={actuator}
-            setFavoriteActuatorValue={setFavoriteActuatorValue}
-          />
-        ))}
+        {actuators.map((actuator) => {
+          // if no actuatorIds => show all actuators as it's the All category
+          if (actuatorIds && !actuatorIds.includes(actuator.id)) {
+            return null
+          }
+          if (onlyFavorite && !actuator.favorite) {
+            return null
+          }
+          return <ActuatorCard key={actuator.id} actuator={actuator} />
+        })}
       </View>
     </>
   )

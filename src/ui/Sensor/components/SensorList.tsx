@@ -1,25 +1,27 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
+import { useCategoriesCtx } from 'src/app/shared/contexts/CategoriesProvider'
 
-import { TFSensorBase } from '~graphql/generated/graphql'
 import { isDefined } from '~utils/helpers/isDefined'
 import { shrink } from '~utils/helpers/shrink'
 
 import { SensorCard } from './SensorCard'
 
 type TProps = {
-  sensors?: Nullable<RoA<TFSensorBase>>
   label?: Nullable<string>
-  setFavoriteSensorValue: PropsOf<typeof SensorCard>['setFavoriteSensorValue']
+  sensorIds?: RoA<ID>
+  onlyFavorite?: boolean
 }
 
 export const SensorList: React.FC<TProps> = ({
   label,
-  sensors,
-  setFavoriteSensorValue,
+  sensorIds,
+  onlyFavorite,
 }) => {
-  if (!isDefined(sensors) || sensors.length === 0) {
+  const { sensors } = useCategoriesCtx()
+
+  if (sensors.length === 0) {
     return null
   }
 
@@ -27,13 +29,16 @@ export const SensorList: React.FC<TProps> = ({
     <>
       {label && <Text variant={`titleLarge`}>{label}</Text>}
       <View style={styles.sensors}>
-        {sensors.map((sensor) => (
-          <SensorCard
-            key={sensor.id}
-            sensor={sensor}
-            setFavoriteSensorValue={setFavoriteSensorValue}
-          />
-        ))}
+        {sensors.map((sensor) => {
+          // if no sensorIds => show all sensors as it's the All category
+          if (isDefined(sensorIds) && !sensorIds.includes(sensor.id)) {
+            return null
+          }
+          if (onlyFavorite && !sensor.favorite) {
+            return null
+          }
+          return <SensorCard key={sensor.id} sensor={sensor} />
+        })}
       </View>
     </>
   )

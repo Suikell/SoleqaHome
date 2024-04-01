@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Button } from 'react-native-paper'
 import { useCategoriesCtx } from 'src/app/shared/contexts/CategoriesProvider'
+import { useCategoriesUpdatersCtx } from 'src/app/shared/contexts/CategoriesUpdatersProvider'
 
 import { isDefined } from '~utils/helpers/isDefined'
 
@@ -10,7 +11,8 @@ type TProps = NoChildren & {
 }
 
 export const CategoryButton: React.FC<TProps> = ({ categoryId, name }) => {
-  const { selectedCategoryIndex, selectCategoryIndex } = useCategoriesCtx()
+  const { selectedCategoryIndex } = useCategoriesCtx()
+  const { selectCategoryIndex } = useCategoriesUpdatersCtx()
 
   const mode = React.useMemo(() => {
     if (categoryId === selectedCategoryIndex) {

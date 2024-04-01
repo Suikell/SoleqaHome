@@ -1,30 +1,18 @@
 import * as React from 'react'
+import { useDeviceUpdatersCtx } from 'src/app/shared/contexts/CategoriesProvider'
 
 import {
   useMSetFavoriteActuator,
   useMSetFavoriteSensor,
 } from '~graphql/generated/graphql'
 
-type TFavoriteActuatorOptions = {
-  actuatorId: ID
-  favorite: boolean
-}
-
-type TFavoriteSensorOptions = {
-  sensorId: ID
-  favorite: boolean
-}
-
-// type TProps = {
-//   setCategories: ReturnType<typeof useCategoriesState>['setCategories']
-// }
-
 export const useDeviceUpdaters = () => {
+  const { updateSensor, updateActuator } = useDeviceUpdatersCtx()
   const [mFavoriteActuator] = useMSetFavoriteActuator()
   const [mFavoriteSensor] = useMSetFavoriteSensor()
 
   const setFavoriteSensor = React.useCallback(
-    async ({ sensorId, favorite }: TFavoriteSensorOptions) => {
+    async (sensorId: ID, favorite: boolean) => {
       const { data, errors } = await mFavoriteSensor({
         variables: {
           sensorId,
@@ -32,19 +20,23 @@ export const useDeviceUpdaters = () => {
         },
       })
 
-      if (errors || !data || data.result?.success === false) {
+      if (errors || !data?.result?.sensor) {
         console.log(
           'problem with setting favorite sensor ..',
           errors,
           data?.result,
         )
+        return
       }
+
+      const updatedSensor = data.result.sensor
+      updateSensor(updatedSensor)
     },
-    [mFavoriteSensor],
+    [mFavoriteSensor, updateSensor],
   )
 
   const setFavoriteActuator = React.useCallback(
-    async ({ actuatorId, favorite }: TFavoriteActuatorOptions) => {
+    async (actuatorId: ID, favorite: boolean) => {
       const { data, errors } = await mFavoriteActuator({
         variables: {
           actuatorId,
@@ -52,15 +44,18 @@ export const useDeviceUpdaters = () => {
         },
       })
 
-      if (errors || !data || !data.result?.success === false) {
+      if (errors || !data?.result?.actuator) {
         console.log(
           'problem with setting favorite sensor ..',
           errors,
           data?.result,
         )
+        return
       }
+      const updatedActuator = data.result.actuator
+      updateActuator(updatedActuator)
     },
-    [mFavoriteActuator],
+    [mFavoriteActuator, updateActuator],
   )
 
   return { setFavoriteSensor, setFavoriteActuator }

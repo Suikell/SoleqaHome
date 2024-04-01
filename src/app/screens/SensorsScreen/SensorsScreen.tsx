@@ -3,14 +3,11 @@ import { StyleSheet } from 'react-native'
 import { Appbar, Text } from 'react-native-paper'
 
 import { SensorScreenContent } from '~screens/SensorsScreen/components/SensorScreenContent'
-import { SensorCategoriesProvider } from '~screens/SensorsScreen/contexts/SensorCategoriesProvider'
 import { shrink } from '~utils/helpers/shrink'
 
 export const SensorsScreen = () => {
-  // const { sensorCategories, setSensorFavoriteValue } = useLoadSensors()
-
   return (
-    <SensorCategoriesProvider>
+    <>
       <Appbar.Header style={styles.header}>
         <Text variant={`headlineSmall`} style={styles.label}>
           Sensors
@@ -18,7 +15,7 @@ export const SensorsScreen = () => {
         {/* TODO <Appbar.Action icon="magnify" onPress={() => {}} /> */}
       </Appbar.Header>
       <SensorScreenContent />
-    </SensorCategoriesProvider>
+    </>
   )
 }
 

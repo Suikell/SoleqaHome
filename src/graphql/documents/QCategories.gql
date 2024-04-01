@@ -2,15 +2,11 @@ query QCategories {
   categories: allMainframes {
     ...FCategoryBase
 
-    favoriteSensors: sensors(favorite: true) {
+    sensors {
       ...FSensorBase
     }
 
-    criticalSensors: sensors(critical: true) {
-      ...FSensorBase
-    }
-
-    favoriteActuators: actuators(favorite: true) {
+    actuators {
       ...FActuatorBase
     }
   }
