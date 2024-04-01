@@ -14,6 +14,8 @@ import {
 import { cs, registerTranslation } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GqlProvider } from 'src/app/graphql/GqlProvider'
+import { SensorValueProvider } from 'src/app/shared/components/SensorValueProvider'
+import { CategoriesProvider } from 'src/app/shared/contexts/CategoriesProvider'
 
 import { Navigation } from '~navigation/components/Navigation'
 
@@ -98,7 +100,11 @@ const App: React.FC = () => {
       <NavigationContainer theme={navTheme}>
         <GqlProvider>
           <SafeAreaProvider>
-            <Navigation />
+            <CategoriesProvider>
+              <SensorValueProvider>
+                <Navigation />
+              </SensorValueProvider>
+            </CategoriesProvider>
           </SafeAreaProvider>
         </GqlProvider>
       </NavigationContainer>

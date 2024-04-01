@@ -11,6 +11,7 @@ export const SensorGraph: React.FC<TProps> = () => {
   const { loading, values, minMax, overlayValues } = useLoadHistoricalValues()
   const windowHeight = Dimensions.get('window').height
 
+  // TODO - have loading indicator only on first render
   if (loading) {
     return (
       <View style={{ height: windowHeight / 3.5 }}>

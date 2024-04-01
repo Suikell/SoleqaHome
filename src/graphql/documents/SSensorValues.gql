@@ -1,0 +1,9 @@
+subscription SSensorValues {
+  sensorValueLogged {
+    id
+    sensor {
+      id
+    }
+    value
+  }
+}
