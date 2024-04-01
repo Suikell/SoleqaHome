@@ -1,0 +1,5 @@
+mutation MSetCriticalOver($sensorId: Int!, $value: Float) {
+  result: setCriticalOverValue(sensorId: $sensorId, value: $value) {
+    success
+  }
+}

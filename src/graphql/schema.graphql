@@ -1,11 +1,23 @@
+type ActuatorConditionType {
+  active: Boolean!
+  actuator: ActuatorNodeType!
+  createdAt: DateTime!
+  id: Int!
+  operator: ActuatorOperatorEnum
+  thresholdGroup: ThresholdGroupType!
+  updatedAt: DateTime!
+  value: Boolean!
+}
+
 type ActuatorNodeType {
+  actuatorConditions: [ActuatorConditionType!]!
   actuatorType: ActuatorTypeEnum
   batteryLevel: Float
   createdAt: DateTime!
   currentState: Boolean
   deviceId: String!
   favorite: Boolean!
-  id: Int
+  id: Int!
   isOnline: Boolean!
   lastOnline: DateTime
   mainframe: MainframeType
@@ -14,14 +26,17 @@ type ActuatorNodeType {
   name: String
   nodeType: NodeTypeEnum
   systemVersion: String
-  thresholdGroups: [ThresholdGroupType!]!
+  thresholdGroupActuators: [ThresholdGroupActuatorType!]!
   type: Int!
   uid: UUID!
   updatedAt: DateTime!
 }
 
 enum ActuatorOperatorEnum {
+  """="""
   EQUAL
+
+  """!="""
   NOT_EQUAL
 }
 
@@ -31,6 +46,63 @@ enum ActuatorTypeEnum {
   LIGHT
   UNASSIGNED
   WATER_PUMP
+}
+
+type AddActuatorConditionMutation {
+  actuatorCondition: ActuatorConditionType
+  message: String
+  success: Boolean!
+}
+
+type AddActuatorToThresholdGroupMutation {
+  message: String
+  success: Boolean!
+  thresholdGroup: ThresholdGroupType
+}
+
+type AddSensorConditionMutation {
+  message: String
+  sensorCondition: SensorConditionType
+  success: Boolean!
+}
+
+type ChangeActuatorNameMutation {
+  actuator: ActuatorNodeType
+  message: String
+  success: Boolean!
+}
+
+type ChangeSensorNameMutation {
+  message: String
+  sensor: SensorNodeType
+  success: Boolean!
+}
+
+type ChangeThresholdGroupActiveMutation {
+  message: String
+  success: Boolean!
+  thresholdGroup: ThresholdGroupType
+}
+
+type ChangeThresholdGroupNameMutation {
+  message: String
+  success: Boolean!
+  thresholdGroup: ThresholdGroupType
+}
+
+type ChangeUserPasswordMutation {
+  success: Boolean!
+}
+
+type ChangeUserProfileMutation {
+  success: Boolean!
+  user: UserType
+}
+
+type CreateThresholdGroupMutation {
+  message: String
+  success: Boolean!
+  thresholdGroup: ThresholdGroupType
 }
 
 type DailyLogValuesType {
@@ -47,12 +119,31 @@ value as specified by
 """
 scalar Date
 
+enum DateRangeTypeEnum {
+  """DAY"""
+  DAY
+
+  """HOUR"""
+  HOUR
+
+  """MONTH"""
+  MONTH
+
+  """YEAR"""
+  YEAR
+}
+
 """
 The `DateTime` scalar type represents a DateTime
 value as specified by
 [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
 """
 scalar DateTime
+
+type DeleteThresholdGroupMutation {
+  message: String
+  success: Boolean!
+}
 
 """
 The `GenericScalar` scalar type represents a generic
@@ -63,7 +154,7 @@ scalar GenericScalar
 
 type HouseholdType {
   createdAt: DateTime!
-  id: Int
+  id: Int!
   mainframes: [MainframeType!]!
   name: String
   thresholdGroups: [ThresholdGroupType!]!
@@ -78,7 +169,7 @@ type MainframeType {
   deviceId: String!
   favorite: Boolean!
   household: HouseholdType
-  id: Int
+  id: Int!
   isOnline: Boolean!
   lastOnline: DateTime
   name: String
@@ -90,11 +181,27 @@ type MainframeType {
 }
 
 type Mutation {
+  addActuatorCondition(actuatorId: Int!, operator: ActuatorOperatorEnum!, thresholdGroupId: Int!, value: Boolean!): AddActuatorConditionMutation
+  addActuatorToThresholdGroup(actuatorId: Int!, thresholdGroupId: Int!): AddActuatorToThresholdGroupMutation
+  addSensorCondition(operator: SensorOperatorEnum!, sensorId: Int!, thresholdGroupId: Int!, value: Float!): AddSensorConditionMutation
+  changeActuatorName(actuatorId: Int!, name: String!): ChangeActuatorNameMutation
+  changeSensorName(name: String!, sensorId: Int!): ChangeSensorNameMutation
+  changeThresholdGroupActive(active: Boolean!, thresholdGroupId: Int!): ChangeThresholdGroupActiveMutation
+  changeThresholdGroupName(name: String!, thresholdGroupId: Int!): ChangeThresholdGroupNameMutation
+  changeUserPassword(newPassword: String!, oldPassword: String!): ChangeUserPasswordMutation
+  changeUserProfile(firstName: String, lastName: String): ChangeUserProfileMutation
+  createThresholdGroup(active: Boolean, householdId: Int!, name: String!): CreateThresholdGroupMutation
+  deleteThresholdGroup(thresholdGroupId: Int!): DeleteThresholdGroupMutation
   refreshToken(token: String): Refresh
+  removeActuatorCondition(actuatorConditionId: Int!): RemoveActuatorConditionMutation
+  removeActuatorFromThresholdGroup(actuatorId: Int!, thresholdGroupId: Int!): RemoveActuatorFromThresholdGroupMutation
+  removeSensorCondition(sensorConditionId: Int!): RemoveSensorConditionMutation
+  setActuatorThresholdGroupPriority(actuatorId: Int!, priority: Int!, thresholdGroupId: Int!): SetActuatorThresholdGroupPriorityMutation
   setCriticalOverValue(sensorId: Int!, value: Float!): SetCriticalOverMutation
   setCriticalUnderValue(sensorId: Int!, value: Float!): SetCriticalUnderMutation
   setFavoriteActuator(actuatorId: Int!, favorite: Boolean!): SetFavoriteMutation
   setFavoriteSensor(favorite: Boolean!, sensorId: Int!): SetFavoriteMutation
+  setManualOverrideUntil(actuatorId: Int!, until: DateTime!): SetManualOverrideUntilMutation
   tokenAuth(email: String!, password: String!): ObtainJSONWebToken
   userProfileImageUpload(profileImage: Upload!): UserProfileImageMutation
   verifyToken(token: String): Verify
@@ -109,6 +216,7 @@ enum NodeTypeEnum {
 }
 
 type ObtainJSONWebToken {
+  households: [HouseholdType!]
   payload: GenericScalar!
   refreshExpiresIn: Int!
   token: String!
@@ -133,11 +241,13 @@ type PageInfo {
 }
 
 type Query {
+  actuatorCondition(id: Int!): ActuatorConditionType
   actuatorNode(id: Int!): ActuatorNodeType
+  allActuatorConditions(thresholdGroupId: Int!): [ActuatorConditionType!]
   allActuatorNodes(favorite: Boolean, mainframeId: Int!): [ActuatorNodeType!]
   allHouseholds: [HouseholdType!]
   allMainframes: [MainframeType!]
-  allSensorConditions(groupId: Int!): [SensorConditionType!]
+  allSensorConditions(thresholdGroupId: Int!): [SensorConditionType!]
   allSensorNodes(critical: Boolean, favorite: Boolean, mainframeId: Int!): [SensorNodeType!]
   allThresholdGroups(householdId: Int!): [ThresholdGroupType!]
   allUsers: [UserType!]
@@ -149,6 +259,7 @@ type Query {
     id: ID!
   ): SensorConditionType
   sensorNode(id: Int!): SensorNodeType
+  sensorValuesForDateRange(dateRangeType: DateRangeTypeEnum, endDatetime: DateTime, sensorId: Int!): [SensorDateRangeValuesType]
   thresholdGroup(id: Int!): ThresholdGroupType
   user(id: Int!): UserType
 }
@@ -159,15 +270,40 @@ type Refresh {
   token: String!
 }
 
+type RemoveActuatorConditionMutation {
+  message: String
+  success: Boolean!
+}
+
+type RemoveActuatorFromThresholdGroupMutation {
+  message: String
+  success: Boolean!
+  thresholdGroup: ThresholdGroupType
+}
+
+type RemoveSensorConditionMutation {
+  message: String
+  success: Boolean!
+}
+
 type SensorConditionType {
   active: Boolean!
   createdAt: DateTime!
-  group: ThresholdGroupType!
-  id: Int
+  id: Int!
   operator: SensorOperatorEnum
   sensor: SensorNodeType!
+  thresholdGroup: ThresholdGroupType!
   updatedAt: DateTime!
   value: Float!
+}
+
+type SensorDateRangeValuesType {
+  avgValue: Float
+  endDate: DateTime!
+  groupId: Int!
+  maxValue: Float!
+  minValue: Float!
+  startDate: DateTime!
 }
 
 type SensorNodeType {
@@ -178,7 +314,7 @@ type SensorNodeType {
   currentValue: Float
   deviceId: String!
   favorite: Boolean!
-  id: Int
+  id: Int!
   isOnline: Boolean!
   lastOnline: DateTime
   mainframe: MainframeType
@@ -191,15 +327,26 @@ type SensorNodeType {
   uid: UUID!
   unitType: UnitTypeEnum
   updatedAt: DateTime!
-  values: [SensorValueType!]
+  values: [SensorDateRangeValuesType]
 }
 
 enum SensorOperatorEnum {
+  """="""
   EQUAL
+
+  """>"""
   GREATER_THAN
+
+  """>="""
   GREATER_THAN_OR_EQUAL
+
+  """<"""
   LESS_THAN
+
+  """<="""
   LESS_THAN_OR_EQUAL
+
+  """!="""
   NOT_EQUAL
 }
 
@@ -216,38 +363,63 @@ enum SensorTypeEnum {
 type SensorValueType {
   createdAt: DateTime!
   dailyLog: DailyLogValuesType!
-  id: Int
+  id: Int!
   sensor: SensorNodeType!
   updatedAt: DateTime!
   value: Float!
 }
 
+type SetActuatorThresholdGroupPriorityMutation {
+  message: String
+  success: Boolean!
+}
+
 type SetCriticalOverMutation {
-  success: Boolean
+  message: String
+  sensor: SensorNodeType
+  success: Boolean!
 }
 
 type SetCriticalUnderMutation {
-  success: Boolean
+  message: String
+  sensor: SensorNodeType
+  success: Boolean!
 }
 
 type SetFavoriteMutation {
-  success: Boolean
+  message: String
+  sensor: SensorNodeType
+  success: Boolean!
+}
+
+type SetManualOverrideUntilMutation {
+  actuator: ActuatorNodeType
+  message: String
+  success: Boolean!
 }
 
 type Subscription {
   countSeconds(upTo: Int): Int
 }
 
+type ThresholdGroupActuatorType {
+  actuator: ActuatorNodeType!
+  createdAt: DateTime!
+  id: Int!
+  priority: Int!
+  thresholdGroup: ThresholdGroupType!
+  updatedAt: DateTime!
+}
+
 type ThresholdGroupType {
   active: Boolean!
-  actuators: [ActuatorNodeType!]!
+  actuatorConditions: [ActuatorConditionType!]!
   createdAt: DateTime!
   household: HouseholdType!
-  id: Int
+  id: Int!
   name: String!
-  operator: ActuatorOperatorEnum
-  priority: Int!
   sensorConditions: [SensorConditionType!]!
+  thresholdGroupActuators: [ThresholdGroupActuatorType!]!
   updatedAt: DateTime!
 }
 
@@ -258,11 +430,22 @@ in fields, resolvers and input.
 scalar UUID
 
 enum UnitTypeEnum {
+  """ppm"""
   CO2
+
+  """%"""
   HUMIDITY
+
+  """Lux"""
   LIGHT
+
+  """%"""
   SOIL_MOISTURE
+
+  """pH"""
   SOIL_PH
+
+  """°C"""
   TEMPERATURE
 }
 
@@ -280,7 +463,7 @@ type UserProfileImageMutation {
 type UserType {
   email: String!
   firstName: String!
-  id: Int
+  id: Int!
 
   """
   Designates whether this user should be treated as active. Unselect this instead of deleting accounts.

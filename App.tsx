@@ -11,6 +11,8 @@ import {
   PaperProvider,
   useTheme,
 } from 'react-native-paper'
+import { cs, registerTranslation } from 'react-native-paper-dates'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GqlProvider } from 'src/app/graphql/GqlProvider'
 
 import { Navigation } from '~navigation/components/Navigation'
@@ -19,10 +21,10 @@ export const BG_COLOR = 'rgb(25, 28, 26)'
 
 const darkTheme = {
   custom: {
-    optimal: `#FFDE89`,
-    optimalFocus: `#fce9bb`,
-    critical: `#FF7373`,
-    criticalFocus: `#ffa4a4`,
+    criticalUnder: `#FFDE89`,
+    criticalUnderFocus: `#fce9bb`,
+    criticalOver: `#FF7373`,
+    criticalOverFocus: `#ffa4a4`,
     overlay: `#6CC8FF`,
     overlayFocus: `#bbe6ff`,
   },
@@ -35,7 +37,7 @@ const darkTheme = {
     onSecondary: 'rgb(32, 53, 42)',
     secondaryContainer: 'rgb(54, 75, 64)',
     onSecondaryContainer: 'rgb(208, 232, 216)',
-    tertiary: 'rgb(165, 205, 222)',
+    tertiary: '#B7EDD4',
     onTertiary: 'rgb(6, 53, 67)',
     tertiaryContainer: 'rgb(36, 76, 90)',
     onTertiaryContainer: 'rgb(192, 233, 251)',
@@ -66,7 +68,7 @@ const darkTheme = {
     },
     surfaceDisabled: 'rgba(225, 227, 223, 0.12)',
     onSurfaceDisabled: 'rgba(225, 227, 223, 0.38)',
-    backdrop: 'rgba(42, 50, 45, 0.4)',
+    backdrop: 'rgba(42, 50, 45, 0.438)3)',
   },
 }
 
@@ -83,18 +85,21 @@ const navTheme = {
   dark: true,
 }
 
-export type AppTheme = typeof theme
+export type TAppTheme = typeof theme
 
-export const useAppTheme = () => useTheme<AppTheme>()
+export const useAppTheme = () => useTheme<TAppTheme>()
 
 // TODO ? - https://reactnative.dev/docs/statusbar
 
 const App: React.FC = () => {
+  registerTranslation('cs', cs)
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer theme={navTheme}>
         <GqlProvider>
-          <Navigation />
+          <SafeAreaProvider>
+            <Navigation />
+          </SafeAreaProvider>
         </GqlProvider>
       </NavigationContainer>
     </PaperProvider>
