@@ -3,6 +3,8 @@ fragment FActuatorBase on ActuatorNodeType {
   name
   favorite
   currentState
+  manualOverride
+  manualOverrideValue
   category: mainframe {
     id
   }

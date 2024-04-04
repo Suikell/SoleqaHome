@@ -9,6 +9,26 @@ type ActuatorConditionType {
   value: Boolean!
 }
 
+type ActuatorNodeSubscriptionType {
+  actuatorType: ActuatorTypeEnum
+  batteryLevel: Float
+  createdAt: DateTime!
+  currentState: Boolean
+  deviceId: String!
+  favorite: Boolean!
+  id: Int!
+  isOnline: Boolean!
+  lastOnline: DateTime
+  manualOverride: Boolean!
+  manualOverrideUntil: DateTime
+  manualOverrideValue: Boolean
+  name: String
+  nodeType: NodeTypeEnum
+  systemVersion: String
+  type: Int!
+  uid: UUID!
+}
+
 type ActuatorNodeType {
   actuatorConditions: [ActuatorConditionType!]!
   actuatorType: ActuatorTypeEnum
@@ -23,7 +43,8 @@ type ActuatorNodeType {
   mainframe: MainframeType
   manualOverride: Boolean!
   manualOverrideUntil: DateTime
-  name: String
+  manualOverrideValue: Boolean
+  name: String!
   nodeType: NodeTypeEnum
   systemVersion: String
   thresholdGroupActuators: [ThresholdGroupActuatorType!]!
@@ -66,8 +87,20 @@ type AddSensorConditionMutation {
   success: Boolean!
 }
 
+type AddUserToHouseholdMigration {
+  household: HouseholdType
+  message: String
+  success: Boolean!
+}
+
 type ChangeActuatorNameMutation {
   actuator: ActuatorNodeType
+  message: String
+  success: Boolean!
+}
+
+type ChangeMainframeNameMutation {
+  mainframe: MainframeType
   message: String
   success: Boolean!
 }
@@ -154,12 +187,22 @@ scalar GenericScalar
 
 type HouseholdType {
   createdAt: DateTime!
+  householdUsers: [HouseholdUserType!]!
   id: Int!
   mainframes: [MainframeType!]!
   name: String
   thresholdGroups: [ThresholdGroupType!]!
   updatedAt: DateTime!
-  users(after: String, before: String, first: Int, last: Int, offset: Int): UserTypeConnection!
+}
+
+type HouseholdUserType {
+  createdAt: DateTime!
+  household: HouseholdType!
+  id: Int!
+  isActivated: DateTime
+  isOwner: Boolean!
+  updatedAt: DateTime!
+  user: UserType!
 }
 
 type MainframeType {
@@ -172,7 +215,7 @@ type MainframeType {
   id: Int!
   isOnline: Boolean!
   lastOnline: DateTime
-  name: String
+  name: String!
   sensors(critical: Boolean, favorite: Boolean): [SensorNodeType!]
   systemVersion: String
   type: NodeTypeEnum
@@ -184,7 +227,9 @@ type Mutation {
   addActuatorCondition(actuatorId: Int!, operator: ActuatorOperatorEnum!, thresholdGroupId: Int!, value: Boolean!): AddActuatorConditionMutation
   addActuatorToThresholdGroup(actuatorId: Int!, thresholdGroupId: Int!): AddActuatorToThresholdGroupMutation
   addSensorCondition(operator: SensorOperatorEnum!, sensorId: Int!, thresholdGroupId: Int!, value: Float!): AddSensorConditionMutation
+  addUserToHousehold(householdId: Int!, userEmail: String!): AddUserToHouseholdMigration
   changeActuatorName(actuatorId: Int!, name: String!): ChangeActuatorNameMutation
+  changeMainframeName(mainframeId: Int!, name: String!): ChangeMainframeNameMutation
   changeSensorName(name: String!, sensorId: Int!): ChangeSensorNameMutation
   changeThresholdGroupActive(active: Boolean!, thresholdGroupId: Int!): ChangeThresholdGroupActiveMutation
   changeThresholdGroupName(name: String!, thresholdGroupId: Int!): ChangeThresholdGroupNameMutation
@@ -197,11 +242,13 @@ type Mutation {
   removeActuatorFromThresholdGroup(actuatorId: Int!, thresholdGroupId: Int!): RemoveActuatorFromThresholdGroupMutation
   removeSensorCondition(sensorConditionId: Int!): RemoveSensorConditionMutation
   setActuatorThresholdGroupPriority(actuatorId: Int!, priority: Int!, thresholdGroupId: Int!): SetActuatorThresholdGroupPriorityMutation
-  setCriticalOverValue(sensorId: Int!, value: Float!): SetCriticalOverMutation
-  setCriticalUnderValue(sensorId: Int!, value: Float!): SetCriticalUnderMutation
-  setFavoriteActuator(actuatorId: Int!, favorite: Boolean!): SetFavoriteMutation
-  setFavoriteSensor(favorite: Boolean!, sensorId: Int!): SetFavoriteMutation
-  setManualOverrideUntil(actuatorId: Int!, until: DateTime!): SetManualOverrideUntilMutation
+  setCriticalOverDisplay(sensorId: Int!, value: Boolean!): SetCriticalOverDisplayMutation
+  setCriticalOverValue(sensorId: Int!, value: Float): SetCriticalOverMutation
+  setCriticalUnderDisplay(sensorId: Int!, value: Boolean!): SetCriticalUnderDisplayMutation
+  setCriticalUnderValue(sensorId: Int!, value: Float): SetCriticalUnderMutation
+  setFavoriteActuator(actuatorId: Int!, favorite: Boolean!): SetFavoriteActuatorMutation
+  setFavoriteSensor(favorite: Boolean!, sensorId: Int!): SetFavoriteSensorMutation
+  setManualOverrideUntil(actuatorId: Int!, until: DateTime, value: Boolean): SetManualOverrideUntilMutation
   tokenAuth(email: String!, password: String!): ObtainJSONWebToken
   userProfileImageUpload(profileImage: Upload!): UserProfileImageMutation
   verifyToken(token: String): Verify
@@ -223,23 +270,6 @@ type ObtainJSONWebToken {
   user: UserType
 }
 
-"""
-The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
-"""
-type PageInfo {
-  """When paginating forwards, the cursor to continue."""
-  endCursor: String
-
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: String
-}
-
 type Query {
   actuatorCondition(id: Int!): ActuatorConditionType
   actuatorNode(id: Int!): ActuatorNodeType
@@ -259,7 +289,7 @@ type Query {
     id: ID!
   ): SensorConditionType
   sensorNode(id: Int!): SensorNodeType
-  sensorValuesForDateRange(dateRangeType: DateRangeTypeEnum, endDatetime: DateTime, sensorId: Int!): [SensorDateRangeValuesType]
+  sensorValuesForDateRange(dateRangeType: DateRangeTypeEnum, endDatetime: DateTime, sensorId: Int!): SensorDateRangeValuesWithMinMaxType
   thresholdGroup(id: Int!): ThresholdGroupType
   user(id: Int!): UserType
 }
@@ -291,7 +321,7 @@ type SensorConditionType {
   createdAt: DateTime!
   id: Int!
   operator: SensorOperatorEnum
-  sensor: SensorNodeType!
+  sensor: SensorNodeSubscriptionType!
   thresholdGroup: ThresholdGroupType!
   updatedAt: DateTime!
   value: Float!
@@ -300,10 +330,38 @@ type SensorConditionType {
 type SensorDateRangeValuesType {
   avgValue: Float
   endDate: DateTime!
-  groupId: Int!
   maxValue: Float!
   minValue: Float!
   startDate: DateTime!
+}
+
+type SensorDateRangeValuesWithMinMaxType {
+  maxValue: Float
+  minValue: Float
+  values: [SensorDateRangeValuesType]
+}
+
+type SensorNodeSubscriptionType {
+  batteryLevel: Float
+  createdAt: DateTime!
+  criticalOver: Float
+  criticalUnder: Float
+  currentValue: Float
+  deviceId: String!
+  displayCriticalOver: Boolean!
+  displayCriticalUnder: Boolean!
+  favorite: Boolean!
+  id: Int!
+  isCritical: Boolean!
+  isOnline: Boolean!
+  lastOnline: DateTime
+  name: String
+  nodeType: NodeTypeEnum
+  sensorType: Int!
+  systemVersion: String
+  type: Int!
+  uid: UUID!
+  unitType: UnitTypeEnum
 }
 
 type SensorNodeType {
@@ -313,12 +371,15 @@ type SensorNodeType {
   criticalUnder: Float
   currentValue: Float
   deviceId: String!
+  displayCriticalOver: Boolean!
+  displayCriticalUnder: Boolean!
   favorite: Boolean!
   id: Int!
+  isCritical: Boolean!
   isOnline: Boolean!
   lastOnline: DateTime
   mainframe: MainframeType
-  name: String
+  name: String!
   nodeType: NodeTypeEnum
   sensorConditions: [SensorConditionType!]!
   sensorType: SensorTypeEnum
@@ -326,6 +387,7 @@ type SensorNodeType {
   type: Int!
   uid: UUID!
   unitType: UnitTypeEnum
+  unitTypeStr: String
   updatedAt: DateTime!
   values: [SensorDateRangeValuesType]
 }
@@ -362,10 +424,8 @@ enum SensorTypeEnum {
 
 type SensorValueType {
   createdAt: DateTime!
-  dailyLog: DailyLogValuesType!
   id: Int!
-  sensor: SensorNodeType!
-  updatedAt: DateTime!
+  sensor: SensorNodeSubscriptionType!
   value: Float!
 }
 
@@ -374,7 +434,19 @@ type SetActuatorThresholdGroupPriorityMutation {
   success: Boolean!
 }
 
+type SetCriticalOverDisplayMutation {
+  message: String
+  sensor: SensorNodeType
+  success: Boolean!
+}
+
 type SetCriticalOverMutation {
+  message: String
+  sensor: SensorNodeType
+  success: Boolean!
+}
+
+type SetCriticalUnderDisplayMutation {
   message: String
   sensor: SensorNodeType
   success: Boolean!
@@ -386,7 +458,13 @@ type SetCriticalUnderMutation {
   success: Boolean!
 }
 
-type SetFavoriteMutation {
+type SetFavoriteActuatorMutation {
+  actuator: ActuatorNodeType
+  message: String
+  success: Boolean!
+}
+
+type SetFavoriteSensorMutation {
   message: String
   sensor: SensorNodeType
   success: Boolean!
@@ -399,8 +477,21 @@ type SetManualOverrideUntilMutation {
 }
 
 type Subscription {
-  countSeconds(upTo: Int): Int
+  nodeValues: SubscriptionType!
 }
+
+enum SubscriptionResultType {
+  ACTUATOR_STATE_CHANGED
+  SENSOR_IS_CRITICAL_CHANGED
+  SENSOR_VALUE_LOGGED
+}
+
+type SubscriptionType {
+  data: SubscriptionUnionType!
+  type: SubscriptionResultType!
+}
+
+union SubscriptionUnionType = ActuatorNodeSubscriptionType | SensorNodeSubscriptionType
 
 type ThresholdGroupActuatorType {
   actuator: ActuatorNodeType!
@@ -482,23 +573,6 @@ type UserType {
 
   """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
   username: String!
-}
-
-type UserTypeConnection {
-  """Contains the nodes in this connection."""
-  edges: [UserTypeEdge]!
-
-  """Pagination data for this connection."""
-  pageInfo: PageInfo!
-}
-
-"""A Relay edge containing a `UserType` and its cursor."""
-type UserTypeEdge {
-  """A cursor for use in pagination"""
-  cursor: String!
-
-  """The item at the end of the edge"""
-  node: UserType
 }
 
 type Verify {

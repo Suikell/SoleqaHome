@@ -1,9 +1,0 @@
-query QActuators {
-  categories: allMainframes {
-    id
-    name
-    actuators {
-      ...FActuatorBase
-    }
-  }
-}

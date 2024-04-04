@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useCategoriesUpdatersCtx } from 'src/app/shared/contexts/CategoriesUpdatersProvider'
 
 import { TFSensorBase } from '~graphql/generated/graphql'
 import { useNavigation } from '~navigation/hooks/useNavigation'
@@ -8,22 +9,17 @@ import { SparkLine } from '~ui/Sensor/components/SparkLine'
 
 type TProps = NoChildren & {
   sensor: TFSensorBase
-  setFavoriteSensorValue: (sensor: TFSensorBase, favorite: boolean) => void
 }
 
-export const SensorCard: React.FC<TProps> = ({
-  setFavoriteSensorValue,
-  sensor,
-}) => {
+export const SensorCard: React.FC<TProps> = ({ sensor }) => {
   const navigation = useNavigation()
+  const { setFavoriteSensorValue } = useCategoriesUpdatersCtx()
 
   const setFavorite = () => {
-    setFavoriteSensorValue(sensor, !sensor.favorite)
+    setFavoriteSensorValue(sensor.id, !sensor.favorite)
   }
 
   const onCardPress = () => {
-    if (!sensor || !sensor.name) return null
-
     navigation.navigate('SensorDetail', {
       sensorId: sensor.id,
       name: sensor.name,

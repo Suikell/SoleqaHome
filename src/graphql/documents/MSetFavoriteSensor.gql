@@ -1,5 +1,7 @@
 mutation MSetFavoriteSensor($sensorId: Int!, $favorite: Boolean!) {
   result: setFavoriteSensor(sensorId: $sensorId, favorite: $favorite) {
-    success
+    sensor {
+      ...FSensorBase
+    }
   }
 }

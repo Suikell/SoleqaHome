@@ -1,21 +1,23 @@
 import * as React from 'react'
-import { useCategoriesState } from 'src/app/shared/hooks/useCategoriesState'
+import { CategoriesUpdatersProvider } from 'src/app/shared/contexts/CategoriesUpdatersProvider'
+import { useLoadCategories } from 'src/app/shared/hooks/useLoadCategories'
 
+import { TFActuatorBase, TFSensorBase } from '~graphql/generated/graphql'
+import { LoadingIndicator } from '~ui/Loading/LoadingIndicator'
 import { createContext } from '~utils/context/createContext'
 
-type TStateContext = Pick<
-  ReturnType<typeof useCategoriesState>,
-  | 'categories'
-  | 'selectedCategoryIndex'
-  | 'favoriteSensors'
-  | 'favoriteActuators'
-  | 'selectCategoryIndex'
+type TData = Pick<
+  ReturnType<typeof useLoadCategories>,
+  'categories' | 'sensors' | 'actuators'
 >
+type TStateContext = TData & {
+  selectedCategoryIndex: ID
+}
 
-type TUpdatersContext = Pick<
-  ReturnType<typeof useCategoriesState>,
-  'setFavoriteActuatorValue' | 'setFavoriteSensorValue'
->
+type TDeviceUpdatersContext = {
+  updateSensor: (updatedSensor: TFSensorBase) => void
+  updateActuator: (updatedActuator: TFActuatorBase) => void
+}
 
 const [
   Provider, //
@@ -23,63 +25,93 @@ const [
 ] = createContext<TStateContext>(`CategoriesState`)
 
 const [
-  UpdatersProvider, //
+  UpdaterProvider, //
   useDeviceUpdatersCtx,
-] = createContext<TUpdatersContext>(`DeviceUpdaters`)
+] = createContext<TDeviceUpdatersContext>(`DeviceUpdaters`)
 
 type TProps = RequiredChildren
+
+const allEmptyCategoryId: ID = 0
 
 /**
  * provides state & data for ProductDetail
  *  - `useProductDetailStateCtx` returns dynamic state of the detail, like selected addons
  *  - `useProductDetailUpdatersCtx` returns memoized functions used to update the state
  */
-
 const CategoriesProvider: React.FC<TProps> = ({ children }) => {
-  const {
-    categories,
-    favoriteActuators,
-    favoriteSensors,
-    selectedCategoryIndex,
-    selectCategoryIndex,
-    setFavoriteActuatorValue,
-    setFavoriteSensorValue,
-  } = useCategoriesState()
+  const { loading, categories, actuators, sensors, setSensors, setActuators } =
+    useLoadCategories()
 
-  const updaters = React.useMemo<TUpdatersContext>(() => {
+  const [selectedCategoryIndex, setSelectCategoryIndex] =
+    React.useState<ID>(allEmptyCategoryId)
+
+  const selectCategoryIndex = React.useCallback((categoryId: ID) => {
+    setSelectCategoryIndex(categoryId)
+  }, [])
+
+  const updateSensor = React.useCallback(
+    (updatedSensor: TFSensorBase) => {
+      const sensorIndex = sensors.findIndex(
+        (sensor) => sensor.id === updatedSensor.id,
+      )
+      if (sensorIndex !== -1) {
+        setSensors((prevSensors) => [
+          ...prevSensors.slice(0, sensorIndex),
+          updatedSensor,
+          ...prevSensors.slice(sensorIndex + 1),
+        ])
+      }
+    },
+    [sensors, setSensors],
+  )
+
+  const updateActuator = React.useCallback(
+    (updatedActuator: TFActuatorBase) => {
+      const sensorIndex = actuators.findIndex(
+        (actuator) => actuator.id === updatedActuator.id,
+      )
+      if (sensorIndex !== -1) {
+        setActuators((prevActuators) => [
+          ...prevActuators.slice(0, sensorIndex),
+          updatedActuator,
+          ...prevActuators.slice(sensorIndex + 1),
+        ])
+      }
+    },
+    [actuators, setActuators],
+  )
+
+  const deviceUpdaters = React.useMemo<TDeviceUpdatersContext>(() => {
     return {
-      setFavoriteActuatorValue,
-      setFavoriteSensorValue,
+      updateSensor,
+      updateActuator,
     }
-  }, [setFavoriteActuatorValue, setFavoriteSensorValue])
+  }, [updateSensor, updateActuator])
+
+  if (loading) {
+    return <LoadingIndicator />
+  }
 
   return (
     <Provider
       value={{
         categories,
-        selectCategoryIndex,
+        actuators,
+        sensors,
         selectedCategoryIndex,
-        favoriteActuators,
-        favoriteSensors,
       }}
     >
-      <UpdatersProvider value={updaters}>{children}</UpdatersProvider>
+      <UpdaterProvider value={deviceUpdaters}>
+        <CategoriesUpdatersProvider
+          setSensors={setSensors}
+          setActuators={setActuators}
+          selectCategoryIndex={selectCategoryIndex}
+        >
+          {children}
+        </CategoriesUpdatersProvider>
+      </UpdaterProvider>
     </Provider>
   )
 }
 
 export { CategoriesProvider, useCategoriesCtx, useDeviceUpdatersCtx }
-
-//* HELPERS
-
-// const getAllFavoriteSensors = (categories: Defined<TCategories>) => {
-//   return categories?.flatMap((category) => category.favoriteSensors || [])
-// }
-
-// const getAllFavoriteActuators = (categories: Defined<TCategories>) => {
-//   return categories?.flatMap((category) => category.favoriteActuators || [])
-// }
-
-// const getAllCriticalSensors = (categories: Defined<TCategories>) => {
-//   return categories?.flatMap((category) => category.criticalSensors || [])
-// }

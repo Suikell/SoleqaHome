@@ -1,43 +1,35 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
+import { useCategoriesCtx } from 'src/app/shared/contexts/CategoriesProvider'
 
-import { useActuatorCategoriesCtx } from '~screens/ActuatorsScreen/contexts/ActuatorCategoriesProvider'
+import { CONTENT_MARGIN } from '~styles/spacing'
 import { ActuatorList } from '~ui/Actuator/components/ActuatorList'
-import { LoadingIndicator } from '~ui/Loading/LoadingIndicator'
-import { shrink } from '~utils/helpers/shrink'
 
 type TProps = NoChildren
 
 export const ActuatorsScreenContent: React.FC<TProps> = () => {
-  const { actuatorCategories, setActuatorFavoriteValue, loading } =
-    useActuatorCategoriesCtx()
-
-  if (loading) return <LoadingIndicator />
+  const { categories } = useCategoriesCtx()
 
   return (
     <View style={styles.content}>
-      {actuatorCategories &&
-        actuatorCategories.map((category) => (
+      {categories.map((category) => {
+        const actuatorIds = category.actuatorIds
+        if (actuatorIds.length === 0) return null
+        return (
           <ActuatorList
             key={category.id}
             label={category.name}
-            actuators={category.actuators}
-            setFavoriteActuatorValue={setActuatorFavoriteValue}
+            actuatorIds={actuatorIds}
           />
-        ))}
+        )
+      })}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  header: {
-    justifyContent: 'space-between',
-  },
-  label: {
-    marginLeft: shrink(48),
-  },
   content: {
-    margin: shrink(48),
-    gap: shrink(48),
+    margin: CONTENT_MARGIN,
+    gap: CONTENT_MARGIN,
   },
 })

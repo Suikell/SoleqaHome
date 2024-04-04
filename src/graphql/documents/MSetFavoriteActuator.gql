@@ -1,5 +1,7 @@
 mutation MSetFavoriteActuator($actuatorId: Int!, $favorite: Boolean!) {
   result: setFavoriteActuator(actuatorId: $actuatorId, favorite: $favorite) {
-    success
+    actuator {
+      ...FActuatorBase
+    }
   }
 }

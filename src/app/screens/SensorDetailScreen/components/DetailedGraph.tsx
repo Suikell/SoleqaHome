@@ -259,6 +259,7 @@ export const DetailedGraph: React.FC<TProps> = ({
           type: 'line',
 
           // TODO - is sensor updated - animation:false
+          // TODO - have animation only on first render
           // animation: false,
           itemStyle: {
             color: theme.colors.primary,

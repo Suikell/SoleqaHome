@@ -38,6 +38,7 @@ export const useLoadHistoricalValues = () => {
     data: result,
     error,
     loading,
+    refetch,
   } = useQSensorHistoricalValues({
     skip: !variables,
     variables,
@@ -53,6 +54,12 @@ export const useLoadHistoricalValues = () => {
     setValues(result.data.values || [])
     setMinMax({ min: result.data.minValue, max: result.data.maxValue })
   }, [error, result])
+
+  React.useEffect(() => {
+    if (sensor.currentValue) {
+      refetch()
+    }
+  }, [sensor.currentValue, refetch])
 
   return { minMax, values, overlayValues, loading }
 }

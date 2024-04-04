@@ -35,6 +35,27 @@ export type TActuatorConditionType = {
   readonly value: Scalars['Boolean']['output'];
 };
 
+export type TActuatorNodeSubscriptionType = {
+  readonly __typename?: 'ActuatorNodeSubscriptionType';
+  readonly actuatorType: Maybe<TActuatorTypeEnum>;
+  readonly batteryLevel: Maybe<Scalars['Float']['output']>;
+  readonly createdAt: Scalars['DateTime']['output'];
+  readonly currentState: Maybe<Scalars['Boolean']['output']>;
+  readonly deviceId: Scalars['String']['output'];
+  readonly favorite: Scalars['Boolean']['output'];
+  readonly id: Scalars['Int']['output'];
+  readonly isOnline: Scalars['Boolean']['output'];
+  readonly lastOnline: Maybe<Scalars['DateTime']['output']>;
+  readonly manualOverride: Scalars['Boolean']['output'];
+  readonly manualOverrideUntil: Maybe<Scalars['DateTime']['output']>;
+  readonly manualOverrideValue: Maybe<Scalars['Boolean']['output']>;
+  readonly name: Maybe<Scalars['String']['output']>;
+  readonly nodeType: Maybe<TNodeTypeEnum>;
+  readonly systemVersion: Maybe<Scalars['String']['output']>;
+  readonly type: Scalars['Int']['output'];
+  readonly uid: Scalars['UUID']['output'];
+};
+
 export type TActuatorNodeType = {
   readonly __typename?: 'ActuatorNodeType';
   readonly actuatorConditions: ReadonlyArray<TActuatorConditionType>;
@@ -50,7 +71,8 @@ export type TActuatorNodeType = {
   readonly mainframe: Maybe<TMainframeType>;
   readonly manualOverride: Scalars['Boolean']['output'];
   readonly manualOverrideUntil: Maybe<Scalars['DateTime']['output']>;
-  readonly name: Maybe<Scalars['String']['output']>;
+  readonly manualOverrideValue: Maybe<Scalars['Boolean']['output']>;
+  readonly name: Scalars['String']['output'];
   readonly nodeType: Maybe<TNodeTypeEnum>;
   readonly systemVersion: Maybe<Scalars['String']['output']>;
   readonly thresholdGroupActuators: ReadonlyArray<TThresholdGroupActuatorType>;
@@ -93,9 +115,23 @@ export type TAddSensorConditionMutation = {
   readonly success: Scalars['Boolean']['output'];
 };
 
+export type TAddUserToHouseholdMigration = {
+  readonly __typename?: 'AddUserToHouseholdMigration';
+  readonly household: Maybe<THouseholdType>;
+  readonly message: Maybe<Scalars['String']['output']>;
+  readonly success: Scalars['Boolean']['output'];
+};
+
 export type TChangeActuatorNameMutation = {
   readonly __typename?: 'ChangeActuatorNameMutation';
   readonly actuator: Maybe<TActuatorNodeType>;
+  readonly message: Maybe<Scalars['String']['output']>;
+  readonly success: Scalars['Boolean']['output'];
+};
+
+export type TChangeMainframeNameMutation = {
+  readonly __typename?: 'ChangeMainframeNameMutation';
+  readonly mainframe: Maybe<TMainframeType>;
   readonly message: Maybe<Scalars['String']['output']>;
   readonly success: Scalars['Boolean']['output'];
 };
@@ -173,21 +209,23 @@ export type TDeleteThresholdGroupMutation = {
 export type THouseholdType = {
   readonly __typename?: 'HouseholdType';
   readonly createdAt: Scalars['DateTime']['output'];
+  readonly householdUsers: ReadonlyArray<THouseholdUserType>;
   readonly id: Scalars['Int']['output'];
   readonly mainframes: ReadonlyArray<TMainframeType>;
   readonly name: Maybe<Scalars['String']['output']>;
   readonly thresholdGroups: ReadonlyArray<TThresholdGroupType>;
   readonly updatedAt: Scalars['DateTime']['output'];
-  readonly users: TUserTypeConnection;
 };
 
-
-export type THouseholdTypeUsersArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
+export type THouseholdUserType = {
+  readonly __typename?: 'HouseholdUserType';
+  readonly createdAt: Scalars['DateTime']['output'];
+  readonly household: THouseholdType;
+  readonly id: Scalars['Int']['output'];
+  readonly isActivated: Maybe<Scalars['DateTime']['output']>;
+  readonly isOwner: Scalars['Boolean']['output'];
+  readonly updatedAt: Scalars['DateTime']['output'];
+  readonly user: TUserType;
 };
 
 export type TMainframeType = {
@@ -201,7 +239,7 @@ export type TMainframeType = {
   readonly id: Scalars['Int']['output'];
   readonly isOnline: Scalars['Boolean']['output'];
   readonly lastOnline: Maybe<Scalars['DateTime']['output']>;
-  readonly name: Maybe<Scalars['String']['output']>;
+  readonly name: Scalars['String']['output'];
   readonly sensors: Maybe<ReadonlyArray<TSensorNodeType>>;
   readonly systemVersion: Maybe<Scalars['String']['output']>;
   readonly type: Maybe<TNodeTypeEnum>;
@@ -225,7 +263,9 @@ export type TMutation = {
   readonly addActuatorCondition: Maybe<TAddActuatorConditionMutation>;
   readonly addActuatorToThresholdGroup: Maybe<TAddActuatorToThresholdGroupMutation>;
   readonly addSensorCondition: Maybe<TAddSensorConditionMutation>;
+  readonly addUserToHousehold: Maybe<TAddUserToHouseholdMigration>;
   readonly changeActuatorName: Maybe<TChangeActuatorNameMutation>;
+  readonly changeMainframeName: Maybe<TChangeMainframeNameMutation>;
   readonly changeSensorName: Maybe<TChangeSensorNameMutation>;
   readonly changeThresholdGroupActive: Maybe<TChangeThresholdGroupActiveMutation>;
   readonly changeThresholdGroupName: Maybe<TChangeThresholdGroupNameMutation>;
@@ -238,10 +278,12 @@ export type TMutation = {
   readonly removeActuatorFromThresholdGroup: Maybe<TRemoveActuatorFromThresholdGroupMutation>;
   readonly removeSensorCondition: Maybe<TRemoveSensorConditionMutation>;
   readonly setActuatorThresholdGroupPriority: Maybe<TSetActuatorThresholdGroupPriorityMutation>;
+  readonly setCriticalOverDisplay: Maybe<TSetCriticalOverDisplayMutation>;
   readonly setCriticalOverValue: Maybe<TSetCriticalOverMutation>;
+  readonly setCriticalUnderDisplay: Maybe<TSetCriticalUnderDisplayMutation>;
   readonly setCriticalUnderValue: Maybe<TSetCriticalUnderMutation>;
-  readonly setFavoriteActuator: Maybe<TSetFavoriteMutation>;
-  readonly setFavoriteSensor: Maybe<TSetFavoriteMutation>;
+  readonly setFavoriteActuator: Maybe<TSetFavoriteActuatorMutation>;
+  readonly setFavoriteSensor: Maybe<TSetFavoriteSensorMutation>;
   readonly setManualOverrideUntil: Maybe<TSetManualOverrideUntilMutation>;
   readonly tokenAuth: Maybe<TObtainJsonWebToken>;
   readonly userProfileImageUpload: Maybe<TUserProfileImageMutation>;
@@ -271,8 +313,20 @@ export type TMutationAddSensorConditionArgs = {
 };
 
 
+export type TMutationAddUserToHouseholdArgs = {
+  householdId: Scalars['Int']['input'];
+  userEmail: Scalars['String']['input'];
+};
+
+
 export type TMutationChangeActuatorNameArgs = {
   actuatorId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+};
+
+
+export type TMutationChangeMainframeNameArgs = {
+  mainframeId: Scalars['Int']['input'];
   name: Scalars['String']['input'];
 };
 
@@ -347,15 +401,27 @@ export type TMutationSetActuatorThresholdGroupPriorityArgs = {
 };
 
 
+export type TMutationSetCriticalOverDisplayArgs = {
+  sensorId: Scalars['Int']['input'];
+  value: Scalars['Boolean']['input'];
+};
+
+
 export type TMutationSetCriticalOverValueArgs = {
   sensorId: Scalars['Int']['input'];
-  value: Scalars['Float']['input'];
+  value?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type TMutationSetCriticalUnderDisplayArgs = {
+  sensorId: Scalars['Int']['input'];
+  value: Scalars['Boolean']['input'];
 };
 
 
 export type TMutationSetCriticalUnderValueArgs = {
   sensorId: Scalars['Int']['input'];
-  value: Scalars['Float']['input'];
+  value?: InputMaybe<Scalars['Float']['input']>;
 };
 
 
@@ -373,7 +439,8 @@ export type TMutationSetFavoriteSensorArgs = {
 
 export type TMutationSetManualOverrideUntilArgs = {
   actuatorId: Scalars['Int']['input'];
-  until: Scalars['DateTime']['input'];
+  until?: InputMaybe<Scalars['DateTime']['input']>;
+  value?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -408,19 +475,6 @@ export type TObtainJsonWebToken = {
   readonly user: Maybe<TUserType>;
 };
 
-/** The Relay compliant `PageInfo` type, containing data necessary to paginate this connection. */
-export type TPageInfo = {
-  readonly __typename?: 'PageInfo';
-  /** When paginating forwards, the cursor to continue. */
-  readonly endCursor: Maybe<Scalars['String']['output']>;
-  /** When paginating forwards, are there more items? */
-  readonly hasNextPage: Scalars['Boolean']['output'];
-  /** When paginating backwards, are there more items? */
-  readonly hasPreviousPage: Scalars['Boolean']['output'];
-  /** When paginating backwards, the cursor to continue. */
-  readonly startCursor: Maybe<Scalars['String']['output']>;
-};
-
 export type TQuery = {
   readonly __typename?: 'Query';
   readonly actuatorCondition: Maybe<TActuatorConditionType>;
@@ -438,7 +492,7 @@ export type TQuery = {
   readonly mainframe: Maybe<TMainframeType>;
   readonly sensorCondition: Maybe<TSensorConditionType>;
   readonly sensorNode: Maybe<TSensorNodeType>;
-  readonly sensorValuesForDateRange: Maybe<ReadonlyArray<Maybe<TSensorDateRangeValuesType>>>;
+  readonly sensorValuesForDateRange: Maybe<TSensorDateRangeValuesWithMinMaxType>;
   readonly thresholdGroup: Maybe<TThresholdGroupType>;
   readonly user: Maybe<TUserType>;
 };
@@ -555,7 +609,7 @@ export type TSensorConditionType = {
   readonly createdAt: Scalars['DateTime']['output'];
   readonly id: Scalars['Int']['output'];
   readonly operator: Maybe<TSensorOperatorEnum>;
-  readonly sensor: TSensorNodeType;
+  readonly sensor: TSensorNodeSubscriptionType;
   readonly thresholdGroup: TThresholdGroupType;
   readonly updatedAt: Scalars['DateTime']['output'];
   readonly value: Scalars['Float']['output'];
@@ -565,10 +619,40 @@ export type TSensorDateRangeValuesType = {
   readonly __typename?: 'SensorDateRangeValuesType';
   readonly avgValue: Maybe<Scalars['Float']['output']>;
   readonly endDate: Scalars['DateTime']['output'];
-  readonly groupId: Scalars['Int']['output'];
   readonly maxValue: Scalars['Float']['output'];
   readonly minValue: Scalars['Float']['output'];
   readonly startDate: Scalars['DateTime']['output'];
+};
+
+export type TSensorDateRangeValuesWithMinMaxType = {
+  readonly __typename?: 'SensorDateRangeValuesWithMinMaxType';
+  readonly maxValue: Maybe<Scalars['Float']['output']>;
+  readonly minValue: Maybe<Scalars['Float']['output']>;
+  readonly values: Maybe<ReadonlyArray<Maybe<TSensorDateRangeValuesType>>>;
+};
+
+export type TSensorNodeSubscriptionType = {
+  readonly __typename?: 'SensorNodeSubscriptionType';
+  readonly batteryLevel: Maybe<Scalars['Float']['output']>;
+  readonly createdAt: Scalars['DateTime']['output'];
+  readonly criticalOver: Maybe<Scalars['Float']['output']>;
+  readonly criticalUnder: Maybe<Scalars['Float']['output']>;
+  readonly currentValue: Maybe<Scalars['Float']['output']>;
+  readonly deviceId: Scalars['String']['output'];
+  readonly displayCriticalOver: Scalars['Boolean']['output'];
+  readonly displayCriticalUnder: Scalars['Boolean']['output'];
+  readonly favorite: Scalars['Boolean']['output'];
+  readonly id: Scalars['Int']['output'];
+  readonly isCritical: Scalars['Boolean']['output'];
+  readonly isOnline: Scalars['Boolean']['output'];
+  readonly lastOnline: Maybe<Scalars['DateTime']['output']>;
+  readonly name: Maybe<Scalars['String']['output']>;
+  readonly nodeType: Maybe<TNodeTypeEnum>;
+  readonly sensorType: Scalars['Int']['output'];
+  readonly systemVersion: Maybe<Scalars['String']['output']>;
+  readonly type: Scalars['Int']['output'];
+  readonly uid: Scalars['UUID']['output'];
+  readonly unitType: Maybe<TUnitTypeEnum>;
 };
 
 export type TSensorNodeType = {
@@ -579,12 +663,15 @@ export type TSensorNodeType = {
   readonly criticalUnder: Maybe<Scalars['Float']['output']>;
   readonly currentValue: Maybe<Scalars['Float']['output']>;
   readonly deviceId: Scalars['String']['output'];
+  readonly displayCriticalOver: Scalars['Boolean']['output'];
+  readonly displayCriticalUnder: Scalars['Boolean']['output'];
   readonly favorite: Scalars['Boolean']['output'];
   readonly id: Scalars['Int']['output'];
+  readonly isCritical: Scalars['Boolean']['output'];
   readonly isOnline: Scalars['Boolean']['output'];
   readonly lastOnline: Maybe<Scalars['DateTime']['output']>;
   readonly mainframe: Maybe<TMainframeType>;
-  readonly name: Maybe<Scalars['String']['output']>;
+  readonly name: Scalars['String']['output'];
   readonly nodeType: Maybe<TNodeTypeEnum>;
   readonly sensorConditions: ReadonlyArray<TSensorConditionType>;
   readonly sensorType: Maybe<TSensorTypeEnum>;
@@ -592,6 +679,7 @@ export type TSensorNodeType = {
   readonly type: Scalars['Int']['output'];
   readonly uid: Scalars['UUID']['output'];
   readonly unitType: Maybe<TUnitTypeEnum>;
+  readonly unitTypeStr: Maybe<Scalars['String']['output']>;
   readonly updatedAt: Scalars['DateTime']['output'];
   readonly values: Maybe<ReadonlyArray<Maybe<TSensorDateRangeValuesType>>>;
 };
@@ -622,10 +710,8 @@ export type TSensorTypeEnum =
 export type TSensorValueType = {
   readonly __typename?: 'SensorValueType';
   readonly createdAt: Scalars['DateTime']['output'];
-  readonly dailyLog: TDailyLogValuesType;
   readonly id: Scalars['Int']['output'];
-  readonly sensor: TSensorNodeType;
-  readonly updatedAt: Scalars['DateTime']['output'];
+  readonly sensor: TSensorNodeSubscriptionType;
   readonly value: Scalars['Float']['output'];
 };
 
@@ -635,8 +721,22 @@ export type TSetActuatorThresholdGroupPriorityMutation = {
   readonly success: Scalars['Boolean']['output'];
 };
 
+export type TSetCriticalOverDisplayMutation = {
+  readonly __typename?: 'SetCriticalOverDisplayMutation';
+  readonly message: Maybe<Scalars['String']['output']>;
+  readonly sensor: Maybe<TSensorNodeType>;
+  readonly success: Scalars['Boolean']['output'];
+};
+
 export type TSetCriticalOverMutation = {
   readonly __typename?: 'SetCriticalOverMutation';
+  readonly message: Maybe<Scalars['String']['output']>;
+  readonly sensor: Maybe<TSensorNodeType>;
+  readonly success: Scalars['Boolean']['output'];
+};
+
+export type TSetCriticalUnderDisplayMutation = {
+  readonly __typename?: 'SetCriticalUnderDisplayMutation';
   readonly message: Maybe<Scalars['String']['output']>;
   readonly sensor: Maybe<TSensorNodeType>;
   readonly success: Scalars['Boolean']['output'];
@@ -649,8 +749,15 @@ export type TSetCriticalUnderMutation = {
   readonly success: Scalars['Boolean']['output'];
 };
 
-export type TSetFavoriteMutation = {
-  readonly __typename?: 'SetFavoriteMutation';
+export type TSetFavoriteActuatorMutation = {
+  readonly __typename?: 'SetFavoriteActuatorMutation';
+  readonly actuator: Maybe<TActuatorNodeType>;
+  readonly message: Maybe<Scalars['String']['output']>;
+  readonly success: Scalars['Boolean']['output'];
+};
+
+export type TSetFavoriteSensorMutation = {
+  readonly __typename?: 'SetFavoriteSensorMutation';
   readonly message: Maybe<Scalars['String']['output']>;
   readonly sensor: Maybe<TSensorNodeType>;
   readonly success: Scalars['Boolean']['output'];
@@ -665,13 +772,21 @@ export type TSetManualOverrideUntilMutation = {
 
 export type TSubscription = {
   readonly __typename?: 'Subscription';
-  readonly countSeconds: Maybe<Scalars['Int']['output']>;
+  readonly nodeValues: TSubscriptionType;
 };
 
+export type TSubscriptionResultType =
+  | 'ACTUATOR_STATE_CHANGED'
+  | 'SENSOR_IS_CRITICAL_CHANGED'
+  | 'SENSOR_VALUE_LOGGED';
 
-export type TSubscriptionCountSecondsArgs = {
-  upTo?: InputMaybe<Scalars['Int']['input']>;
+export type TSubscriptionType = {
+  readonly __typename?: 'SubscriptionType';
+  readonly data: TSubscriptionUnionType;
+  readonly type: TSubscriptionResultType;
 };
+
+export type TSubscriptionUnionType = TActuatorNodeSubscriptionType | TSensorNodeSubscriptionType;
 
 export type TThresholdGroupActuatorType = {
   readonly __typename?: 'ThresholdGroupActuatorType';
@@ -733,35 +848,18 @@ export type TUserType = {
   readonly username: Scalars['String']['output'];
 };
 
-export type TUserTypeConnection = {
-  readonly __typename?: 'UserTypeConnection';
-  /** Contains the nodes in this connection. */
-  readonly edges: ReadonlyArray<Maybe<TUserTypeEdge>>;
-  /** Pagination data for this connection. */
-  readonly pageInfo: TPageInfo;
-};
-
-/** A Relay edge containing a `UserType` and its cursor. */
-export type TUserTypeEdge = {
-  readonly __typename?: 'UserTypeEdge';
-  /** A cursor for use in pagination */
-  readonly cursor: Scalars['String']['output'];
-  /** The item at the end of the edge */
-  readonly node: Maybe<TUserType>;
-};
-
 export type TVerify = {
   readonly __typename?: 'Verify';
   readonly payload: Scalars['GenericScalar']['output'];
 };
 
-export type TFActuatorBase = { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string | null, readonly favorite: boolean, readonly currentState: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null };
+export type TFActuatorBase = { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentState: boolean | null, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null };
 
-export type TFCategoryBase = { readonly __typename?: 'MainframeType', readonly id: number, readonly name: string | null, readonly isOnline: boolean, readonly batteryLevel: number | null };
+export type TFCategoryBase = { readonly __typename?: 'MainframeType', readonly id: number, readonly name: string, readonly isOnline: boolean, readonly batteryLevel: number | null };
 
-export type TFGroup = { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly sensorConditions: ReadonlyArray<{ readonly __typename?: 'SensorConditionType', readonly id: number, readonly active: boolean, readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string | null } }> };
+export type TFGroup = { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly sensorConditions: ReadonlyArray<{ readonly __typename?: 'SensorConditionType', readonly id: number, readonly active: boolean, readonly sensor: { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly name: string | null } }> };
 
-export type TFSensorBase = { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string | null, readonly favorite: boolean, readonly unitType: TUnitTypeEnum | null, readonly currentValue: number | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null };
+export type TFSensorBase = { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null };
 
 export type TFUser = { readonly __typename?: 'UserType', readonly id: number, readonly email: string, readonly firstName: string, readonly lastName: string, readonly profileImage: string | null };
 
@@ -775,7 +873,7 @@ export type TMAuthUser = { readonly __typename?: 'Mutation', readonly login: { r
 
 export type TMSetCriticalOverVariables = Exact<{
   sensorId: Scalars['Int']['input'];
-  value: Scalars['Float']['input'];
+  value?: InputMaybe<Scalars['Float']['input']>;
 }>;
 
 
@@ -783,7 +881,7 @@ export type TMSetCriticalOver = { readonly __typename?: 'Mutation', readonly res
 
 export type TMSetCriticalUnderVariables = Exact<{
   sensorId: Scalars['Int']['input'];
-  value: Scalars['Float']['input'];
+  value?: InputMaybe<Scalars['Float']['input']>;
 }>;
 
 
@@ -795,7 +893,7 @@ export type TMSetFavoriteActuatorVariables = Exact<{
 }>;
 
 
-export type TMSetFavoriteActuator = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'SetFavoriteMutation', readonly success: boolean } | null };
+export type TMSetFavoriteActuator = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'SetFavoriteActuatorMutation', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentState: boolean | null, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null } | null } | null };
 
 export type TMSetFavoriteSensorVariables = Exact<{
   sensorId: Scalars['Int']['input'];
@@ -803,31 +901,35 @@ export type TMSetFavoriteSensorVariables = Exact<{
 }>;
 
 
-export type TMSetFavoriteSensor = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'SetFavoriteMutation', readonly success: boolean } | null };
+export type TMSetFavoriteSensor = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'SetFavoriteSensorMutation', readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null } | null } | null };
+
+export type TMSetManualOverrideVariables = Exact<{
+  actuatorId: Scalars['Int']['input'];
+  until?: InputMaybe<Scalars['DateTime']['input']>;
+  value?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type TMSetManualOverride = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'SetManualOverrideUntilMutation', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentState: boolean | null, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null } | null } | null };
 
 export type TQActuatorDetailVariables = Exact<{
   actuatorId: Scalars['Int']['input'];
 }>;
 
 
-export type TQActuatorDetail = { readonly __typename?: 'Query', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly currentState: boolean | null, readonly batteryLevel: number | null, readonly isOnline: boolean, readonly manualOverride: boolean, readonly thresholdGroupActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly id: number, readonly priority: number, readonly thresholdGroup: { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string } }> } | null };
-
-export type TQActuatorsVariables = Exact<{ [key: string]: never; }>;
-
-
-export type TQActuators = { readonly __typename?: 'Query', readonly categories: ReadonlyArray<{ readonly __typename?: 'MainframeType', readonly id: number, readonly name: string | null, readonly actuators: ReadonlyArray<{ readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string | null, readonly favorite: boolean, readonly currentState: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null }> | null };
+export type TQActuatorDetail = { readonly __typename?: 'Query', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly currentState: boolean | null, readonly batteryLevel: number | null, readonly isOnline: boolean, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly thresholdGroupActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly id: number, readonly priority: number, readonly thresholdGroup: { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string } }> } | null };
 
 export type TQCategoriesVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TQCategories = { readonly __typename?: 'Query', readonly categories: ReadonlyArray<{ readonly __typename?: 'MainframeType', readonly id: number, readonly name: string | null, readonly isOnline: boolean, readonly batteryLevel: number | null, readonly favoriteSensors: ReadonlyArray<{ readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string | null, readonly favorite: boolean, readonly unitType: TUnitTypeEnum | null, readonly currentValue: number | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null, readonly criticalSensors: ReadonlyArray<{ readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string | null, readonly favorite: boolean, readonly unitType: TUnitTypeEnum | null, readonly currentValue: number | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null, readonly favoriteActuators: ReadonlyArray<{ readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string | null, readonly favorite: boolean, readonly currentState: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null }> | null };
+export type TQCategories = { readonly __typename?: 'Query', readonly categories: ReadonlyArray<{ readonly __typename?: 'MainframeType', readonly id: number, readonly name: string, readonly isOnline: boolean, readonly batteryLevel: number | null, readonly sensors: ReadonlyArray<{ readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null, readonly actuators: ReadonlyArray<{ readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentState: boolean | null, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null }> | null };
 
 export type TQSensorDetailVariables = Exact<{
   sensorId: Scalars['Int']['input'];
 }>;
 
 
-export type TQSensorDetail = { readonly __typename?: 'Query', readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly currentValue: number | null, readonly batteryLevel: number | null, readonly isOnline: boolean, readonly unitType: TUnitTypeEnum | null } | null };
+export type TQSensorDetail = { readonly __typename?: 'Query', readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly currentValue: number | null, readonly batteryLevel: number | null, readonly isOnline: boolean, readonly unitType: string | null } | null };
 
 export type TQSensorGraphValuesVariables = Exact<{
   sensorId: Scalars['Int']['input'];
@@ -838,22 +940,35 @@ export type TQSensorGraphValues = { readonly __typename?: 'Query', readonly sens
 
 export type TQSensorHistoricalValuesVariables = Exact<{
   sensorId: Scalars['Int']['input'];
-  endDatetime?: InputMaybe<Scalars['DateTime']['input']>;
   dateRangeType?: InputMaybe<TDateRangeTypeEnum>;
 }>;
 
 
-export type TQSensorHistoricalValues = { readonly __typename?: 'Query', readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly startDate: any, readonly max: number, readonly min: number, readonly average: number | null } | null> | null };
+export type TQSensorHistoricalValues = { readonly __typename?: 'Query', readonly data: { readonly __typename?: 'SensorDateRangeValuesWithMinMaxType', readonly minValue: number | null, readonly maxValue: number | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly startDate: any, readonly max: number, readonly min: number, readonly average: number | null } | null> | null } | null };
 
-export type TQSensorsVariables = Exact<{ [key: string]: never; }>;
+export type TQSensorHistoricalValuesByDateVariables = Exact<{
+  sensorId: Scalars['Int']['input'];
+  dateRangeType?: InputMaybe<TDateRangeTypeEnum>;
+  endDatetime?: InputMaybe<Scalars['DateTime']['input']>;
+}>;
 
 
-export type TQSensors = { readonly __typename?: 'Query', readonly categories: ReadonlyArray<{ readonly __typename?: 'MainframeType', readonly id: number, readonly name: string | null, readonly sensors: ReadonlyArray<{ readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string | null, readonly favorite: boolean, readonly unitType: TUnitTypeEnum | null, readonly currentValue: number | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null }> | null };
+export type TQSensorHistoricalValuesByDate = { readonly __typename?: 'Query', readonly data: { readonly __typename?: 'SensorDateRangeValuesWithMinMaxType', readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly startDate: any, readonly average: number | null } | null> | null } | null };
 
-export type TSTestVariables = Exact<{ [key: string]: never; }>;
+export type TSActuatorValueVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TSTest = { readonly __typename?: 'Subscription', readonly countSeconds: number | null };
+export type TSActuatorValue = { readonly __typename?: 'Subscription', readonly change: { readonly __typename?: 'SubscriptionType', readonly data: { readonly __typename?: 'ActuatorNodeSubscriptionType', readonly id: number, readonly currentState: boolean | null } | { readonly __typename?: 'SensorNodeSubscriptionType' } } };
+
+export type TSSensorCriticalVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TSSensorCritical = { readonly __typename?: 'Subscription', readonly change: { readonly __typename?: 'SubscriptionType', readonly data: { readonly __typename?: 'ActuatorNodeSubscriptionType' } | { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly isCritical: boolean } } };
+
+export type TSSensorValueVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TSSensorValue = { readonly __typename?: 'Subscription', readonly change: { readonly __typename?: 'SubscriptionType', readonly type: TSubscriptionResultType, readonly data: { readonly __typename?: 'ActuatorNodeSubscriptionType' } | { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly currentValue: number | null, readonly isCritical: boolean } } };
 
 export const FActuatorBase = gql`
     fragment FActuatorBase on ActuatorNodeType {
@@ -861,6 +976,8 @@ export const FActuatorBase = gql`
   name
   favorite
   currentState
+  manualOverride
+  manualOverrideValue
   category: mainframe {
     id
   }
@@ -894,7 +1011,7 @@ export const FSensorBase = gql`
   id
   name
   favorite
-  unitType
+  unitType: unitTypeStr
   currentValue
   values {
     avgValue
@@ -951,7 +1068,7 @@ export type MAuthUserHookResult = ReturnType<typeof useMAuthUser>;
 export type MAuthUserMutationResult = ApolloReactCommon.MutationResult<TMAuthUser>;
 export type MAuthUserMutationOptions = ApolloReactCommon.BaseMutationOptions<TMAuthUser, TMAuthUserVariables>;
 export const MSetCriticalOverDocument = gql`
-    mutation MSetCriticalOver($sensorId: Int!, $value: Float!) {
+    mutation MSetCriticalOver($sensorId: Int!, $value: Float) {
   result: setCriticalOverValue(sensorId: $sensorId, value: $value) {
     success
   }
@@ -985,7 +1102,7 @@ export type MSetCriticalOverHookResult = ReturnType<typeof useMSetCriticalOver>;
 export type MSetCriticalOverMutationResult = ApolloReactCommon.MutationResult<TMSetCriticalOver>;
 export type MSetCriticalOverMutationOptions = ApolloReactCommon.BaseMutationOptions<TMSetCriticalOver, TMSetCriticalOverVariables>;
 export const MSetCriticalUnderDocument = gql`
-    mutation MSetCriticalUnder($sensorId: Int!, $value: Float!) {
+    mutation MSetCriticalUnder($sensorId: Int!, $value: Float) {
   result: setCriticalUnderValue(sensorId: $sensorId, value: $value) {
     success
   }
@@ -1021,10 +1138,12 @@ export type MSetCriticalUnderMutationOptions = ApolloReactCommon.BaseMutationOpt
 export const MSetFavoriteActuatorDocument = gql`
     mutation MSetFavoriteActuator($actuatorId: Int!, $favorite: Boolean!) {
   result: setFavoriteActuator(actuatorId: $actuatorId, favorite: $favorite) {
-    success
+    actuator {
+      ...FActuatorBase
+    }
   }
 }
-    `;
+    ${FActuatorBase}`;
 export type TMSetFavoriteActuatorMutationFn = ApolloReactCommon.MutationFunction<TMSetFavoriteActuator, TMSetFavoriteActuatorVariables>;
 
 /**
@@ -1055,10 +1174,12 @@ export type MSetFavoriteActuatorMutationOptions = ApolloReactCommon.BaseMutation
 export const MSetFavoriteSensorDocument = gql`
     mutation MSetFavoriteSensor($sensorId: Int!, $favorite: Boolean!) {
   result: setFavoriteSensor(sensorId: $sensorId, favorite: $favorite) {
-    success
+    sensor {
+      ...FSensorBase
+    }
   }
 }
-    `;
+    ${FSensorBase}`;
 export type TMSetFavoriteSensorMutationFn = ApolloReactCommon.MutationFunction<TMSetFavoriteSensor, TMSetFavoriteSensorVariables>;
 
 /**
@@ -1086,6 +1207,47 @@ export function useMSetFavoriteSensor(baseOptions?: ApolloReactHooks.MutationHoo
 export type MSetFavoriteSensorHookResult = ReturnType<typeof useMSetFavoriteSensor>;
 export type MSetFavoriteSensorMutationResult = ApolloReactCommon.MutationResult<TMSetFavoriteSensor>;
 export type MSetFavoriteSensorMutationOptions = ApolloReactCommon.BaseMutationOptions<TMSetFavoriteSensor, TMSetFavoriteSensorVariables>;
+export const MSetManualOverrideDocument = gql`
+    mutation MSetManualOverride($actuatorId: Int!, $until: DateTime, $value: Boolean) {
+  result: setManualOverrideUntil(
+    actuatorId: $actuatorId
+    until: $until
+    value: $value
+  ) {
+    actuator {
+      ...FActuatorBase
+    }
+  }
+}
+    ${FActuatorBase}`;
+export type TMSetManualOverrideMutationFn = ApolloReactCommon.MutationFunction<TMSetManualOverride, TMSetManualOverrideVariables>;
+
+/**
+ * __useMSetManualOverride__
+ *
+ * To run a mutation, you first call `useMSetManualOverride` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMSetManualOverride` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mSetManualOverride, { data, loading, error }] = useMSetManualOverride({
+ *   variables: {
+ *      actuatorId: // value for 'actuatorId'
+ *      until: // value for 'until'
+ *      value: // value for 'value'
+ *   },
+ * });
+ */
+export function useMSetManualOverride(baseOptions?: ApolloReactHooks.MutationHookOptions<TMSetManualOverride, TMSetManualOverrideVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<TMSetManualOverride, TMSetManualOverrideVariables>(MSetManualOverrideDocument, options);
+      }
+export type MSetManualOverrideHookResult = ReturnType<typeof useMSetManualOverride>;
+export type MSetManualOverrideMutationResult = ApolloReactCommon.MutationResult<TMSetManualOverride>;
+export type MSetManualOverrideMutationOptions = ApolloReactCommon.BaseMutationOptions<TMSetManualOverride, TMSetManualOverrideVariables>;
 export const QActuatorDetailDocument = gql`
     query QActuatorDetail($actuatorId: Int!) {
   actuator: actuatorNode(id: $actuatorId) {
@@ -1094,6 +1256,7 @@ export const QActuatorDetailDocument = gql`
     batteryLevel
     isOnline
     manualOverride
+    manualOverrideValue
     thresholdGroupActuators {
       id
       priority
@@ -1138,60 +1301,14 @@ export type QActuatorDetailHookResult = ReturnType<typeof useQActuatorDetail>;
 export type QActuatorDetailLazyQueryHookResult = ReturnType<typeof useQActuatorDetailLazyQuery>;
 export type QActuatorDetailSuspenseQueryHookResult = ReturnType<typeof useQActuatorDetailSuspenseQuery>;
 export type QActuatorDetailQueryResult = ApolloReactCommon.QueryResult<TQActuatorDetail, TQActuatorDetailVariables>;
-export const QActuatorsDocument = gql`
-    query QActuators {
-  categories: allMainframes {
-    id
-    name
-    actuators {
-      ...FActuatorBase
-    }
-  }
-}
-    ${FActuatorBase}`;
-
-/**
- * __useQActuators__
- *
- * To run a query within a React component, call `useQActuators` and pass it any options that fit your needs.
- * When your component renders, `useQActuators` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useQActuators({
- *   variables: {
- *   },
- * });
- */
-export function useQActuators(baseOptions?: ApolloReactHooks.QueryHookOptions<TQActuators, TQActuatorsVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<TQActuators, TQActuatorsVariables>(QActuatorsDocument, options);
-      }
-export function useQActuatorsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TQActuators, TQActuatorsVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<TQActuators, TQActuatorsVariables>(QActuatorsDocument, options);
-        }
-export function useQActuatorsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<TQActuators, TQActuatorsVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<TQActuators, TQActuatorsVariables>(QActuatorsDocument, options);
-        }
-export type QActuatorsHookResult = ReturnType<typeof useQActuators>;
-export type QActuatorsLazyQueryHookResult = ReturnType<typeof useQActuatorsLazyQuery>;
-export type QActuatorsSuspenseQueryHookResult = ReturnType<typeof useQActuatorsSuspenseQuery>;
-export type QActuatorsQueryResult = ApolloReactCommon.QueryResult<TQActuators, TQActuatorsVariables>;
 export const QCategoriesDocument = gql`
     query QCategories {
   categories: allMainframes {
     ...FCategoryBase
-    favoriteSensors: sensors(favorite: true) {
+    sensors {
       ...FSensorBase
     }
-    criticalSensors: sensors(critical: true) {
-      ...FSensorBase
-    }
-    favoriteActuators: actuators(favorite: true) {
+    actuators {
       ...FActuatorBase
     }
   }
@@ -1238,7 +1355,7 @@ export const QSensorDetailDocument = gql`
     currentValue
     batteryLevel
     isOnline
-    unitType
+    unitType: unitTypeStr
   }
 }
     `;
@@ -1318,16 +1435,19 @@ export type QSensorGraphValuesLazyQueryHookResult = ReturnType<typeof useQSensor
 export type QSensorGraphValuesSuspenseQueryHookResult = ReturnType<typeof useQSensorGraphValuesSuspenseQuery>;
 export type QSensorGraphValuesQueryResult = ApolloReactCommon.QueryResult<TQSensorGraphValues, TQSensorGraphValuesVariables>;
 export const QSensorHistoricalValuesDocument = gql`
-    query QSensorHistoricalValues($sensorId: Int!, $endDatetime: DateTime, $dateRangeType: DateRangeTypeEnum) {
-  values: sensorValuesForDateRange(
+    query QSensorHistoricalValues($sensorId: Int!, $dateRangeType: DateRangeTypeEnum) {
+  data: sensorValuesForDateRange(
     sensorId: $sensorId
-    endDatetime: $endDatetime
     dateRangeType: $dateRangeType
   ) {
-    startDate
-    max: maxValue
-    min: minValue
-    average: avgValue
+    minValue
+    maxValue
+    values {
+      startDate
+      max: maxValue
+      min: minValue
+      average: avgValue
+    }
   }
 }
     `;
@@ -1345,7 +1465,6 @@ export const QSensorHistoricalValuesDocument = gql`
  * const { data, loading, error } = useQSensorHistoricalValues({
  *   variables: {
  *      sensorId: // value for 'sensorId'
- *      endDatetime: // value for 'endDatetime'
  *      dateRangeType: // value for 'dateRangeType'
  *   },
  * });
@@ -1366,73 +1485,156 @@ export type QSensorHistoricalValuesHookResult = ReturnType<typeof useQSensorHist
 export type QSensorHistoricalValuesLazyQueryHookResult = ReturnType<typeof useQSensorHistoricalValuesLazyQuery>;
 export type QSensorHistoricalValuesSuspenseQueryHookResult = ReturnType<typeof useQSensorHistoricalValuesSuspenseQuery>;
 export type QSensorHistoricalValuesQueryResult = ApolloReactCommon.QueryResult<TQSensorHistoricalValues, TQSensorHistoricalValuesVariables>;
-export const QSensorsDocument = gql`
-    query QSensors {
-  categories: allMainframes {
-    id
-    name
-    sensors {
-      ...FSensorBase
+export const QSensorHistoricalValuesByDateDocument = gql`
+    query QSensorHistoricalValuesByDate($sensorId: Int!, $dateRangeType: DateRangeTypeEnum, $endDatetime: DateTime) {
+  data: sensorValuesForDateRange(
+    sensorId: $sensorId
+    dateRangeType: $dateRangeType
+    endDatetime: $endDatetime
+  ) {
+    values {
+      startDate
+      average: avgValue
     }
   }
 }
-    ${FSensorBase}`;
+    `;
 
 /**
- * __useQSensors__
+ * __useQSensorHistoricalValuesByDate__
  *
- * To run a query within a React component, call `useQSensors` and pass it any options that fit your needs.
- * When your component renders, `useQSensors` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useQSensorHistoricalValuesByDate` and pass it any options that fit your needs.
+ * When your component renders, `useQSensorHistoricalValuesByDate` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useQSensors({
+ * const { data, loading, error } = useQSensorHistoricalValuesByDate({
  *   variables: {
+ *      sensorId: // value for 'sensorId'
+ *      dateRangeType: // value for 'dateRangeType'
+ *      endDatetime: // value for 'endDatetime'
  *   },
  * });
  */
-export function useQSensors(baseOptions?: ApolloReactHooks.QueryHookOptions<TQSensors, TQSensorsVariables>) {
+export function useQSensorHistoricalValuesByDate(baseOptions: ApolloReactHooks.QueryHookOptions<TQSensorHistoricalValuesByDate, TQSensorHistoricalValuesByDateVariables> & ({ variables: TQSensorHistoricalValuesByDateVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<TQSensors, TQSensorsVariables>(QSensorsDocument, options);
+        return ApolloReactHooks.useQuery<TQSensorHistoricalValuesByDate, TQSensorHistoricalValuesByDateVariables>(QSensorHistoricalValuesByDateDocument, options);
       }
-export function useQSensorsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TQSensors, TQSensorsVariables>) {
+export function useQSensorHistoricalValuesByDateLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TQSensorHistoricalValuesByDate, TQSensorHistoricalValuesByDateVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<TQSensors, TQSensorsVariables>(QSensorsDocument, options);
+          return ApolloReactHooks.useLazyQuery<TQSensorHistoricalValuesByDate, TQSensorHistoricalValuesByDateVariables>(QSensorHistoricalValuesByDateDocument, options);
         }
-export function useQSensorsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<TQSensors, TQSensorsVariables>) {
+export function useQSensorHistoricalValuesByDateSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<TQSensorHistoricalValuesByDate, TQSensorHistoricalValuesByDateVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<TQSensors, TQSensorsVariables>(QSensorsDocument, options);
+          return ApolloReactHooks.useSuspenseQuery<TQSensorHistoricalValuesByDate, TQSensorHistoricalValuesByDateVariables>(QSensorHistoricalValuesByDateDocument, options);
         }
-export type QSensorsHookResult = ReturnType<typeof useQSensors>;
-export type QSensorsLazyQueryHookResult = ReturnType<typeof useQSensorsLazyQuery>;
-export type QSensorsSuspenseQueryHookResult = ReturnType<typeof useQSensorsSuspenseQuery>;
-export type QSensorsQueryResult = ApolloReactCommon.QueryResult<TQSensors, TQSensorsVariables>;
-export const STestDocument = gql`
-    subscription STest {
-  countSeconds(upTo: 10)
+export type QSensorHistoricalValuesByDateHookResult = ReturnType<typeof useQSensorHistoricalValuesByDate>;
+export type QSensorHistoricalValuesByDateLazyQueryHookResult = ReturnType<typeof useQSensorHistoricalValuesByDateLazyQuery>;
+export type QSensorHistoricalValuesByDateSuspenseQueryHookResult = ReturnType<typeof useQSensorHistoricalValuesByDateSuspenseQuery>;
+export type QSensorHistoricalValuesByDateQueryResult = ApolloReactCommon.QueryResult<TQSensorHistoricalValuesByDate, TQSensorHistoricalValuesByDateVariables>;
+export const SActuatorValueDocument = gql`
+    subscription SActuatorValue {
+  change: nodeValues {
+    data {
+      ... on ActuatorNodeSubscriptionType {
+        id
+        currentState
+      }
+    }
+  }
 }
     `;
 
 /**
- * __useSTest__
+ * __useSActuatorValue__
  *
- * To run a query within a React component, call `useSTest` and pass it any options that fit your needs.
- * When your component renders, `useSTest` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSActuatorValue` and pass it any options that fit your needs.
+ * When your component renders, `useSActuatorValue` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useSTest({
+ * const { data, loading, error } = useSActuatorValue({
  *   variables: {
  *   },
  * });
  */
-export function useSTest(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TSTest, TSTestVariables>) {
+export function useSActuatorValue(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TSActuatorValue, TSActuatorValueVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useSubscription<TSTest, TSTestVariables>(STestDocument, options);
+        return ApolloReactHooks.useSubscription<TSActuatorValue, TSActuatorValueVariables>(SActuatorValueDocument, options);
       }
-export type STestHookResult = ReturnType<typeof useSTest>;
-export type STestSubscriptionResult = ApolloReactCommon.SubscriptionResult<TSTest>;
+export type SActuatorValueHookResult = ReturnType<typeof useSActuatorValue>;
+export type SActuatorValueSubscriptionResult = ApolloReactCommon.SubscriptionResult<TSActuatorValue>;
+export const SSensorCriticalDocument = gql`
+    subscription SSensorCritical {
+  change: nodeValues {
+    data {
+      ... on SensorNodeSubscriptionType {
+        id
+        isCritical
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSSensorCritical__
+ *
+ * To run a query within a React component, call `useSSensorCritical` and pass it any options that fit your needs.
+ * When your component renders, `useSSensorCritical` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSSensorCritical({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSSensorCritical(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TSSensorCritical, TSSensorCriticalVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useSubscription<TSSensorCritical, TSSensorCriticalVariables>(SSensorCriticalDocument, options);
+      }
+export type SSensorCriticalHookResult = ReturnType<typeof useSSensorCritical>;
+export type SSensorCriticalSubscriptionResult = ApolloReactCommon.SubscriptionResult<TSSensorCritical>;
+export const SSensorValueDocument = gql`
+    subscription SSensorValue {
+  change: nodeValues {
+    type
+    data {
+      ... on SensorNodeSubscriptionType {
+        id
+        currentValue
+        isCritical
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSSensorValue__
+ *
+ * To run a query within a React component, call `useSSensorValue` and pass it any options that fit your needs.
+ * When your component renders, `useSSensorValue` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSSensorValue({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSSensorValue(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TSSensorValue, TSSensorValueVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useSubscription<TSSensorValue, TSSensorValueVariables>(SSensorValueDocument, options);
+      }
+export type SSensorValueHookResult = ReturnType<typeof useSSensorValue>;
+export type SSensorValueSubscriptionResult = ApolloReactCommon.SubscriptionResult<TSSensorValue>;
