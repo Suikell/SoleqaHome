@@ -14,6 +14,7 @@ import {
 import { cs, registerTranslation } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GqlProvider } from 'src/app/graphql/GqlProvider'
+import { ActuatorValueProvider } from 'src/app/shared/components/ActuatorValueProvider'
 import { SensorValueProvider } from 'src/app/shared/components/SensorValueProvider'
 import { CategoriesProvider } from 'src/app/shared/contexts/CategoriesProvider'
 
@@ -70,7 +71,7 @@ const darkTheme = {
     },
     surfaceDisabled: 'rgba(225, 227, 223, 0.12)',
     onSurfaceDisabled: 'rgba(225, 227, 223, 0.38)',
-    backdrop: 'rgba(42, 50, 45, 0.438)3)',
+    backdrop: 'rgba(17, 20, 19, 0.7)3)',
   },
 }
 
@@ -102,7 +103,9 @@ const App: React.FC = () => {
           <SafeAreaProvider>
             <CategoriesProvider>
               <SensorValueProvider>
-                <Navigation />
+                <ActuatorValueProvider>
+                  <Navigation />
+                </ActuatorValueProvider>
               </SensorValueProvider>
             </CategoriesProvider>
           </SafeAreaProvider>

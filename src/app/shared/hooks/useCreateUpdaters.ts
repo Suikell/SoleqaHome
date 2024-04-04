@@ -10,9 +10,11 @@ type TProps = Pick<
 >
 
 export const useCreateUpdaters = ({ setSensors, setActuators }: TProps) => {
-  const { sensors } = useCategoriesCtx()
+  const { sensors, actuators } = useCategoriesCtx()
   const sensorsRef = React.useRef(sensors)
+  const actuatorsRef = React.useRef(actuators)
   sensorsRef.current = sensors
+  actuatorsRef.current = actuators
 
   const updateSensorPart = React.useCallback(
     (sensorIndex: number, updatedSensor: TFSensorBase) => {

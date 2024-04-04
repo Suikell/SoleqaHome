@@ -7,6 +7,8 @@ import { createContext } from '~utils/context/createContext'
 
 type TUpdatersContext = {
   selectCategoryIndex: (categoryId: ID) => void
+  setManualOverride: (actuatorId: ID, state: boolean, until: Date) => void
+
   setFavoriteActuatorValue: (
     actuatorId: ID,
     value: TFActuatorBase['favorite'],
@@ -18,6 +20,10 @@ type TUpdatersContext = {
   updateSensorCurrentValue: (
     sensorId: ID,
     value: TFSensorBase['currentValue'],
+  ) => void
+  updateActuatorCurrentState: (
+    actuatorId: ID,
+    state: Defined<TFActuatorBase['currentState']>,
   ) => void
 }
 
@@ -39,11 +45,13 @@ const CategoriesUpdatersProvider: React.FC<TProps> = ({
   setSensors,
   setActuators,
 }) => {
-  const { setFavoriteSensor, setFavoriteActuator } = useDeviceUpdaters()
+  const { setFavoriteSensor, setFavoriteActuator, setManualOverride } =
+    useDeviceUpdaters()
   const { useCreateSensorUpdater, useCreateActuatorUpdater } =
     useCreateUpdaters({ setSensors, setActuators })
 
   const updateSensorCurrentValue = useCreateSensorUpdater('currentValue')
+  const updateActuatorCurrentState = useCreateActuatorUpdater('currentState')
 
   const setFavoriteSensorValue = useCreateSensorUpdater(
     'favorite',
@@ -59,13 +67,17 @@ const CategoriesUpdatersProvider: React.FC<TProps> = ({
       selectCategoryIndex,
       updateSensorCurrentValue,
       setFavoriteActuatorValue,
+      setManualOverride,
       setFavoriteSensorValue,
+      updateActuatorCurrentState,
     }
   }, [
     selectCategoryIndex,
     setFavoriteActuatorValue,
+    setManualOverride,
     setFavoriteSensorValue,
     updateSensorCurrentValue,
+    updateActuatorCurrentState,
   ])
 
   return <Provider value={updaters}>{children}</Provider>

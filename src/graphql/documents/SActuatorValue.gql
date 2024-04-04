@@ -1,0 +1,10 @@
+subscription SActuatorValue {
+  change: nodeValues {
+    data {
+      ... on ActuatorNodeSubscriptionType {
+        id
+        currentState
+      }
+    }
+  }
+}
