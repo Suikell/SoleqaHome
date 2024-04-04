@@ -1,0 +1,12 @@
+subscription SSensorValue {
+  change: nodeValues {
+    type
+    data {
+      ... on SensorNodeSubscriptionType {
+        id
+        currentValue
+        isCritical
+      }
+    }
+  }
+}

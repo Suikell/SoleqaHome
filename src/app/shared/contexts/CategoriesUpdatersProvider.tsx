@@ -7,8 +7,12 @@ import { createContext } from '~utils/context/createContext'
 
 type TUpdatersContext = {
   selectCategoryIndex: (categoryId: ID) => void
-  setManualOverride: (actuatorId: ID, state: boolean, until: Date) => void
-
+  setManualOverride: (
+    actuatorId: ID,
+    state: boolean,
+    until: Nullable<Date>,
+  ) => void
+  cancelManualOverride: (actuatorId: ID) => void
   setFavoriteActuatorValue: (
     actuatorId: ID,
     value: TFActuatorBase['favorite'],
@@ -20,6 +24,10 @@ type TUpdatersContext = {
   updateSensorCurrentValue: (
     sensorId: ID,
     value: TFSensorBase['currentValue'],
+  ) => void
+  updateSensorFavoriteValue: (
+    sensorId: ID,
+    value: TFSensorBase['favorite'],
   ) => void
   updateActuatorCurrentState: (
     actuatorId: ID,
@@ -45,12 +53,17 @@ const CategoriesUpdatersProvider: React.FC<TProps> = ({
   setSensors,
   setActuators,
 }) => {
-  const { setFavoriteSensor, setFavoriteActuator, setManualOverride } =
-    useDeviceUpdaters()
+  const {
+    setFavoriteSensor,
+    setFavoriteActuator,
+    setManualOverride: setManualOverrideValue,
+  } = useDeviceUpdaters()
   const { useCreateSensorUpdater, useCreateActuatorUpdater } =
     useCreateUpdaters({ setSensors, setActuators })
 
   const updateSensorCurrentValue = useCreateSensorUpdater('currentValue')
+  const updateSensorFavoriteValue = useCreateSensorUpdater('favorite')
+
   const updateActuatorCurrentState = useCreateActuatorUpdater('currentState')
 
   const setFavoriteSensorValue = useCreateSensorUpdater(
@@ -62,20 +75,38 @@ const CategoriesUpdatersProvider: React.FC<TProps> = ({
     setFavoriteActuator,
   )
 
+  const cancelManualOverride = React.useCallback(
+    (actuatorId: ID) => {
+      setManualOverrideValue(actuatorId)
+    },
+    [setManualOverrideValue],
+  )
+
+  const setManualOverride = React.useCallback(
+    (actuatorId: ID, state: boolean, until: Nullable<Date>) => {
+      setManualOverride(actuatorId, state, until)
+    },
+    [],
+  )
+
   const updaters = React.useMemo<TUpdatersContext>(() => {
     return {
       selectCategoryIndex,
       updateSensorCurrentValue,
       setFavoriteActuatorValue,
+      cancelManualOverride,
       setManualOverride,
       setFavoriteSensorValue,
       updateActuatorCurrentState,
+      updateSensorFavoriteValue,
     }
   }, [
     selectCategoryIndex,
     setFavoriteActuatorValue,
+    updateSensorFavoriteValue,
     setManualOverride,
     setFavoriteSensorValue,
+    cancelManualOverride,
     updateSensorCurrentValue,
     updateActuatorCurrentState,
   ])
