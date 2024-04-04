@@ -9,6 +9,26 @@ type ActuatorConditionType {
   value: Boolean!
 }
 
+type ActuatorNodeSubscriptionType {
+  actuatorType: ActuatorTypeEnum
+  batteryLevel: Float
+  createdAt: DateTime!
+  currentState: Boolean
+  deviceId: String!
+  favorite: Boolean!
+  id: Int!
+  isOnline: Boolean!
+  lastOnline: DateTime
+  manualOverride: Boolean!
+  manualOverrideUntil: DateTime
+  manualOverrideValue: Boolean
+  name: String
+  nodeType: NodeTypeEnum
+  systemVersion: String
+  type: Int!
+  uid: UUID!
+}
+
 type ActuatorNodeType {
   actuatorConditions: [ActuatorConditionType!]!
   actuatorType: ActuatorTypeEnum
@@ -23,6 +43,7 @@ type ActuatorNodeType {
   mainframe: MainframeType
   manualOverride: Boolean!
   manualOverrideUntil: DateTime
+  manualOverrideValue: Boolean
   name: String!
   nodeType: NodeTypeEnum
   systemVersion: String
@@ -227,7 +248,7 @@ type Mutation {
   setCriticalUnderValue(sensorId: Int!, value: Float): SetCriticalUnderMutation
   setFavoriteActuator(actuatorId: Int!, favorite: Boolean!): SetFavoriteActuatorMutation
   setFavoriteSensor(favorite: Boolean!, sensorId: Int!): SetFavoriteSensorMutation
-  setManualOverrideUntil(actuatorId: Int!, until: DateTime!): SetManualOverrideUntilMutation
+  setManualOverrideUntil(actuatorId: Int!, until: DateTime, value: Boolean): SetManualOverrideUntilMutation
   tokenAuth(email: String!, password: String!): ObtainJSONWebToken
   userProfileImageUpload(profileImage: Upload!): UserProfileImageMutation
   verifyToken(token: String): Verify
@@ -331,6 +352,7 @@ type SensorNodeSubscriptionType {
   displayCriticalUnder: Boolean!
   favorite: Boolean!
   id: Int!
+  isCritical: Boolean!
   isOnline: Boolean!
   lastOnline: DateTime
   name: String
@@ -353,6 +375,7 @@ type SensorNodeType {
   displayCriticalUnder: Boolean!
   favorite: Boolean!
   id: Int!
+  isCritical: Boolean!
   isOnline: Boolean!
   lastOnline: DateTime
   mainframe: MainframeType
@@ -397,18 +420,6 @@ enum SensorTypeEnum {
   SOIL_PH
   TEMPERATURE
   UNASSIGNED
-}
-
-"""
-Subscriptions for sensor values. This is used to notify the user when a new sensor value is logged.
-To successfully authenticate user, pass token in the query string. For example:
-/graphql/?token=<your_token_here>
-"""
-type SensorValueSubscriptionType {
-  createdAt: DateTime!
-  id: Int!
-  sensor: SensorNodeSubscriptionType
-  value: Float!
 }
 
 type SensorValueType {
@@ -466,8 +477,21 @@ type SetManualOverrideUntilMutation {
 }
 
 type Subscription {
-  sensorValueLogged: SensorValueSubscriptionType
+  nodeValues: SubscriptionType!
 }
+
+enum SubscriptionResultType {
+  ACTUATOR_STATE_CHANGED
+  SENSOR_IS_CRITICAL_CHANGED
+  SENSOR_VALUE_LOGGED
+}
+
+type SubscriptionType {
+  data: SubscriptionUnionType!
+  type: SubscriptionResultType!
+}
+
+union SubscriptionUnionType = ActuatorNodeSubscriptionType | SensorNodeSubscriptionType
 
 type ThresholdGroupActuatorType {
   actuator: ActuatorNodeType!
