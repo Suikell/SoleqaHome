@@ -18,6 +18,8 @@ type TMinMax = {
   max: TData['maxValue']
 }
 
+const REFETCH_TIME = 3 * 60 * 1000 // 3 minutes
+
 export const useLoadHistoricalValues = () => {
   const [values, setValues] = React.useState<TValues>([])
   const [minMax, setMinMax] = React.useState<TMinMax>({ min: null, max: null })
@@ -47,6 +49,15 @@ export const useLoadHistoricalValues = () => {
   const { overlayValues } = useLoadOverlayData()
 
   React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      refetch()
+    }, REFETCH_TIME)
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [selectedPeriod, refetch, overlayValues])
+
+  React.useEffect(() => {
     if (error || !result || !result.data) {
       return
     }
@@ -54,12 +65,6 @@ export const useLoadHistoricalValues = () => {
     setValues(result.data.values || [])
     setMinMax({ min: result.data.minValue, max: result.data.maxValue })
   }, [error, result])
-
-  React.useEffect(() => {
-    if (sensor.currentValue) {
-      refetch()
-    }
-  }, [sensor.currentValue, refetch])
 
   return { minMax, values, overlayValues, loading }
 }
