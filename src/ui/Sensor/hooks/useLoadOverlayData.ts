@@ -22,10 +22,12 @@ export const useLoadOverlayData = () => {
   const variables = React.useMemo<
     TQSensorHistoricalValuesVariables | undefined
   >(() => {
+    if (!isOverlayVisible) return undefined
+
     return {
       sensorId: sensor.id,
       dateRangeType: selectedPeriod,
-      endDatetime: isOverlayVisible ? overlayDateTime : null,
+      endDatetime: overlayDateTime,
     }
   }, [sensor.id, selectedPeriod, isOverlayVisible, overlayDateTime])
 
@@ -38,7 +40,6 @@ export const useLoadOverlayData = () => {
     if (error || !result || !result.data) {
       return
     }
-
     setOverlayValues(result.data.values || [])
   }, [error, result])
 

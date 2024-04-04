@@ -15,6 +15,7 @@ type TProps = NoChildren & {
   isOnline: TActuator['isOnline']
   batteryLevel: TActuator['batteryLevel']
   hasManualOverride: TActuator['manualOverride']
+  manualOverrideValue: TActuator['manualOverrideValue']
 }
 
 export const ActuatorValues: React.FC<TProps> = ({
@@ -22,14 +23,16 @@ export const ActuatorValues: React.FC<TProps> = ({
   isOnline,
   batteryLevel,
   hasManualOverride,
+  manualOverrideValue,
 }) => {
   const theme = useAppTheme()
 
+  const state = hasManualOverride ? manualOverrideValue : currentState
   return (
     <FlexRow justifyContent={`space-between`} margin={CONTENT_MARGIN}>
       <View>
         <Text variant={`displaySmall`} style={{ color: theme.colors.primary }}>
-          {getActuatorStateString(currentState)}
+          {getActuatorStateString(state)}
         </Text>
         <FlexRow marginLeft={shrink(48)}>
           <Text>controlled by: </Text>

@@ -34,8 +34,11 @@ export const ActuatorDetailScreen: React.FC<TProps> = ({ route }) => {
             currentState={actuator.currentState}
             batteryLevel={actuator.batteryLevel}
             hasManualOverride={actuator.manualOverride}
+            manualOverrideValue={actuator.manualOverrideValue}
           />
           <ManualControl
+            actuatorId={actuatorId}
+            currentState={actuator.currentState}
             hasManualOverride={actuator.manualOverride}
             isManualControlOpen={isManualControlOpen}
             setIsManualControlOpen={setIsManualControlOpen}

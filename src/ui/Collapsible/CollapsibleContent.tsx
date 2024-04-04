@@ -1,6 +1,6 @@
 import { TAppTheme } from 'App'
 import React from 'react'
-import { Pressable, StyleSheet } from 'react-native'
+import { Pressable, StyleSheet, ViewStyle } from 'react-native'
 import { Button, Text } from 'react-native-paper'
 
 import { FlexRow } from '~ui/Layout/FlexRow'
@@ -12,6 +12,10 @@ type TProps = RequiredChildren & {
   onConfirm: () => void
   title: string
   description?: string
+  contentStyle?: {
+    margin: ViewStyle['margin']
+    borderRadius: ViewStyle['borderRadius']
+  }
 }
 
 export const CollapsibleContent: React.FC<TProps> = ({
@@ -20,11 +24,12 @@ export const CollapsibleContent: React.FC<TProps> = ({
   onCancel,
   onConfirm,
   children,
+  contentStyle,
 }) => {
   const styles = useStylesWithTheme(styleCreator)
 
   return (
-    <Pressable style={styles.modal} pointerEvents={`box-none`}>
+    <Pressable style={[styles.modal, contentStyle]} pointerEvents={`box-none`}>
       <Text variant={`titleLarge`}>{title}</Text>
       {description && <Text variant={`bodyMedium`}>{description}</Text>}
 
