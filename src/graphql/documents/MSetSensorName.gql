@@ -1,0 +1,8 @@
+mutation MSetSensorName($id: Int!, $name: String!) {
+  result: changeSensorName(sensorId: $id, name: $name) {
+    sensor {
+      id
+      name
+    }
+  }
+}

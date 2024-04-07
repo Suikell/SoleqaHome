@@ -1,0 +1,13 @@
+mutation MSetGroupActuatorPriority(
+  $actuatorId: Int!
+  $priority: Int!
+  $groupId: Int!
+) {
+  result: setActuatorThresholdGroupPriority(
+    actuatorId: $actuatorId
+    priority: $priority
+    thresholdGroupId: $groupId
+  ) {
+    success
+  }
+}

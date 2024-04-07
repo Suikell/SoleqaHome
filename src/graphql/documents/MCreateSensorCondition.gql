@@ -1,0 +1,15 @@
+mutation MCreateSensorCondition(
+  $sensorId: Int!
+  $groupId: Int!
+  $operator: SensorOperatorEnum!
+  $value: Float!
+) {
+  result: addSensorCondition(
+    sensorId: $sensorId
+    thresholdGroupId: $groupId
+    operator: $operator
+    value: $value
+  ) {
+    success
+  }
+}

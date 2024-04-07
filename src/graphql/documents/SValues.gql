@@ -1,4 +1,4 @@
-subscription SSensorValue {
+subscription SValues {
   change: nodeValues {
     type
     data {
@@ -6,6 +6,10 @@ subscription SSensorValue {
         id
         currentValue
         isCritical
+      }
+      ... on ActuatorNodeSubscriptionType {
+        id
+        currentState
       }
     }
   }

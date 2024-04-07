@@ -1,6 +1,7 @@
 query QActuatorDetail($actuatorId: Int!) {
   actuator: actuatorNode(id: $actuatorId) {
     id
+    name
     currentState
     batteryLevel
     isOnline
