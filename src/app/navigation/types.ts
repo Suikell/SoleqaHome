@@ -9,8 +9,12 @@ export type TRootStackParamList = {
   ActuatorDetail: {
     actuatorId: ID
     name: string
-    state: boolean
   }
+  GroupDetail: {
+    groupId: ID
+    name?: string
+  }
+  CreateCondition: undefined
 }
 
 export type TScreenName = keyof TRootStackParamList
