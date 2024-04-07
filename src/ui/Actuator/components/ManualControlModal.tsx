@@ -1,9 +1,8 @@
-import { TAppTheme } from 'App'
 import * as React from 'react'
-import { Modal, Pressable, StyleSheet } from 'react-native'
+import { Modal, Pressable } from 'react-native'
 
 import { ManualControlContent } from '~ui/Actuator/components/ManualControlContent'
-import { useStylesWithTheme } from '~utils/hooks/useStylesWithTheme'
+import { useModalStyles } from '~utils/hooks/useModalStyles'
 
 type TManualControlContent = PropsOf<typeof ManualControlContent>
 type TManualControlContentProps = Pick<
@@ -22,7 +21,7 @@ export const ManualControlModal: React.FC<TProps> = ({
   visible,
   hideModal,
 }) => {
-  const styles = useStylesWithTheme(styleCreator)
+  const styles = useModalStyles()
 
   return (
     <Modal visible={visible} onDismiss={hideModal} transparent>
@@ -38,18 +37,3 @@ export const ManualControlModal: React.FC<TProps> = ({
     </Modal>
   )
 }
-
-const styleCreator = (theme: TAppTheme) =>
-  StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: theme.colors.backdrop,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 16,
-    },
-    modal: {
-      margin: 20,
-      borderRadius: 16,
-    },
-  })

@@ -9,8 +9,15 @@ import {
 
 type TCategoryInfo = OmitSafe<TFCategoryBase, '__typename'>
 type TCategory = TCategoryInfo & {
-  sensorIds: RoA<ID>
-  actuatorIds: RoA<ID>
+  sensors: RoA<{
+    id: ID
+    name: string
+    unit: string
+  }>
+  actuators: RoA<{
+    id: ID
+    name: string
+  }>
 }
 
 export const useLoadCategories = () => {
@@ -33,16 +40,21 @@ export const useLoadCategories = () => {
       data.categories.forEach((category) => {
         if (!category) return
 
-        const sensorIds =
+        // TODO - repair unit when it will be fixed in the backend
+        const categorySensors =
           category.sensors?.map((sensor) => {
             newSensors.push(sensor)
-            return sensor.id
+            return {
+              id: sensor.id,
+              name: sensor.name,
+              unit: sensor.unitType || '',
+            }
           }) ?? []
 
-        const actuatorIds =
+        const categoryActuators =
           category.actuators?.map((actuator) => {
             newActuators.push(actuator)
-            return actuator.id
+            return { id: actuator.id, name: actuator.name }
           }) ?? []
 
         const categoryInfo: TCategoryInfo = {
@@ -52,7 +64,11 @@ export const useLoadCategories = () => {
           batteryLevel: category.batteryLevel,
         }
 
-        newCategories.push({ ...categoryInfo, sensorIds, actuatorIds })
+        newCategories.push({
+          ...categoryInfo,
+          sensors: categorySensors,
+          actuators: categoryActuators,
+        })
       })
 
       setCategories(newCategories)

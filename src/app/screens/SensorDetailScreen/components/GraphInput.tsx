@@ -1,9 +1,14 @@
 import { useAppTheme } from 'App'
 import * as React from 'react'
-import { Platform, Pressable } from 'react-native'
+import { Pressable } from 'react-native'
 import { Icon, TextInput } from 'react-native-paper'
 
 import { FlexRow } from '~ui/Layout/FlexRow'
+import {
+  getNumericKeyboardType,
+  getTextNumber,
+  isTextValid,
+} from '~utils/helpers/numericKeyboardHelpers'
 import { shrink } from '~utils/helpers/shrink'
 
 type TProps = NoChildren & {
@@ -27,6 +32,7 @@ export const GraphInput: React.FC<TProps> = ({
   const [inputValue, setInputValue] = React.useState<string>('')
   const [iconColor, setIconColor] = React.useState(theme.colors.outline)
 
+  const keyboardType = getNumericKeyboardType()
   React.useEffect(() => {
     const stringValue = value ? value.toString() : ''
 
@@ -41,19 +47,14 @@ export const GraphInput: React.FC<TProps> = ({
         style={{ width: `100%` }}
         label={label}
         value={inputValue}
-        keyboardType={
-          Platform.OS === 'ios' ? `numbers-and-punctuation` : `decimal-pad`
-        }
+        keyboardType={keyboardType}
         outlineColor={outLineColor}
         activeOutlineColor={activeOutlineColor}
         onTouchStart={() => {
           setKeyboardVisible(true)
         }}
         onChangeText={(text) => {
-          // regex to check if the input is a number, handling both comma and dot as decimal separator
-          // also allows to end with a comma or dot
-          const isNumber = /^-?\d*([.,]\d{0,2})?$/
-          const isValid = isNumber.test(text)
+          const isValid = isTextValid(text)
 
           if (!isValid) {
             return
@@ -64,8 +65,7 @@ export const GraphInput: React.FC<TProps> = ({
           if (!inputValue) {
             onChangeValue()
           } else {
-            const withReplacedComma = inputValue?.replace(',', '.')
-            const numberValue = parseFloat(withReplacedComma)
+            const numberValue = getTextNumber(inputValue)
 
             setInputValue(numberValue.toString())
             onChangeValue(numberValue)

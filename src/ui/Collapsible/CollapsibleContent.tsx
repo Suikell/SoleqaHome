@@ -1,11 +1,10 @@
-import { TAppTheme } from 'App'
 import React from 'react'
-import { Pressable, StyleSheet, ViewStyle } from 'react-native'
+import { Pressable, ViewStyle } from 'react-native'
 import { Button, Text } from 'react-native-paper'
 
+import { BUTTONS_GAP } from '~styles/spacing'
 import { FlexRow } from '~ui/Layout/FlexRow'
-import { shrink } from '~utils/helpers/shrink'
-import { useStylesWithTheme } from '~utils/hooks/useStylesWithTheme'
+import { useModalStyles } from '~utils/hooks/useModalStyles'
 
 type TProps = RequiredChildren & {
   onCancel: () => void
@@ -26,16 +25,19 @@ export const CollapsibleContent: React.FC<TProps> = ({
   children,
   contentStyle,
 }) => {
-  const styles = useStylesWithTheme(styleCreator)
+  const styles = useModalStyles()
 
   return (
-    <Pressable style={[styles.modal, contentStyle]} pointerEvents={`box-none`}>
+    <Pressable
+      style={[styles.modalContent, styles.color, contentStyle]}
+      pointerEvents={`box-none`}
+    >
       <Text variant={`titleLarge`}>{title}</Text>
       {description && <Text variant={`bodyMedium`}>{description}</Text>}
 
       {children}
 
-      <FlexRow justifyContent={`flex-end`} gap={shrink(48)}>
+      <FlexRow justifyContent={`flex-end`} gap={BUTTONS_GAP}>
         <Button mode={`contained`} onPress={onConfirm}>
           Confirm
         </Button>
@@ -44,12 +46,3 @@ export const CollapsibleContent: React.FC<TProps> = ({
     </Pressable>
   )
 }
-
-const styleCreator = (theme: TAppTheme) =>
-  StyleSheet.create({
-    modal: {
-      backgroundColor: theme.colors.surfaceVariant,
-      padding: shrink(60),
-      gap: shrink(48),
-    },
-  })

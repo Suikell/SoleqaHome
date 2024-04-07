@@ -12,7 +12,7 @@ export const SensorScreenContent: React.FC<TProps> = () => {
   return (
     <View style={styles.content}>
       {categories.map((category) => {
-        const sensorIds = category.sensorIds
+        const sensorIds = category.sensors.map((sensor) => sensor.id)
         if (sensorIds.length === 0) return null
         return (
           <SensorList
