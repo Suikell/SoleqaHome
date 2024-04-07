@@ -1,0 +1,6 @@
+fragment FControlledActuatorBase on ThresholdGroupActuatorType {
+  actuator {
+    id
+    name
+  }
+}

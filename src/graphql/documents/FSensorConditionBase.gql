@@ -1,0 +1,7 @@
+fragment FSensorConditionBase on SensorConditionType {
+  id
+  sensor {
+    id
+    name
+  }
+}

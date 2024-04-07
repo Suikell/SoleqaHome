@@ -1,0 +1,9 @@
+mutation MRemoveSensorCondition($sensorConditionId: Int!) {
+  result: removeSensorCondition(sensorConditionId: $sensorConditionId) {
+    group: thresholdGroup {
+      sensorConditions {
+        ...FSensorCondition
+      }
+    }
+  }
+}

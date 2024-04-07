@@ -1,0 +1,12 @@
+mutation MRemoveControlledActuator($groupId: Int!, $actuatorId: Int!) {
+  result: removeActuatorFromThresholdGroup(
+    thresholdGroupId: $groupId
+    actuatorId: $actuatorId
+  ) {
+    group: thresholdGroup {
+      controlledActuators: thresholdGroupActuators {
+        ...FControlledActuator
+      }
+    }
+  }
+}

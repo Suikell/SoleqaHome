@@ -1,0 +1,14 @@
+query QGroupDetail($groupId: Int!) {
+  group: thresholdGroup(id: $groupId) {
+    ...FGroupBase
+    controlledActuators: thresholdGroupActuators {
+      ...FControlledActuator
+    }
+    sensorConditions {
+      ...FSensorCondition
+    }
+    actuatorConditions {
+      ...FActuatorCondition
+    }
+  }
+}

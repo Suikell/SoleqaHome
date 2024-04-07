@@ -1,0 +1,5 @@
+fragment FActuatorCondition on ActuatorConditionType {
+  ...FActuatorConditionBase
+  value
+  operator
+}

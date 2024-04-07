@@ -6,13 +6,9 @@ query QActuatorDetail($actuatorId: Int!) {
     isOnline
     manualOverride
     manualOverrideValue
-    thresholdGroupActuators {
-      id
-      priority
-      thresholdGroup {
-        id
-        name
-      }
+
+    groups: thresholdGroupActuators {
+      ...FTriggerGroup
     }
   }
 }

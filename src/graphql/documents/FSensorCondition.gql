@@ -1,0 +1,5 @@
+fragment FSensorCondition on SensorConditionType {
+  ...FSensorConditionBase
+  operator
+  value
+}
