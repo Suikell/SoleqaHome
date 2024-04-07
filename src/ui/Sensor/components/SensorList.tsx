@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useCategoriesCtx } from 'src/app/shared/contexts/CategoriesProvider'
 
+import { CONTENT_MARGIN } from '~styles/spacing'
 import { isDefined } from '~utils/helpers/isDefined'
 import { shrink } from '~utils/helpers/shrink'
 
@@ -26,7 +27,7 @@ export const SensorList: React.FC<TProps> = ({
   }
 
   return (
-    <>
+    <View style={label ? styles.labelContainer : undefined}>
       {label && <Text variant={`titleLarge`}>{label}</Text>}
       <View style={styles.sensors}>
         {sensors.map((sensor) => {
@@ -40,7 +41,7 @@ export const SensorList: React.FC<TProps> = ({
           return <SensorCard key={sensor.id} sensor={sensor} />
         })}
       </View>
-    </>
+    </View>
   )
 }
 
@@ -50,5 +51,8 @@ const styles = StyleSheet.create({
     rowGap: shrink(48),
     flexWrap: 'wrap',
     justifyContent: `space-between`,
+  },
+  labelContainer: {
+    gap: CONTENT_MARGIN,
   },
 })

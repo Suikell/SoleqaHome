@@ -12,9 +12,17 @@ export type TRootStackParamList = {
   }
   GroupDetail: {
     groupId: ID
-    name?: string
+    name: string
   }
-  CreateCondition: undefined
+  CreateCondition: {
+    groupId: ID
+  }
+  AddControlledActuator: {
+    groupId: ID
+    controlledActuators: RoA<ID>
+  }
+  Settings: undefined
+  Notifications: undefined
 }
 
 export type TScreenName = keyof TRootStackParamList

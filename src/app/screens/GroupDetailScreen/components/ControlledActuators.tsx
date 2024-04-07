@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import { DataTable, Switch } from 'react-native-paper'
 
 import { ActuatorDetailLink } from '~navigation/components/NavigationLink'
+import { useNavigation } from '~navigation/hooks/useNavigation'
 import { useGroupDetailCtx } from '~screens/GroupDetailScreen/contexts/GroupDetailProvider'
 import { AddButtonRow } from '~ui/Group/Table/AddButtonRow'
 import { RemoveItemCell } from '~ui/Group/Table/RemoveItemCell'
@@ -11,9 +12,11 @@ import { useTableStyles } from '~utils/hooks/useTableStyles'
 
 type TProps = NoChildren
 export const ControlledActuators: React.FC<TProps> = () => {
+  const navigation = useNavigation()
+  const styles = useTableStyles()
+
   const { group, removeActuatorFromGroup, setActuatorChangeToState } =
     useGroupDetailCtx()
-  const styles = useTableStyles()
 
   return (
     <View style={styles.tableContainer}>
@@ -62,7 +65,16 @@ export const ControlledActuators: React.FC<TProps> = () => {
             </DataTable.Row>
           )
         })}
-        <AddButtonRow onAdd={() => console.log('add click')} />
+        <AddButtonRow
+          onAdd={() => {
+            navigation.navigate('AddControlledActuator', {
+              groupId: group.id,
+              controlledActuators: group.controlledActuators.map(
+                ({ actuator }) => actuator.id,
+              ),
+            })
+          }}
+        />
       </DataTable>
     </View>
   )

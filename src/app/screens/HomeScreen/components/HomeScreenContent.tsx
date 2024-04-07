@@ -30,17 +30,8 @@ export const HomeScreenContent: React.FC<TProps> = () => {
   return (
     <View style={styles.content}>
       <CategoryNavigation />
-      {/* <Button onPress={() => setIs(true)}>Toggle subscription</Button> */}
-
-      {/* {is && <Test />} */}
-
-      {/* <SensorList showOnlyCritical /> */}
-      {/* <ScrollView> */}
-      {/* <Text variant={`titleLarge`}>Favourites</Text> */}
       <SensorList onlyFavorite label={`Favorites`} sensorIds={sensorIds} />
-      {/* <FavoriteActuators /> */}
       <ActuatorList onlyFavorite actuatorIds={actuatorIds} />
-      {/* </ScrollView> */}
       <Button onPress={logout}>Logout</Button>
     </View>
   )

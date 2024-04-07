@@ -57,7 +57,7 @@ export const GroupConditions: React.FC<TProps> = () => {
 
   return (
     <View style={styles.tableContainer}>
-      <Headline text={`Controlled actuators:`} />
+      <Headline text={`Conditions:`} />
 
       <DataTable>
         <ConditionHeader />
@@ -116,7 +116,13 @@ export const GroupConditions: React.FC<TProps> = () => {
         })}
 
         {/* ADD BUTTON */}
-        <AddButtonRow onAdd={() => navigation.navigate('CreateCondition')} />
+        <AddButtonRow
+          onAdd={() =>
+            navigation.navigate('CreateCondition', {
+              groupId: group.id,
+            })
+          }
+        />
       </DataTable>
     </View>
   )

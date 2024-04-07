@@ -1,9 +1,9 @@
 import * as React from 'react'
 
-import { ButtonsContainer } from '~screens/CreateConditionScreen/components/ButtonsContainer'
-import { DeviceButton } from '~screens/CreateConditionScreen/components/DeviceButton'
 import { useCreateConditionCtx } from '~screens/CreateConditionScreen/contexts/CreateConditionProvider'
 import { getActuatorStateString } from '~ui/Actuator/helpers/getActuatorStateString'
+import { ButtonsContainer } from '~ui/Buttons/ButtonsContainer'
+import { DeviceButton } from '~ui/Buttons/DeviceButton'
 
 type TProps = NoChildren
 

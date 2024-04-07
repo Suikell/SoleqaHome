@@ -13,6 +13,7 @@ type TGroupUpdaters = Pick<
   | 'removeSensorCondition'
   | 'removeActuatorCondition'
   | 'setActuatorChangeToState'
+  | 'deleteGroup'
 >
 type TContext = TGroupUpdaters & {
   group: TGroup
@@ -32,6 +33,7 @@ const GroupDetailProvider: React.FC<TProps> = ({ groupId, children }) => {
 
   const { group: loadedGroup, loading } = useLoadGroupDetail(groupId)
   const {
+    deleteGroup,
     setGroupActive,
     removeActuatorFromGroup,
     removeSensorCondition,
@@ -46,6 +48,7 @@ const GroupDetailProvider: React.FC<TProps> = ({ groupId, children }) => {
 
   const updaters = React.useMemo(() => {
     return {
+      deleteGroup,
       setGroupActive,
       removeActuatorFromGroup,
       removeSensorCondition,
@@ -53,6 +56,7 @@ const GroupDetailProvider: React.FC<TProps> = ({ groupId, children }) => {
       setActuatorChangeToState,
     }
   }, [
+    deleteGroup,
     setGroupActive,
     removeActuatorFromGroup,
     removeSensorCondition,

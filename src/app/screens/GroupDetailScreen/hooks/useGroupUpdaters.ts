@@ -3,22 +3,48 @@ import * as React from 'react'
 import {
   TFControlledActuator,
   useMChangeGroupActuatorState,
+  useMDeleteGroup,
   useMRemoveActuatorCondition,
   useMRemoveControlledActuator,
   useMRemoveSensorCondition,
   useMSetGroupActive,
 } from '~graphql/generated/graphql'
+import { useNavigation } from '~navigation/hooks/useNavigation'
 import { useLoadGroupDetail } from '~screens/GroupDetailScreen/hooks/useLoadGroupDetail'
 import { isDefined } from '~utils/helpers/isDefined'
 
 type TGroup = Defined<ReturnType<typeof useLoadGroupDetail>['group']>
 
 export const useGroupUpdaters = (setGroup: ReactSetState<Nullable<TGroup>>) => {
+  const navigation = useNavigation()
   const [mSetGroupActive] = useMSetGroupActive()
   const [mRemoveControlledActuator] = useMRemoveControlledActuator()
   const [mRemoveSensorCondition] = useMRemoveSensorCondition()
   const [mRemoveActuatorCondition] = useMRemoveActuatorCondition()
   const [mChangeGroupActuatorState] = useMChangeGroupActuatorState()
+  const [mDeleteGroup] = useMDeleteGroup()
+
+  const deleteGroup = React.useCallback(
+    (groupId: ID) => {
+      mDeleteGroup({
+        variables: {
+          groupId,
+        },
+        refetchQueries: ['QGroups'],
+      })
+        .then(({ data }) => {
+          const success = Boolean(data?.result?.success)
+          if (success) {
+            navigation.goBack()
+          }
+        })
+        .catch((error) => {
+          console.error('could not remove group', error)
+        })
+    },
+
+    [mDeleteGroup, navigation],
+  )
 
   const updateStoredGroup = React.useCallback(
     (updatedPart: Partial<TGroup>) => {
@@ -224,5 +250,6 @@ export const useGroupUpdaters = (setGroup: ReactSetState<Nullable<TGroup>>) => {
     removeSensorCondition,
     removeActuatorCondition,
     setActuatorChangeToState,
+    deleteGroup,
   }
 }

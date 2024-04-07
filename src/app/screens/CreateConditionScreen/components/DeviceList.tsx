@@ -3,13 +3,13 @@ import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useCategoriesCtx } from 'src/app/shared/contexts/CategoriesProvider'
 
-import { ButtonsContainer } from '~screens/CreateConditionScreen/components/ButtonsContainer'
-import { DeviceButton } from '~screens/CreateConditionScreen/components/DeviceButton'
 import {
   TDevice,
   useCreateConditionCtx,
 } from '~screens/CreateConditionScreen/contexts/CreateConditionProvider'
 import { CONTENT_MARGIN } from '~styles/spacing'
+import { ButtonsContainer } from '~ui/Buttons/ButtonsContainer'
+import { DeviceButton } from '~ui/Buttons/DeviceButton'
 
 type TProps = NoChildren
 

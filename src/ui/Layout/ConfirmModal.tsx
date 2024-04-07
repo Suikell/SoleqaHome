@@ -35,7 +35,7 @@ export const ConfirmModal: React.FC<TProps> = ({
           pointerEvents={`box-none`}
         >
           <Text variant={`titleLarge`}>{title}</Text>
-          <Text variant={`bodyMedium`}>{children}</Text>
+          {children}
           <FlexRow justifyContent={`flex-end`} gap={BUTTONS_GAP}>
             <Button onPress={onConfirmPress} mode={`contained`}>
               Confirm

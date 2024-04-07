@@ -16,6 +16,8 @@ export type TDevice = {
 }
 
 type TContext = {
+  groupId: ID
+
   selectedType: TDeviceType
   selectType: (type: TDeviceType) => void
 
@@ -49,9 +51,11 @@ export type TLogin = TMAuthUserVariables
 const [Provider, useCreateConditionCtx] =
   createContext<TContext>(`CreateCondition`)
 
-type TProps = RequiredChildren
+type TProps = RequiredChildren & {
+  groupId: ID
+}
 
-const CreateConditionProvider: React.FC<TProps> = ({ children }) => {
+const CreateConditionProvider: React.FC<TProps> = ({ groupId, children }) => {
   const [selectedType, setSelectedType] = React.useState<TDeviceType>('sensor')
 
   const [isDeviceVisible, setIsDeviceVisible] = React.useState(false)
@@ -126,6 +130,7 @@ const CreateConditionProvider: React.FC<TProps> = ({ children }) => {
 
   const value = React.useMemo(() => {
     return {
+      groupId,
       selectedType,
       selectType,
       selectedDevice,
@@ -146,6 +151,7 @@ const CreateConditionProvider: React.FC<TProps> = ({ children }) => {
       setSensorValue,
     }
   }, [
+    groupId,
     actuatorState,
     isConditionVisible,
     isDeviceVisible,

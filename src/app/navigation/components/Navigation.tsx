@@ -9,12 +9,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TRootStackParamList } from '~navigation/types'
 import { ActuatorDetailScreen } from '~screens/ActuatorDetailScreen/ActuatorDetailScreen'
 import { ActuatorsScreen } from '~screens/ActuatorsScreen/ActuatorsScreen'
+import { AddControlledActuatorScreen } from '~screens/AddControlledActuatorScreen/AddControlledActuatorScreen'
 import { CreateConditionScreen } from '~screens/CreateConditionScreen/CreateConditionScreen'
 import { GroupDetailScreen } from '~screens/GroupDetailScreen/GroupDetailScreen'
 import { GroupsScreen } from '~screens/GroupsScreen/GroupsScreen'
 import { HomeScreen } from '~screens/HomeScreen/HomeScreen'
+import { NotificationsScreen } from '~screens/NotificationsScreen/NotificationsScreen'
 import { SensorDetailScreen } from '~screens/SensorDetailScreen/SensorDetailScreen'
 import { SensorsScreen } from '~screens/SensorsScreen/SensorsScreen'
+import { SettingsScreen } from '~screens/SettingsScreen/SettingsScreen'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator<TRootStackParamList>()
@@ -132,6 +135,12 @@ export const Navigation = () => {
       <Stack.Screen name="ActuatorDetail" component={ActuatorDetailScreen} />
       <Stack.Screen name="GroupDetail" component={GroupDetailScreen} />
       <Stack.Screen name="CreateCondition" component={CreateConditionScreen} />
+      <Stack.Screen
+        name="AddControlledActuator"
+        component={AddControlledActuatorScreen}
+      />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} />
     </Stack.Navigator>
   )
 }

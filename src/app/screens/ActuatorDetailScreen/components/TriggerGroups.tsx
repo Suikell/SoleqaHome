@@ -18,8 +18,12 @@ export const TriggerGroups: React.FC<TProps> = () => {
       <Headline text={`Applied trigger groups:`} />
 
       <GroupListContainer>
-        {actuator.groups.map((group) => (
-          <TriggerGroupCard key={group.group.id} triggerGroup={group} />
+        {actuator.groups.map((group, index) => (
+          <TriggerGroupCard
+            key={group.group.id}
+            priority={index + 1}
+            triggerGroup={group}
+          />
         ))}
       </GroupListContainer>
       {/* <GroupListContainerGroupListContainer groups={actuator.groups.map(({ group }) => group)} setGroupActive={} /> */}
