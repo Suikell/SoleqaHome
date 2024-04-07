@@ -29,7 +29,8 @@ export type TActuatorConditionType = {
   readonly actuator: TActuatorNodeType;
   readonly createdAt: Scalars['DateTime']['output'];
   readonly id: Scalars['Int']['output'];
-  readonly operator: Maybe<TActuatorOperatorEnum>;
+  readonly operator: TActuatorOperatorEnum;
+  readonly operatorStr: Scalars['String']['output'];
   readonly thresholdGroup: TThresholdGroupType;
   readonly updatedAt: Scalars['DateTime']['output'];
   readonly value: Scalars['Boolean']['output'];
@@ -49,7 +50,7 @@ export type TActuatorNodeSubscriptionType = {
   readonly manualOverride: Scalars['Boolean']['output'];
   readonly manualOverrideUntil: Maybe<Scalars['DateTime']['output']>;
   readonly manualOverrideValue: Maybe<Scalars['Boolean']['output']>;
-  readonly name: Maybe<Scalars['String']['output']>;
+  readonly name: Scalars['String']['output'];
   readonly nodeType: Maybe<TNodeTypeEnum>;
   readonly systemVersion: Maybe<Scalars['String']['output']>;
   readonly type: Scalars['Int']['output'];
@@ -277,6 +278,7 @@ export type TMutation = {
   readonly removeActuatorCondition: Maybe<TRemoveActuatorConditionMutation>;
   readonly removeActuatorFromThresholdGroup: Maybe<TRemoveActuatorFromThresholdGroupMutation>;
   readonly removeSensorCondition: Maybe<TRemoveSensorConditionMutation>;
+  readonly setActuatorChangeToStateThresholdGroup: Maybe<TSetActuatorChangeToStateThresholdGroupMutation>;
   readonly setActuatorThresholdGroupPriority: Maybe<TSetActuatorThresholdGroupPriorityMutation>;
   readonly setCriticalOverDisplay: Maybe<TSetCriticalOverDisplayMutation>;
   readonly setCriticalOverValue: Maybe<TSetCriticalOverMutation>;
@@ -391,6 +393,13 @@ export type TMutationRemoveActuatorFromThresholdGroupArgs = {
 
 export type TMutationRemoveSensorConditionArgs = {
   sensorConditionId: Scalars['Int']['input'];
+};
+
+
+export type TMutationSetActuatorChangeToStateThresholdGroupArgs = {
+  actuatorId: Scalars['Int']['input'];
+  changeToState: Scalars['Boolean']['input'];
+  thresholdGroupId: Scalars['Int']['input'];
 };
 
 
@@ -588,6 +597,7 @@ export type TRemoveActuatorConditionMutation = {
   readonly __typename?: 'RemoveActuatorConditionMutation';
   readonly message: Maybe<Scalars['String']['output']>;
   readonly success: Scalars['Boolean']['output'];
+  readonly thresholdGroup: Maybe<TThresholdGroupType>;
 };
 
 export type TRemoveActuatorFromThresholdGroupMutation = {
@@ -601,6 +611,7 @@ export type TRemoveSensorConditionMutation = {
   readonly __typename?: 'RemoveSensorConditionMutation';
   readonly message: Maybe<Scalars['String']['output']>;
   readonly success: Scalars['Boolean']['output'];
+  readonly thresholdGroup: Maybe<TThresholdGroupType>;
 };
 
 export type TSensorConditionType = {
@@ -608,7 +619,8 @@ export type TSensorConditionType = {
   readonly active: Scalars['Boolean']['output'];
   readonly createdAt: Scalars['DateTime']['output'];
   readonly id: Scalars['Int']['output'];
-  readonly operator: Maybe<TSensorOperatorEnum>;
+  readonly operator: TSensorOperatorEnum;
+  readonly operatorStr: Scalars['String']['output'];
   readonly sensor: TSensorNodeSubscriptionType;
   readonly thresholdGroup: TThresholdGroupType;
   readonly updatedAt: Scalars['DateTime']['output'];
@@ -646,7 +658,7 @@ export type TSensorNodeSubscriptionType = {
   readonly isCritical: Scalars['Boolean']['output'];
   readonly isOnline: Scalars['Boolean']['output'];
   readonly lastOnline: Maybe<Scalars['DateTime']['output']>;
-  readonly name: Maybe<Scalars['String']['output']>;
+  readonly name: Scalars['String']['output'];
   readonly nodeType: Maybe<TNodeTypeEnum>;
   readonly sensorType: Scalars['Int']['output'];
   readonly systemVersion: Maybe<Scalars['String']['output']>;
@@ -715,10 +727,18 @@ export type TSensorValueType = {
   readonly value: Scalars['Float']['output'];
 };
 
+export type TSetActuatorChangeToStateThresholdGroupMutation = {
+  readonly __typename?: 'SetActuatorChangeToStateThresholdGroupMutation';
+  readonly message: Maybe<Scalars['String']['output']>;
+  readonly success: Scalars['Boolean']['output'];
+  readonly thresholdGroupActuator: Maybe<TThresholdGroupActuatorType>;
+};
+
 export type TSetActuatorThresholdGroupPriorityMutation = {
   readonly __typename?: 'SetActuatorThresholdGroupPriorityMutation';
   readonly message: Maybe<Scalars['String']['output']>;
   readonly success: Scalars['Boolean']['output'];
+  readonly thresholdGroupActuator: Maybe<TThresholdGroupActuatorType>;
 };
 
 export type TSetCriticalOverDisplayMutation = {
@@ -776,8 +796,11 @@ export type TSubscription = {
 };
 
 export type TSubscriptionResultType =
+  | 'ACTUATOR_ONLINE_STATUS_CHANGED'
   | 'ACTUATOR_STATE_CHANGED'
+  | 'MAINFRAME_ONLINE_STATUS_CHANGED'
   | 'SENSOR_IS_CRITICAL_CHANGED'
+  | 'SENSOR_ONLINE_STATUS_CHANGED'
   | 'SENSOR_VALUE_LOGGED';
 
 export type TSubscriptionType = {
@@ -791,6 +814,7 @@ export type TSubscriptionUnionType = TActuatorNodeSubscriptionType | TSensorNode
 export type TThresholdGroupActuatorType = {
   readonly __typename?: 'ThresholdGroupActuatorType';
   readonly actuator: TActuatorNodeType;
+  readonly changeToState: Scalars['Boolean']['output'];
   readonly createdAt: Scalars['DateTime']['output'];
   readonly id: Scalars['Int']['output'];
   readonly priority: Scalars['Int']['output'];
@@ -855,11 +879,27 @@ export type TVerify = {
 
 export type TFActuatorBase = { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentState: boolean | null, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null };
 
+export type TFActuatorCondition = { readonly __typename?: 'ActuatorConditionType', readonly value: boolean, readonly operator: TActuatorOperatorEnum, readonly id: number, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } };
+
+export type TFActuatorConditionBase = { readonly __typename?: 'ActuatorConditionType', readonly id: number, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } };
+
 export type TFCategoryBase = { readonly __typename?: 'MainframeType', readonly id: number, readonly name: string, readonly isOnline: boolean, readonly batteryLevel: number | null };
 
-export type TFGroup = { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly sensorConditions: ReadonlyArray<{ readonly __typename?: 'SensorConditionType', readonly id: number, readonly active: boolean, readonly sensor: { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly name: string | null } }> };
+export type TFControlledActuator = { readonly __typename?: 'ThresholdGroupActuatorType', readonly priority: number, readonly changeToState: boolean, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } };
+
+export type TFControlledActuatorBase = { readonly __typename?: 'ThresholdGroupActuatorType', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } };
+
+export type TFGroup = { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly controlledActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }> };
+
+export type TFGroupBase = { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean };
 
 export type TFSensorBase = { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null };
+
+export type TFSensorCondition = { readonly __typename?: 'SensorConditionType', readonly operator: TSensorOperatorEnum, readonly value: number, readonly id: number, readonly sensor: { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly name: string } };
+
+export type TFSensorConditionBase = { readonly __typename?: 'SensorConditionType', readonly id: number, readonly sensor: { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly name: string } };
+
+export type TFTriggerGroup = { readonly __typename?: 'ThresholdGroupActuatorType', readonly priority: number, readonly changeToState: boolean, readonly group: { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly actuatorConditions: ReadonlyArray<{ readonly __typename?: 'ActuatorConditionType', readonly id: number, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }>, readonly sensorConditions: ReadonlyArray<{ readonly __typename?: 'SensorConditionType', readonly id: number, readonly sensor: { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly name: string } }> } };
 
 export type TFUser = { readonly __typename?: 'UserType', readonly id: number, readonly email: string, readonly firstName: string, readonly lastName: string, readonly profileImage: string | null };
 
@@ -870,6 +910,44 @@ export type TMAuthUserVariables = Exact<{
 
 
 export type TMAuthUser = { readonly __typename?: 'Mutation', readonly login: { readonly __typename?: 'ObtainJSONWebToken', readonly token: string, readonly user: { readonly __typename?: 'UserType', readonly id: number, readonly email: string, readonly firstName: string, readonly lastName: string, readonly profileImage: string | null } | null } | null };
+
+export type TMChangeGroupActuatorStateVariables = Exact<{
+  groupId: Scalars['Int']['input'];
+  actuatorId: Scalars['Int']['input'];
+  changeToState: Scalars['Boolean']['input'];
+}>;
+
+
+export type TMChangeGroupActuatorState = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'SetActuatorChangeToStateThresholdGroupMutation', readonly actuator: { readonly __typename?: 'ThresholdGroupActuatorType', readonly priority: number, readonly changeToState: boolean, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } } | null } | null };
+
+export type TMCreateGroupVariables = Exact<{
+  name: Scalars['String']['input'];
+}>;
+
+
+export type TMCreateGroup = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'CreateThresholdGroupMutation', readonly group: { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string } | null } | null };
+
+export type TMRemoveActuatorConditionVariables = Exact<{
+  actuatorConditionId: Scalars['Int']['input'];
+}>;
+
+
+export type TMRemoveActuatorCondition = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'RemoveActuatorConditionMutation', readonly group: { readonly __typename?: 'ThresholdGroupType', readonly actuatorConditions: ReadonlyArray<{ readonly __typename?: 'ActuatorConditionType', readonly value: boolean, readonly operator: TActuatorOperatorEnum, readonly id: number, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }> } | null } | null };
+
+export type TMRemoveControlledActuatorVariables = Exact<{
+  groupId: Scalars['Int']['input'];
+  actuatorId: Scalars['Int']['input'];
+}>;
+
+
+export type TMRemoveControlledActuator = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'RemoveActuatorFromThresholdGroupMutation', readonly group: { readonly __typename?: 'ThresholdGroupType', readonly controlledActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly priority: number, readonly changeToState: boolean, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }> } | null } | null };
+
+export type TMRemoveSensorConditionVariables = Exact<{
+  sensorConditionId: Scalars['Int']['input'];
+}>;
+
+
+export type TMRemoveSensorCondition = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'RemoveSensorConditionMutation', readonly group: { readonly __typename?: 'ThresholdGroupType', readonly sensorConditions: ReadonlyArray<{ readonly __typename?: 'SensorConditionType', readonly operator: TSensorOperatorEnum, readonly value: number, readonly id: number, readonly sensor: { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly name: string } }> } | null } | null };
 
 export type TMSetCriticalOverVariables = Exact<{
   sensorId: Scalars['Int']['input'];
@@ -903,6 +981,14 @@ export type TMSetFavoriteSensorVariables = Exact<{
 
 export type TMSetFavoriteSensor = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'SetFavoriteSensorMutation', readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null } | null } | null };
 
+export type TMSetGroupActiveVariables = Exact<{
+  groupId: Scalars['Int']['input'];
+  active: Scalars['Boolean']['input'];
+}>;
+
+
+export type TMSetGroupActive = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'ChangeThresholdGroupActiveMutation', readonly group: { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly controlledActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }> } | null } | null };
+
 export type TMSetManualOverrideVariables = Exact<{
   actuatorId: Scalars['Int']['input'];
   until?: InputMaybe<Scalars['DateTime']['input']>;
@@ -917,12 +1003,24 @@ export type TQActuatorDetailVariables = Exact<{
 }>;
 
 
-export type TQActuatorDetail = { readonly __typename?: 'Query', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly currentState: boolean | null, readonly batteryLevel: number | null, readonly isOnline: boolean, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly thresholdGroupActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly id: number, readonly priority: number, readonly thresholdGroup: { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string } }> } | null };
+export type TQActuatorDetail = { readonly __typename?: 'Query', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly currentState: boolean | null, readonly batteryLevel: number | null, readonly isOnline: boolean, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly groups: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly priority: number, readonly changeToState: boolean, readonly group: { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly actuatorConditions: ReadonlyArray<{ readonly __typename?: 'ActuatorConditionType', readonly id: number, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }>, readonly sensorConditions: ReadonlyArray<{ readonly __typename?: 'SensorConditionType', readonly id: number, readonly sensor: { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly name: string } }> } }> } | null };
 
 export type TQCategoriesVariables = Exact<{ [key: string]: never; }>;
 
 
 export type TQCategories = { readonly __typename?: 'Query', readonly categories: ReadonlyArray<{ readonly __typename?: 'MainframeType', readonly id: number, readonly name: string, readonly isOnline: boolean, readonly batteryLevel: number | null, readonly sensors: ReadonlyArray<{ readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null, readonly actuators: ReadonlyArray<{ readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly currentState: boolean | null, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null }> | null };
+
+export type TQGroupDetailVariables = Exact<{
+  groupId: Scalars['Int']['input'];
+}>;
+
+
+export type TQGroupDetail = { readonly __typename?: 'Query', readonly group: { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly controlledActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly priority: number, readonly changeToState: boolean, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }>, readonly sensorConditions: ReadonlyArray<{ readonly __typename?: 'SensorConditionType', readonly operator: TSensorOperatorEnum, readonly value: number, readonly id: number, readonly sensor: { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly name: string } }>, readonly actuatorConditions: ReadonlyArray<{ readonly __typename?: 'ActuatorConditionType', readonly value: boolean, readonly operator: TActuatorOperatorEnum, readonly id: number, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }> } | null };
+
+export type TQGroupsVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TQGroups = { readonly __typename?: 'Query', readonly groups: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly controlledActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }> }> | null };
 
 export type TQSensorDetailVariables = Exact<{
   sensorId: Scalars['Int']['input'];
@@ -960,11 +1058,6 @@ export type TSActuatorValueVariables = Exact<{ [key: string]: never; }>;
 
 export type TSActuatorValue = { readonly __typename?: 'Subscription', readonly change: { readonly __typename?: 'SubscriptionType', readonly data: { readonly __typename?: 'ActuatorNodeSubscriptionType', readonly id: number, readonly currentState: boolean | null } | { readonly __typename?: 'SensorNodeSubscriptionType' } } };
 
-export type TSSensorCriticalVariables = Exact<{ [key: string]: never; }>;
-
-
-export type TSSensorCritical = { readonly __typename?: 'Subscription', readonly change: { readonly __typename?: 'SubscriptionType', readonly data: { readonly __typename?: 'ActuatorNodeSubscriptionType' } | { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly isCritical: boolean } } };
-
 export type TSSensorValueVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -983,6 +1076,22 @@ export const FActuatorBase = gql`
   }
 }
     `;
+export const FActuatorConditionBase = gql`
+    fragment FActuatorConditionBase on ActuatorConditionType {
+  id
+  actuator {
+    id
+    name
+  }
+}
+    `;
+export const FActuatorCondition = gql`
+    fragment FActuatorCondition on ActuatorConditionType {
+  ...FActuatorConditionBase
+  value
+  operator
+}
+    ${FActuatorConditionBase}`;
 export const FCategoryBase = gql`
     fragment FCategoryBase on MainframeType {
   id
@@ -991,21 +1100,40 @@ export const FCategoryBase = gql`
   batteryLevel
 }
     `;
-export const FGroup = gql`
-    fragment FGroup on ThresholdGroupType {
-  id
-  name
-  active
-  sensorConditions {
+export const FControlledActuator = gql`
+    fragment FControlledActuator on ThresholdGroupActuatorType {
+  priority
+  changeToState
+  actuator {
     id
-    active
-    sensor {
-      id
-      name
-    }
+    name
   }
 }
     `;
+export const FGroupBase = gql`
+    fragment FGroupBase on ThresholdGroupType {
+  id
+  name
+  active
+}
+    `;
+export const FControlledActuatorBase = gql`
+    fragment FControlledActuatorBase on ThresholdGroupActuatorType {
+  actuator {
+    id
+    name
+  }
+}
+    `;
+export const FGroup = gql`
+    fragment FGroup on ThresholdGroupType {
+  ...FGroupBase
+  controlledActuators: thresholdGroupActuators {
+    ...FControlledActuatorBase
+  }
+}
+    ${FGroupBase}
+${FControlledActuatorBase}`;
 export const FSensorBase = gql`
     fragment FSensorBase on SensorNodeType {
   id
@@ -1021,6 +1149,39 @@ export const FSensorBase = gql`
   }
 }
     `;
+export const FSensorConditionBase = gql`
+    fragment FSensorConditionBase on SensorConditionType {
+  id
+  sensor {
+    id
+    name
+  }
+}
+    `;
+export const FSensorCondition = gql`
+    fragment FSensorCondition on SensorConditionType {
+  ...FSensorConditionBase
+  operator
+  value
+}
+    ${FSensorConditionBase}`;
+export const FTriggerGroup = gql`
+    fragment FTriggerGroup on ThresholdGroupActuatorType {
+  group: thresholdGroup {
+    ...FGroupBase
+    actuatorConditions {
+      ...FActuatorConditionBase
+    }
+    sensorConditions {
+      ...FSensorConditionBase
+    }
+  }
+  priority
+  changeToState
+}
+    ${FGroupBase}
+${FActuatorConditionBase}
+${FSensorConditionBase}`;
 export const FUser = gql`
     fragment FUser on UserType {
   id
@@ -1067,6 +1228,198 @@ export function useMAuthUser(baseOptions?: ApolloReactHooks.MutationHookOptions<
 export type MAuthUserHookResult = ReturnType<typeof useMAuthUser>;
 export type MAuthUserMutationResult = ApolloReactCommon.MutationResult<TMAuthUser>;
 export type MAuthUserMutationOptions = ApolloReactCommon.BaseMutationOptions<TMAuthUser, TMAuthUserVariables>;
+export const MChangeGroupActuatorStateDocument = gql`
+    mutation MChangeGroupActuatorState($groupId: Int!, $actuatorId: Int!, $changeToState: Boolean!) {
+  result: setActuatorChangeToStateThresholdGroup(
+    thresholdGroupId: $groupId
+    actuatorId: $actuatorId
+    changeToState: $changeToState
+  ) {
+    actuator: thresholdGroupActuator {
+      ...FControlledActuator
+    }
+  }
+}
+    ${FControlledActuator}`;
+export type TMChangeGroupActuatorStateMutationFn = ApolloReactCommon.MutationFunction<TMChangeGroupActuatorState, TMChangeGroupActuatorStateVariables>;
+
+/**
+ * __useMChangeGroupActuatorState__
+ *
+ * To run a mutation, you first call `useMChangeGroupActuatorState` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMChangeGroupActuatorState` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mChangeGroupActuatorState, { data, loading, error }] = useMChangeGroupActuatorState({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      actuatorId: // value for 'actuatorId'
+ *      changeToState: // value for 'changeToState'
+ *   },
+ * });
+ */
+export function useMChangeGroupActuatorState(baseOptions?: ApolloReactHooks.MutationHookOptions<TMChangeGroupActuatorState, TMChangeGroupActuatorStateVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<TMChangeGroupActuatorState, TMChangeGroupActuatorStateVariables>(MChangeGroupActuatorStateDocument, options);
+      }
+export type MChangeGroupActuatorStateHookResult = ReturnType<typeof useMChangeGroupActuatorState>;
+export type MChangeGroupActuatorStateMutationResult = ApolloReactCommon.MutationResult<TMChangeGroupActuatorState>;
+export type MChangeGroupActuatorStateMutationOptions = ApolloReactCommon.BaseMutationOptions<TMChangeGroupActuatorState, TMChangeGroupActuatorStateVariables>;
+export const MCreateGroupDocument = gql`
+    mutation MCreateGroup($name: String!) {
+  result: createThresholdGroup(householdId: 1, name: $name) {
+    group: thresholdGroup {
+      id
+      name
+    }
+  }
+}
+    `;
+export type TMCreateGroupMutationFn = ApolloReactCommon.MutationFunction<TMCreateGroup, TMCreateGroupVariables>;
+
+/**
+ * __useMCreateGroup__
+ *
+ * To run a mutation, you first call `useMCreateGroup` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMCreateGroup` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mCreateGroup, { data, loading, error }] = useMCreateGroup({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useMCreateGroup(baseOptions?: ApolloReactHooks.MutationHookOptions<TMCreateGroup, TMCreateGroupVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<TMCreateGroup, TMCreateGroupVariables>(MCreateGroupDocument, options);
+      }
+export type MCreateGroupHookResult = ReturnType<typeof useMCreateGroup>;
+export type MCreateGroupMutationResult = ApolloReactCommon.MutationResult<TMCreateGroup>;
+export type MCreateGroupMutationOptions = ApolloReactCommon.BaseMutationOptions<TMCreateGroup, TMCreateGroupVariables>;
+export const MRemoveActuatorConditionDocument = gql`
+    mutation MRemoveActuatorCondition($actuatorConditionId: Int!) {
+  result: removeActuatorCondition(actuatorConditionId: $actuatorConditionId) {
+    group: thresholdGroup {
+      actuatorConditions {
+        ...FActuatorCondition
+      }
+    }
+  }
+}
+    ${FActuatorCondition}`;
+export type TMRemoveActuatorConditionMutationFn = ApolloReactCommon.MutationFunction<TMRemoveActuatorCondition, TMRemoveActuatorConditionVariables>;
+
+/**
+ * __useMRemoveActuatorCondition__
+ *
+ * To run a mutation, you first call `useMRemoveActuatorCondition` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMRemoveActuatorCondition` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mRemoveActuatorCondition, { data, loading, error }] = useMRemoveActuatorCondition({
+ *   variables: {
+ *      actuatorConditionId: // value for 'actuatorConditionId'
+ *   },
+ * });
+ */
+export function useMRemoveActuatorCondition(baseOptions?: ApolloReactHooks.MutationHookOptions<TMRemoveActuatorCondition, TMRemoveActuatorConditionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<TMRemoveActuatorCondition, TMRemoveActuatorConditionVariables>(MRemoveActuatorConditionDocument, options);
+      }
+export type MRemoveActuatorConditionHookResult = ReturnType<typeof useMRemoveActuatorCondition>;
+export type MRemoveActuatorConditionMutationResult = ApolloReactCommon.MutationResult<TMRemoveActuatorCondition>;
+export type MRemoveActuatorConditionMutationOptions = ApolloReactCommon.BaseMutationOptions<TMRemoveActuatorCondition, TMRemoveActuatorConditionVariables>;
+export const MRemoveControlledActuatorDocument = gql`
+    mutation MRemoveControlledActuator($groupId: Int!, $actuatorId: Int!) {
+  result: removeActuatorFromThresholdGroup(
+    thresholdGroupId: $groupId
+    actuatorId: $actuatorId
+  ) {
+    group: thresholdGroup {
+      controlledActuators: thresholdGroupActuators {
+        ...FControlledActuator
+      }
+    }
+  }
+}
+    ${FControlledActuator}`;
+export type TMRemoveControlledActuatorMutationFn = ApolloReactCommon.MutationFunction<TMRemoveControlledActuator, TMRemoveControlledActuatorVariables>;
+
+/**
+ * __useMRemoveControlledActuator__
+ *
+ * To run a mutation, you first call `useMRemoveControlledActuator` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMRemoveControlledActuator` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mRemoveControlledActuator, { data, loading, error }] = useMRemoveControlledActuator({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      actuatorId: // value for 'actuatorId'
+ *   },
+ * });
+ */
+export function useMRemoveControlledActuator(baseOptions?: ApolloReactHooks.MutationHookOptions<TMRemoveControlledActuator, TMRemoveControlledActuatorVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<TMRemoveControlledActuator, TMRemoveControlledActuatorVariables>(MRemoveControlledActuatorDocument, options);
+      }
+export type MRemoveControlledActuatorHookResult = ReturnType<typeof useMRemoveControlledActuator>;
+export type MRemoveControlledActuatorMutationResult = ApolloReactCommon.MutationResult<TMRemoveControlledActuator>;
+export type MRemoveControlledActuatorMutationOptions = ApolloReactCommon.BaseMutationOptions<TMRemoveControlledActuator, TMRemoveControlledActuatorVariables>;
+export const MRemoveSensorConditionDocument = gql`
+    mutation MRemoveSensorCondition($sensorConditionId: Int!) {
+  result: removeSensorCondition(sensorConditionId: $sensorConditionId) {
+    group: thresholdGroup {
+      sensorConditions {
+        ...FSensorCondition
+      }
+    }
+  }
+}
+    ${FSensorCondition}`;
+export type TMRemoveSensorConditionMutationFn = ApolloReactCommon.MutationFunction<TMRemoveSensorCondition, TMRemoveSensorConditionVariables>;
+
+/**
+ * __useMRemoveSensorCondition__
+ *
+ * To run a mutation, you first call `useMRemoveSensorCondition` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMRemoveSensorCondition` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mRemoveSensorCondition, { data, loading, error }] = useMRemoveSensorCondition({
+ *   variables: {
+ *      sensorConditionId: // value for 'sensorConditionId'
+ *   },
+ * });
+ */
+export function useMRemoveSensorCondition(baseOptions?: ApolloReactHooks.MutationHookOptions<TMRemoveSensorCondition, TMRemoveSensorConditionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<TMRemoveSensorCondition, TMRemoveSensorConditionVariables>(MRemoveSensorConditionDocument, options);
+      }
+export type MRemoveSensorConditionHookResult = ReturnType<typeof useMRemoveSensorCondition>;
+export type MRemoveSensorConditionMutationResult = ApolloReactCommon.MutationResult<TMRemoveSensorCondition>;
+export type MRemoveSensorConditionMutationOptions = ApolloReactCommon.BaseMutationOptions<TMRemoveSensorCondition, TMRemoveSensorConditionVariables>;
 export const MSetCriticalOverDocument = gql`
     mutation MSetCriticalOver($sensorId: Int!, $value: Float) {
   result: setCriticalOverValue(sensorId: $sensorId, value: $value) {
@@ -1207,6 +1560,42 @@ export function useMSetFavoriteSensor(baseOptions?: ApolloReactHooks.MutationHoo
 export type MSetFavoriteSensorHookResult = ReturnType<typeof useMSetFavoriteSensor>;
 export type MSetFavoriteSensorMutationResult = ApolloReactCommon.MutationResult<TMSetFavoriteSensor>;
 export type MSetFavoriteSensorMutationOptions = ApolloReactCommon.BaseMutationOptions<TMSetFavoriteSensor, TMSetFavoriteSensorVariables>;
+export const MSetGroupActiveDocument = gql`
+    mutation MSetGroupActive($groupId: Int!, $active: Boolean!) {
+  result: changeThresholdGroupActive(thresholdGroupId: $groupId, active: $active) {
+    group: thresholdGroup {
+      ...FGroup
+    }
+  }
+}
+    ${FGroup}`;
+export type TMSetGroupActiveMutationFn = ApolloReactCommon.MutationFunction<TMSetGroupActive, TMSetGroupActiveVariables>;
+
+/**
+ * __useMSetGroupActive__
+ *
+ * To run a mutation, you first call `useMSetGroupActive` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMSetGroupActive` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mSetGroupActive, { data, loading, error }] = useMSetGroupActive({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      active: // value for 'active'
+ *   },
+ * });
+ */
+export function useMSetGroupActive(baseOptions?: ApolloReactHooks.MutationHookOptions<TMSetGroupActive, TMSetGroupActiveVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<TMSetGroupActive, TMSetGroupActiveVariables>(MSetGroupActiveDocument, options);
+      }
+export type MSetGroupActiveHookResult = ReturnType<typeof useMSetGroupActive>;
+export type MSetGroupActiveMutationResult = ApolloReactCommon.MutationResult<TMSetGroupActive>;
+export type MSetGroupActiveMutationOptions = ApolloReactCommon.BaseMutationOptions<TMSetGroupActive, TMSetGroupActiveVariables>;
 export const MSetManualOverrideDocument = gql`
     mutation MSetManualOverride($actuatorId: Int!, $until: DateTime, $value: Boolean) {
   result: setManualOverrideUntil(
@@ -1257,17 +1646,12 @@ export const QActuatorDetailDocument = gql`
     isOnline
     manualOverride
     manualOverrideValue
-    thresholdGroupActuators {
-      id
-      priority
-      thresholdGroup {
-        id
-        name
-      }
+    groups: thresholdGroupActuators {
+      ...FTriggerGroup
     }
   }
 }
-    `;
+    ${FTriggerGroup}`;
 
 /**
  * __useQActuatorDetail__
@@ -1348,6 +1732,97 @@ export type QCategoriesHookResult = ReturnType<typeof useQCategories>;
 export type QCategoriesLazyQueryHookResult = ReturnType<typeof useQCategoriesLazyQuery>;
 export type QCategoriesSuspenseQueryHookResult = ReturnType<typeof useQCategoriesSuspenseQuery>;
 export type QCategoriesQueryResult = ApolloReactCommon.QueryResult<TQCategories, TQCategoriesVariables>;
+export const QGroupDetailDocument = gql`
+    query QGroupDetail($groupId: Int!) {
+  group: thresholdGroup(id: $groupId) {
+    ...FGroupBase
+    controlledActuators: thresholdGroupActuators {
+      ...FControlledActuator
+    }
+    sensorConditions {
+      ...FSensorCondition
+    }
+    actuatorConditions {
+      ...FActuatorCondition
+    }
+  }
+}
+    ${FGroupBase}
+${FControlledActuator}
+${FSensorCondition}
+${FActuatorCondition}`;
+
+/**
+ * __useQGroupDetail__
+ *
+ * To run a query within a React component, call `useQGroupDetail` and pass it any options that fit your needs.
+ * When your component renders, `useQGroupDetail` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQGroupDetail({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useQGroupDetail(baseOptions: ApolloReactHooks.QueryHookOptions<TQGroupDetail, TQGroupDetailVariables> & ({ variables: TQGroupDetailVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<TQGroupDetail, TQGroupDetailVariables>(QGroupDetailDocument, options);
+      }
+export function useQGroupDetailLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TQGroupDetail, TQGroupDetailVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<TQGroupDetail, TQGroupDetailVariables>(QGroupDetailDocument, options);
+        }
+export function useQGroupDetailSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<TQGroupDetail, TQGroupDetailVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<TQGroupDetail, TQGroupDetailVariables>(QGroupDetailDocument, options);
+        }
+export type QGroupDetailHookResult = ReturnType<typeof useQGroupDetail>;
+export type QGroupDetailLazyQueryHookResult = ReturnType<typeof useQGroupDetailLazyQuery>;
+export type QGroupDetailSuspenseQueryHookResult = ReturnType<typeof useQGroupDetailSuspenseQuery>;
+export type QGroupDetailQueryResult = ApolloReactCommon.QueryResult<TQGroupDetail, TQGroupDetailVariables>;
+export const QGroupsDocument = gql`
+    query QGroups {
+  groups: allThresholdGroups(householdId: 1) {
+    ...FGroup
+  }
+}
+    ${FGroup}`;
+
+/**
+ * __useQGroups__
+ *
+ * To run a query within a React component, call `useQGroups` and pass it any options that fit your needs.
+ * When your component renders, `useQGroups` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQGroups({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useQGroups(baseOptions?: ApolloReactHooks.QueryHookOptions<TQGroups, TQGroupsVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<TQGroups, TQGroupsVariables>(QGroupsDocument, options);
+      }
+export function useQGroupsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TQGroups, TQGroupsVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<TQGroups, TQGroupsVariables>(QGroupsDocument, options);
+        }
+export function useQGroupsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<TQGroups, TQGroupsVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<TQGroups, TQGroupsVariables>(QGroupsDocument, options);
+        }
+export type QGroupsHookResult = ReturnType<typeof useQGroups>;
+export type QGroupsLazyQueryHookResult = ReturnType<typeof useQGroupsLazyQuery>;
+export type QGroupsSuspenseQueryHookResult = ReturnType<typeof useQGroupsSuspenseQuery>;
+export type QGroupsQueryResult = ApolloReactCommon.QueryResult<TQGroups, TQGroupsVariables>;
 export const QSensorDetailDocument = gql`
     query QSensorDetail($sensorId: Int!) {
   sensor: sensorNode(id: $sensorId) {
@@ -1568,40 +2043,6 @@ export function useSActuatorValue(baseOptions?: ApolloReactHooks.SubscriptionHoo
       }
 export type SActuatorValueHookResult = ReturnType<typeof useSActuatorValue>;
 export type SActuatorValueSubscriptionResult = ApolloReactCommon.SubscriptionResult<TSActuatorValue>;
-export const SSensorCriticalDocument = gql`
-    subscription SSensorCritical {
-  change: nodeValues {
-    data {
-      ... on SensorNodeSubscriptionType {
-        id
-        isCritical
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useSSensorCritical__
- *
- * To run a query within a React component, call `useSSensorCritical` and pass it any options that fit your needs.
- * When your component renders, `useSSensorCritical` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSSensorCritical({
- *   variables: {
- *   },
- * });
- */
-export function useSSensorCritical(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TSSensorCritical, TSSensorCriticalVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useSubscription<TSSensorCritical, TSSensorCriticalVariables>(SSensorCriticalDocument, options);
-      }
-export type SSensorCriticalHookResult = ReturnType<typeof useSSensorCritical>;
-export type SSensorCriticalSubscriptionResult = ApolloReactCommon.SubscriptionResult<TSSensorCritical>;
 export const SSensorValueDocument = gql`
     subscription SSensorValue {
   change: nodeValues {
