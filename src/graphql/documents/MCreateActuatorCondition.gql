@@ -1,0 +1,15 @@
+mutation MCreateActuatorCondition(
+  $actuatorId: Int!
+  $groupId: Int!
+  $operator: ActuatorOperatorEnum!
+  $state: Boolean!
+) {
+  result: addActuatorCondition(
+    operator: $operator
+    actuatorId: $actuatorId
+    thresholdGroupId: $groupId
+    value: $state
+  ) {
+    success
+  }
+}

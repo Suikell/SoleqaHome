@@ -1,0 +1,12 @@
+query QNotifications {
+  result: getNotifications {
+    unreadCount
+    notifications {
+      id
+      read
+      createdAt
+      title
+      body
+    }
+  }
+}

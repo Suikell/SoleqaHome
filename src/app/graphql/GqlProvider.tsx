@@ -17,7 +17,7 @@ type TProps = RequiredChildren
 
 // !change when starting ngrok
 // !ngrok http http://localhost:8000 (port based on BE)
-const NGROK = `49d1-83-240-63-190.ngrok-free.app`
+const NGROK = `cfa6-83-240-63-190.ngrok-free.app`
 
 /**
  * GQL BE connection provider
@@ -25,9 +25,6 @@ const NGROK = `49d1-83-240-63-190.ngrok-free.app`
  */
 export const GqlProvider: React.FC<TProps> = ({ children }) => {
   const [token, setToken] = React.useState<Nullable<string>>(null)
-
-  // TODO - add subscriptions
-  // https://medium.com/simform-engineering/apollo-graphql-with-react-native-part-2-3d845f1b006
 
   const [client, setClient] =
     React.useState<Nullable<ApolloClient<NormalizedCacheObject>>>(null)
@@ -47,6 +44,8 @@ export const GqlProvider: React.FC<TProps> = ({ children }) => {
         },
       }
     })
+
+    // https://medium.com/simform-engineering/apollo-graphql-with-react-native-part-2-3d845f1b006
     const wsLink = new GraphQLWsLink(
       createClient({
         url: `wss://${NGROK}/subscriptions/?token=${token}`,
@@ -56,7 +55,7 @@ export const GqlProvider: React.FC<TProps> = ({ children }) => {
         keepAlive: 60000,
         //     retryAttempts: 20,
         shouldRetry: (errOrClose) => {
-          console.log(errOrClose)
+          console.log('errCl', errOrClose)
           return true
         },
       }),

@@ -88,7 +88,7 @@ export const useAuthUser = ({ setToken }: TProps) => {
 
   console.log('loading', loading)
   console.log('error', error)
-  return { logoutUser, validateUser, loading, user }
+  return { logoutUser, validateUser, loading, user, setUser }
 }
 
 // * HELPERS

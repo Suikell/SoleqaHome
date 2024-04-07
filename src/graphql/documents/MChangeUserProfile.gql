@@ -1,0 +1,7 @@
+mutation MChangeUserProfile($firstName: String!, $lastName: String!) {
+  result: changeUserProfile(firstName: $firstName, lastName: $lastName) {
+    user {
+      ...FUser
+    }
+  }
+}

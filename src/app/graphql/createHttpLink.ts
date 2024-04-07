@@ -1,4 +1,4 @@
-import { HttpLink } from '@apollo/client';
+import { HttpLink } from '@apollo/client'
 
 const beUrl = `Hello? Who should I be?`
 
@@ -15,8 +15,5 @@ export type TCreateHttpLinkOptions = {
 export const createHttpLink = () => {
   return new HttpLink({
     uri: `${beUrl}/graphql`,
-    // TODO headers: {
-    //     "Authorization": `Bearer ${token}`,
-    // },
   })
 }

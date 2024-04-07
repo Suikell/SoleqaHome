@@ -1,0 +1,5 @@
+mutation MReadNotifications {
+  result: markAllAsRead {
+    success
+  }
+}

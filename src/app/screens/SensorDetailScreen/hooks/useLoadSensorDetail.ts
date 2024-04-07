@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSensorValueCtx } from 'src/app/shared/components/SensorValueProvider'
+import { useSensorValueCtx } from 'src/app/shared/components/ValueSubscriptionProvider'
 
 import { TQSensorDetail, useQSensorDetail } from '~graphql/generated/graphql'
 

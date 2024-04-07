@@ -14,8 +14,8 @@ import {
 import { cs, registerTranslation } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GqlProvider } from 'src/app/graphql/GqlProvider'
-import { ActuatorValueProvider } from 'src/app/shared/components/ActuatorValueProvider'
-import { SensorValueProvider } from 'src/app/shared/components/SensorValueProvider'
+import { NotificationsProvider } from 'src/app/shared/components/NotificationsProvider'
+import { ValueSubscriptionProvider } from 'src/app/shared/components/ValueSubscriptionProvider'
 import { CategoriesProvider } from 'src/app/shared/contexts/CategoriesProvider'
 
 import { Navigation } from '~navigation/components/Navigation'
@@ -36,7 +36,7 @@ const darkTheme = {
   colors: {
     primary: 'rgb(111, 219, 169)',
     onPrimary: 'rgb(0, 56, 36)',
-    primaryContainer: 'rgb(0, 82, 54)',
+    primaryContainer: 'rgb(62, 114, 92)',
     onPrimaryContainer: 'rgb(139, 247, 195)',
     onPressPrimary: 'rgba(111, 219, 169, 0.150)',
     secondary: 'rgb(180, 204, 189)',
@@ -104,13 +104,13 @@ const App: React.FC = () => {
       <NavigationContainer theme={navTheme}>
         <GqlProvider>
           <SafeAreaProvider>
-            <CategoriesProvider>
-              <SensorValueProvider>
-                <ActuatorValueProvider>
+            <NotificationsProvider>
+              <CategoriesProvider>
+                <ValueSubscriptionProvider>
                   <Navigation />
-                </ActuatorValueProvider>
-              </SensorValueProvider>
-            </CategoriesProvider>
+                </ValueSubscriptionProvider>
+              </CategoriesProvider>
+            </NotificationsProvider>
           </SafeAreaProvider>
         </GqlProvider>
       </NavigationContainer>

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Text } from 'react-native-paper'
 
 import { TFGroup } from '~graphql/generated/graphql'
 import { ConfirmModal } from '~ui/Layout/ConfirmModal'
@@ -35,11 +36,13 @@ export const ConfirmActiveModal: React.FC<TProps> = ({
       onConfirm={onConfirm}
       title={`Group activity`}
     >
-      Are you sure you want to
-      <EmphasisText> {activationState}</EmphasisText> the
-      {` `}
-      <EmphasisText>{name}</EmphasisText> group? This action will impact all the
-      actuators controlled by this group.
+      <Text variant={`bodyMedium`}>
+        Are you sure you want to
+        <EmphasisText> {activationState}</EmphasisText> the
+        {` `}
+        <EmphasisText>{name}</EmphasisText> group? This action will impact all
+        the actuators controlled by this group.
+      </Text>
     </ConfirmModal>
   )
 }

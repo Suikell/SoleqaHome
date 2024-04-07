@@ -1,21 +1,28 @@
-import { TAppTheme } from 'App'
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 import { TFTriggerGroup } from '~graphql/generated/graphql'
+import { PriorityBadge } from '~screens/ActuatorDetailScreen/components/PriorityBadge'
+import { useActuatorDetailCtx } from '~screens/ActuatorDetailScreen/contexts/ActuatorDetailProvider'
+import { getActuatorStateString } from '~ui/Actuator/helpers/getActuatorStateString'
+import { CardLabel } from '~ui/Group/GroupCard/CardLabel'
 import { GroupCardContainer } from '~ui/Group/GroupCard/GroupCardContainer'
 import { GroupCardDescription } from '~ui/Group/GroupCard/GroupCardDescription'
-import { Switch } from '~ui/Switch/Switch'
+import { FlexRow } from '~ui/Layout/FlexRow'
 import { shrink } from '~utils/helpers/shrink'
-import { useStylesWithTheme } from '~utils/hooks/useStylesWithTheme'
 
 type TProps = NoChildren & {
+  priority: number
   triggerGroup: TFTriggerGroup
 }
 
-export const TriggerGroupCard: React.FC<TProps> = ({ triggerGroup }) => {
-  const { group, changeToState, priority } = triggerGroup
+export const TriggerGroupCard: React.FC<TProps> = ({
+  priority,
+  triggerGroup,
+}) => {
+  const { actuator } = useActuatorDetailCtx()
+  const { group, changeToState } = triggerGroup
   const { actuatorConditions, sensorConditions } = group
 
   const hasActuatorConditions = actuatorConditions.length > 0
@@ -23,15 +30,33 @@ export const TriggerGroupCard: React.FC<TProps> = ({ triggerGroup }) => {
 
   const hasConditions = hasActuatorConditions || hasSensorConditions
 
-  const [visible, setVisible] = React.useState(false)
-
-  const showModal = () => setVisible(true)
-  const hideModal = () => setVisible(false)
-
-  const styles = useStylesWithTheme(styleCreator)
-
   return (
-    <GroupCardContainer groupId={group.id} name={group.name}>
+    <GroupCardContainer
+      groupId={group.id}
+      name={group.name}
+      rightAction={
+        <PriorityBadge
+          groupId={group.id}
+          actuatorId={actuator.id}
+          groupName={group.name}
+          actuatorName={actuator.name}
+          priority={priority}
+          maxPriority={actuator.groups.length}
+        />
+      }
+      cardStyle={styles.card}
+    >
+      <View style={styles.content}>
+        <FlexRow maxWidth={`100%`} justifyContent={`space-between`}>
+          <View style={{ maxWidth: `80%` }}>
+            <CardLabel label={`Changes actuator to:`} />
+          </View>
+          <Text variant={`titleLarge`}>
+            {getActuatorStateString(changeToState)}
+          </Text>
+        </FlexRow>
+      </View>
+
       {hasConditions && (
         <GroupCardDescription label={`Depends on:`}>
           {sensorConditions.map((item, index) => {
@@ -51,31 +76,18 @@ export const TriggerGroupCard: React.FC<TProps> = ({ triggerGroup }) => {
           })}
         </GroupCardDescription>
       )}
-
-      <Switch
-        label={`active`}
-        state={group.active}
-        onChange={() => showModal()}
-      />
     </GroupCardContainer>
   )
 }
 
-const titleSpacing = shrink(32)
 const contentSpacing = shrink(48)
 
-const styleCreator = (theme: TAppTheme) =>
-  StyleSheet.create({
-    title: {
-      marginTop: titleSpacing,
-      // paddingRight: titleSpacing,
-      marginBottom: shrink(16),
-    },
-    label: {
-      color: theme.colors.tertiary,
-    },
-    content: {
-      marginHorizontal: contentSpacing,
-      marginBottom: shrink(20),
-    },
-  })
+const styles = StyleSheet.create({
+  content: {
+    marginHorizontal: contentSpacing,
+    marginBottom: shrink(20),
+  },
+  card: {
+    overflow: `visible`,
+  },
+})

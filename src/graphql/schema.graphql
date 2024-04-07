@@ -14,7 +14,7 @@ type ActuatorNodeSubscriptionType {
   actuatorType: ActuatorTypeEnum
   batteryLevel: Float
   createdAt: DateTime!
-  currentState: Boolean
+  currentState: Boolean!
   deviceId: String!
   favorite: Boolean!
   id: Int!
@@ -224,6 +224,12 @@ type MainframeType {
   updatedAt: DateTime!
 }
 
+type MarkAllAsRead {
+  message: String
+  success: Boolean!
+  unreadCount: Int
+}
+
 type Mutation {
   addActuatorCondition(actuatorId: Int!, operator: ActuatorOperatorEnum!, thresholdGroupId: Int!, value: Boolean!): AddActuatorConditionMutation
   addActuatorToThresholdGroup(actuatorId: Int!, thresholdGroupId: Int!): AddActuatorToThresholdGroupMutation
@@ -238,6 +244,7 @@ type Mutation {
   changeUserProfile(firstName: String, lastName: String): ChangeUserProfileMutation
   createThresholdGroup(active: Boolean, householdId: Int!, name: String!): CreateThresholdGroupMutation
   deleteThresholdGroup(thresholdGroupId: Int!): DeleteThresholdGroupMutation
+  markAllAsRead: MarkAllAsRead
   refreshToken(token: String): Refresh
   removeActuatorCondition(actuatorConditionId: Int!): RemoveActuatorConditionMutation
   removeActuatorFromThresholdGroup(actuatorId: Int!, thresholdGroupId: Int!): RemoveActuatorFromThresholdGroupMutation
@@ -264,6 +271,38 @@ enum NodeTypeEnum {
   UNASSIGNED
 }
 
+type NotificationListType {
+  notifications: [NotificationType]!
+  unreadCount: Int!
+}
+
+enum NotificationSeverityEnum {
+  CRITICAL
+  INFO
+  WARNING
+}
+
+type NotificationType {
+  body: String!
+  createdAt: DateTime!
+  id: Int!
+  read: Boolean!
+  severity: NotificationSeverityEnum
+  title: String!
+  type: NotificationTypeEnum
+  updatedAt: DateTime!
+}
+
+enum NotificationTypeEnum {
+  ACTUATOR_MANUAL_OVERRIDE_EXPIRED
+  ACTUATOR_STATE_CHANGED
+  GENERAL
+  NODE_OFFLINE
+  NODE_ONLINE
+  SENSOR_CRITICAL
+  SENSOR_NOT_CRITICAL
+}
+
 type ObtainJSONWebToken {
   households: [HouseholdType!]
   payload: GenericScalar!
@@ -284,6 +323,7 @@ type Query {
   allThresholdGroups(householdId: Int!): [ThresholdGroupType!]
   allUsers: [UserType!]
   dailyLogValues(date: Date!): DailyLogValuesType
+  getNotifications: NotificationListType
   household(id: Int!): HouseholdType
   mainframe(id: Int!): MainframeType
   sensorCondition(
@@ -326,7 +366,7 @@ type SensorConditionType {
   id: Int!
   operator: SensorOperatorEnum!
   operatorStr: String!
-  sensor: SensorNodeSubscriptionType!
+  sensor: SensorNodeType!
   thresholdGroup: ThresholdGroupType!
   updatedAt: DateTime!
   value: Float!
@@ -430,7 +470,7 @@ enum SensorTypeEnum {
 type SensorValueType {
   createdAt: DateTime!
   id: Int!
-  sensor: SensorNodeSubscriptionType!
+  sensor: SensorNodeType!
   value: Float!
 }
 
@@ -490,9 +530,11 @@ type SetManualOverrideUntilMutation {
 
 type Subscription {
   nodeValues: SubscriptionType!
+  notificationUnreadCount: Int!
 }
 
 enum SubscriptionResultType {
+  ACTUATOR_MANUAL_OVERRIDE_EXPIRED
   ACTUATOR_ONLINE_STATUS_CHANGED
   ACTUATOR_STATE_CHANGED
   MAINFRAME_ONLINE_STATUS_CHANGED

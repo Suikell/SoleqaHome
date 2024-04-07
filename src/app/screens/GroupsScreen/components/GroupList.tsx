@@ -8,7 +8,6 @@ type TProps = NoChildren
 
 export const GroupsList: React.FC<TProps> = () => {
   const { groups } = useGroupsCtx()
-  console.log(groups)
   return (
     <GroupListContainer>
       {groups.map((group) => (

@@ -280,7 +280,7 @@
     "body": [
       "import * as React from 'react'",
       "",
-      "import { createContext } from '~logic/lib/react'",
+      "import { createContext } from '~utils/context/createContext'",
       "",
       "type T${2:ContextValue} = {",
       "\t$3",

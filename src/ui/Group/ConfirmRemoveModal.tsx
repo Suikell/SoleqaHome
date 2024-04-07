@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Text } from 'react-native-paper'
 
 import { ConfirmModal } from '~ui/Layout/ConfirmModal'
 import { EmphasisText } from '~ui/Layout/EmphasisText'
@@ -12,6 +13,7 @@ type TProps = NoChildren &
   TModalProps & {
     removeItemName: string
     textBehindName?: string
+    extraContent?: React.ReactNode
   }
 
 export const ConfirmRemoveModal: React.FC<TProps> = ({
@@ -20,6 +22,7 @@ export const ConfirmRemoveModal: React.FC<TProps> = ({
   removeItemName,
   hideModal,
   onConfirm,
+  extraContent,
   textBehindName,
 }) => {
   return (
@@ -29,8 +32,11 @@ export const ConfirmRemoveModal: React.FC<TProps> = ({
       onConfirm={onConfirm}
       title={title}
     >
-      Are you sure you want to remove
-      <EmphasisText> {removeItemName}</EmphasisText> {textBehindName}?
+      <Text variant={`bodyMedium`}>
+        Are you sure you want to remove
+        <EmphasisText> {removeItemName}</EmphasisText> {textBehindName}?
+      </Text>
+      {extraContent}
     </ConfirmModal>
   )
 }

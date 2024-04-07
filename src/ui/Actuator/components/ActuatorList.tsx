@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useCategoriesCtx } from 'src/app/shared/contexts/CategoriesProvider'
 
+import { CONTENT_MARGIN } from '~styles/spacing'
 import { ActuatorCard } from '~ui/Actuator/components/ActuatorCard'
 import { shrink } from '~utils/helpers/shrink'
 
@@ -24,7 +25,7 @@ export const ActuatorList: React.FC<TProps> = ({
   }
 
   return (
-    <>
+    <View style={label ? styles.labelContainer : undefined}>
       {label && <Text variant={`titleLarge`}>{label}</Text>}
       <View style={styles.sensors}>
         {actuators.map((actuator) => {
@@ -38,11 +39,14 @@ export const ActuatorList: React.FC<TProps> = ({
           return <ActuatorCard key={actuator.id} actuator={actuator} />
         })}
       </View>
-    </>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  labelContainer: {
+    gap: CONTENT_MARGIN,
+  },
   sensors: {
     flexDirection: `row`,
     rowGap: shrink(48),

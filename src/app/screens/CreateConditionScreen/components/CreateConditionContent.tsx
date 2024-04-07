@@ -10,7 +10,9 @@ import {
   TDeviceType,
   useCreateConditionCtx,
 } from '~screens/CreateConditionScreen/contexts/CreateConditionProvider'
+import { useCreateCondition } from '~screens/CreateConditionScreen/hooks/useCreateCondition'
 import { CONTENT_MARGIN } from '~styles/spacing'
+import { CreateButton } from '~ui/Buttons/CreateButton'
 import { shrink } from '~utils/helpers/shrink'
 
 type TProps = NoChildren
@@ -26,6 +28,8 @@ export const CreateConditionContent: React.FC<TProps> = () => {
     toggleConditionVisibility,
     toggleDeviceVisibility,
   } = useCreateConditionCtx()
+
+  const { createCondition } = useCreateCondition()
 
   return (
     <>
@@ -52,7 +56,7 @@ export const CreateConditionContent: React.FC<TProps> = () => {
       >
         <ScrollView style={{ marginVertical: shrink(24) }}>
           {/* Because of the keyboard */}
-          <View style={{ paddingBottom: 100 }}>
+          <View style={{ paddingBottom: 140 }}>
             <SectionHeader
               title={`Choose ${selectedType}`}
               isVisible={isDeviceVisible}
@@ -76,6 +80,8 @@ export const CreateConditionContent: React.FC<TProps> = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <CreateButton onPress={createCondition} />
     </>
   )
 }

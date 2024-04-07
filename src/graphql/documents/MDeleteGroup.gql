@@ -1,0 +1,5 @@
+mutation MDeleteGroup($groupId: Int!) {
+  result: deleteThresholdGroup(thresholdGroupId: $groupId) {
+    success
+  }
+}

@@ -1,0 +1,8 @@
+mutation MAddControlledActuator($groupId: Int!, $actuatorId: Int!) {
+  result: addActuatorToThresholdGroup(
+    thresholdGroupId: $groupId
+    actuatorId: $actuatorId
+  ) {
+    success
+  }
+}

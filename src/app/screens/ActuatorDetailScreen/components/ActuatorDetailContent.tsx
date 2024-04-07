@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Pressable, View } from 'react-native'
+import { Pressable, ScrollView, View } from 'react-native'
 
 import { ActuatorValues } from '~screens/ActuatorDetailScreen/components/ActuatorValues'
 import { ManualControl } from '~screens/ActuatorDetailScreen/components/ManualControl'
@@ -9,6 +9,8 @@ type TManualControlProps = OmitSafe<PropsOf<typeof ManualControl>, 'children'>
 
 type TProps = NoChildren & TManualControlProps
 
+const contentPaddingForScroll = 450
+
 export const ActuatorDetailContent: React.FC<TProps> = ({
   isManualControlOpen,
   setIsManualControlOpen,
@@ -16,13 +18,18 @@ export const ActuatorDetailContent: React.FC<TProps> = ({
   return (
     <View>
       <ActuatorValues />
-      <ManualControl
-        isManualControlOpen={isManualControlOpen}
-        setIsManualControlOpen={setIsManualControlOpen}
-      />
-      <Pressable pointerEvents={isManualControlOpen ? `none` : undefined}>
-        <TriggerGroups />
-      </Pressable>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ManualControl
+          isManualControlOpen={isManualControlOpen}
+          setIsManualControlOpen={setIsManualControlOpen}
+        />
+        <Pressable
+          pointerEvents={isManualControlOpen ? `none` : undefined}
+          style={{ paddingBottom: contentPaddingForScroll }}
+        >
+          <TriggerGroups />
+        </Pressable>
+      </ScrollView>
     </View>
   )
 }

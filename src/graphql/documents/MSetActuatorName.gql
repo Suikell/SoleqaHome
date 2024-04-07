@@ -1,0 +1,8 @@
+mutation MSetActuatorName($id: Int!, $name: String!) {
+  result: changeActuatorName(actuatorId: $id, name: $name) {
+    actuator {
+      id
+      name
+    }
+  }
+}

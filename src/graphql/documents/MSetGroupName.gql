@@ -1,0 +1,8 @@
+mutation MSetGroupName($id: Int!, $name: String!) {
+  result: changeThresholdGroupName(thresholdGroupId: $id, name: $name) {
+    group: thresholdGroup {
+      id
+      name
+    }
+  }
+}

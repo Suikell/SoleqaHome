@@ -11,12 +11,16 @@ import { useStylesWithTheme } from '~utils/hooks/useStylesWithTheme'
 type TProps = RequiredChildren & {
   groupId: TFGroupBase['id']
   name: TFGroupBase['name']
+  rightAction?: PropsOf<typeof Card>['rightAction']
+  cardStyle?: PropsOf<typeof Card>['cardStyle']
 }
 
 export const GroupCardContainer: React.FC<TProps> = ({
   groupId,
   name,
   children,
+  rightAction,
+  cardStyle,
 }) => {
   const navigation = useNavigation()
 
@@ -28,7 +32,13 @@ export const GroupCardContainer: React.FC<TProps> = ({
   }
   const styles = useStylesWithTheme(styleCreator)
   return (
-    <Card title={name} titleStyle={styles.title} onPress={onCardPress}>
+    <Card
+      rightAction={rightAction}
+      title={name}
+      titleStyle={styles.title}
+      onPress={onCardPress}
+      cardStyle={cardStyle}
+    >
       {children}
     </Card>
   )
