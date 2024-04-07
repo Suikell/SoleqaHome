@@ -1,19 +1,28 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { TriggerGroupCard } from '~screens/ActuatorDetailScreen/components/TriggerGroupCard'
+import { useActuatorDetailCtx } from '~screens/ActuatorDetailScreen/contexts/ActuatorDetailProvider'
 import { CONTENT_MARGIN } from '~styles/spacing'
-import { GroupsList } from '~ui/Group/GroupsList'
+import { GroupListContainer } from '~ui/Group/GroupListContainer'
 import { Headline } from '~ui/Text/Headline'
 import { shrink } from '~utils/helpers/shrink'
 
 type TProps = NoChildren
 
 export const TriggerGroups: React.FC<TProps> = () => {
-  //   TODO - add real data, add remove group button, add want switch prop
+  const { actuator } = useActuatorDetailCtx()
+
   return (
     <View style={{ gap: shrink(32), margin: CONTENT_MARGIN }}>
       <Headline text={`Applied trigger groups:`} />
-      <GroupsList />
+
+      <GroupListContainer>
+        {actuator.groups.map((group) => (
+          <TriggerGroupCard key={group.group.id} triggerGroup={group} />
+        ))}
+      </GroupListContainer>
+      {/* <GroupListContainerGroupListContainer groups={actuator.groups.map(({ group }) => group)} setGroupActive={} /> */}
     </View>
   )
 }
