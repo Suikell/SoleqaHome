@@ -17,6 +17,7 @@
       "requireFullScreen": true
     },
     "android": {
+      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -41,7 +42,8 @@
           "initialOrientation": "LANDSCAPE",
           "orientation": "LANDSCAPE"
         }
-      ]
+      ],
+      ["expo-build-properties", { "android": { "usesCleartextTraffic": true } }]
     ]
   }
 }

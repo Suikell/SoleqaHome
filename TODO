@@ -11,6 +11,10 @@
 
 6. turn off animation and loading after first render on sensor detail screen
 
+7. turn off manual control modal ""
+
+8. refetch
+
 PLAYGROUND
 
 {"Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jeiIsImV4cCI6MTcxMTY0NTM2NSwib3JpZ0lhdCI6MTcxMTY0NTA2NX0.jYRahn0oFeejFJi_40MvOXN_1CYZ-no6HdVxDQ25EV4"}
