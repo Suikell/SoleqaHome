@@ -13,7 +13,7 @@ type TProps = NoChildren & {
   isCollapsed?: boolean
 }
 
-const DESCRIPTION = `Choose an end date and time, and the system will retrieve historical data up to the selected date. The range is dynamically adjusted based on the period you've selected above.`
+const DESCRIPTION = `Choose an end date and time, and the system will retrieve average historical data up to the selected date. The range is dynamically adjusted based on the period you've selected above.`
 
 export const OverlayControlContent: React.FC<TProps> = ({
   isCollapsed,
@@ -81,12 +81,9 @@ export const OverlayControlContent: React.FC<TProps> = ({
         onDismiss={() => setIsSnackbarVisible(false)}
         action={{
           label: 'Ok',
-          onPress: () => {
-            // Do something
-          },
         }}
       >
-        Time selections must not exceed the current moment!
+        Time selection must not exceed the current moment!
       </Snackbar>
     </>
   )

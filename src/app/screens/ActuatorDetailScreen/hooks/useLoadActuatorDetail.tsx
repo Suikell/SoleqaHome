@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {
   TQActuatorDetail,
   useQActuatorDetail,
@@ -7,22 +5,18 @@ import {
 
 export type TActuator = Defined<TQActuatorDetail['actuator']>
 
-// TODO load in provider
+// todo error handling
 // add mutations for editing sensor and sensor values (optimal, critical, ...)
 export const useLoadActuatorDetail = (actuatorId: ID) => {
-  const [actuator, setActuator] = React.useState<TActuator | null>(null)
-
-  const { data, error, loading } = useQActuatorDetail({
+  const { data, loading } = useQActuatorDetail({
     variables: { actuatorId },
   })
 
-  React.useEffect(() => {
-    if (error || !data) {
-      console.log('error', error)
-      return
-    }
-    setActuator(data.actuator)
-  }, [data, error])
-
-  return { actuator, loading }
+  if (loading && !data?.actuator) {
+    return { actuator: null, loading }
+  }
+  return {
+    actuator: data?.actuator || null,
+    loading,
+  }
 }

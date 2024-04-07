@@ -1,13 +1,6 @@
 fragment FGroup on ThresholdGroupType {
-  id
-  name
-  active
-  sensorConditions {
-    id
-    active
-    sensor {
-      id
-      name
-    }
+  ...FGroupBase
+  controlledActuators: thresholdGroupActuators {
+    ...FControlledActuatorBase
   }
 }

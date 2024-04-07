@@ -18,8 +18,14 @@ export const HomeScreenContent: React.FC<TProps> = () => {
   const selectedCategory = categories.find(
     (category) => category.id === selectedCategoryIndex,
   )
-  const sensorIds = selectedCategory?.sensorIds
-  const actuatorIds = selectedCategory?.actuatorIds
+
+  const sensors = selectedCategory?.sensors
+  const actuators = selectedCategory?.actuators
+
+  const sensorIds = sensors ? sensors.map((sensor) => sensor.id) : undefined
+  const actuatorIds = actuators
+    ? actuators?.map((actuator) => actuator.id)
+    : undefined
 
   return (
     <View style={styles.content}>

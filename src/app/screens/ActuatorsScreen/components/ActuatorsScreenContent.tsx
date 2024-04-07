@@ -13,7 +13,7 @@ export const ActuatorsScreenContent: React.FC<TProps> = () => {
   return (
     <View style={styles.content}>
       {categories.map((category) => {
-        const actuatorIds = category.actuatorIds
+        const actuatorIds = category.actuators.map((actuator) => actuator.id)
         if (actuatorIds.length === 0) return null
         return (
           <ActuatorList

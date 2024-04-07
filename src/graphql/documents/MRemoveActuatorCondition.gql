@@ -1,0 +1,9 @@
+mutation MRemoveActuatorCondition($actuatorConditionId: Int!) {
+  result: removeActuatorCondition(actuatorConditionId: $actuatorConditionId) {
+    group: thresholdGroup {
+      actuatorConditions {
+        ...FActuatorCondition
+      }
+    }
+  }
+}

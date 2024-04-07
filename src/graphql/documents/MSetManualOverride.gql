@@ -1,0 +1,15 @@
+mutation MSetManualOverride(
+  $actuatorId: Int!
+  $until: DateTime
+  $value: Boolean
+) {
+  result: setManualOverrideUntil(
+    actuatorId: $actuatorId
+    until: $until
+    value: $value
+  ) {
+    actuator {
+      ...FActuatorBase
+    }
+  }
+}

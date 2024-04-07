@@ -1,0 +1,15 @@
+mutation MChangeGroupActuatorState(
+  $groupId: Int!
+  $actuatorId: Int!
+  $changeToState: Boolean!
+) {
+  result: setActuatorChangeToStateThresholdGroup(
+    thresholdGroupId: $groupId
+    actuatorId: $actuatorId
+    changeToState: $changeToState
+  ) {
+    actuator: thresholdGroupActuator {
+      ...FControlledActuator
+    }
+  }
+}

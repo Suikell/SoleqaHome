@@ -3,14 +3,20 @@ import { StyleSheet, View } from 'react-native'
 import { Switch as UISwitch, Text } from 'react-native-paper'
 
 type TProps = NoChildren & {
+  label?: string
   state: Nullable<boolean>
+  onChange: PropsOf<typeof UISwitch>['onChange']
 }
 
-export const Switch: React.FC<TProps> = ({ state = false }) => {
+export const Switch: React.FC<TProps> = ({
+  label = `State`,
+  state = false,
+  onChange,
+}) => {
   return (
     <View style={styles.content}>
-      <Text variant={`labelLarge`}>State:</Text>
-      <UISwitch value={state || false} />
+      <Text variant={`labelLarge`}>{label}:</Text>
+      <UISwitch value={state || false} onChange={onChange} />
     </View>
   )
 }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FlexStyle, StyleSheet, View } from 'react-native'
+import { FlexStyle, StyleSheet, View, ViewStyle } from 'react-native'
 
 type TProps = RequiredChildren & {
   justifyContent?: FlexStyle['justifyContent']
@@ -19,9 +19,14 @@ type TProps = RequiredChildren & {
   paddingVertical?: FlexStyle['paddingVertical']
   paddingHorizontal?: FlexStyle['paddingHorizontal']
   gap?: FlexStyle['gap']
+  rowGap?: FlexStyle['rowGap']
   height?: FlexStyle['height']
   width?: FlexStyle['width']
+  maxWidth?: FlexStyle['maxWidth']
   alignSelf?: FlexStyle['alignSelf']
+  borderBottomWidth?: FlexStyle['borderBottomWidth']
+  borderBottomColor?: ViewStyle['borderBottomColor']
+  flexWrap?: FlexStyle['flexWrap']
 }
 
 export const FlexRow: React.FC<TProps> = ({ children, ...style }) => {

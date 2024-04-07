@@ -1,0 +1,10 @@
+mutation MSetGroupActive($groupId: Int!, $active: Boolean!) {
+  result: changeThresholdGroupActive(
+    thresholdGroupId: $groupId
+    active: $active
+  ) {
+    group: thresholdGroup {
+      ...FGroup
+    }
+  }
+}

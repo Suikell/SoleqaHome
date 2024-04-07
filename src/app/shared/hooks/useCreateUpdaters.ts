@@ -66,13 +66,14 @@ export const useCreateUpdaters = ({ setSensors, setActuators }: TProps) => {
     property: K,
     onUpdateExtra?: (actuatorId: ID, value: TFActuatorBase[K]) => void,
   ) => {
-    const { actuators } = useCategoriesCtx()
     return React.useCallback(
       (actuatorId: ID, value: TFActuatorBase[K]) => {
-        const actuatorIndex = actuators.findIndex((a) => a.id === actuatorId)
+        const actuatorIndex = actuatorsRef.current.findIndex(
+          (a) => a.id === actuatorId,
+        )
         if (actuatorIndex !== -1) {
           const updatedActuator = {
-            ...actuators[actuatorIndex],
+            ...actuatorsRef.current[actuatorIndex],
             [property]: value,
           }
           updateActuator(actuatorIndex, updatedActuator)
@@ -81,7 +82,7 @@ export const useCreateUpdaters = ({ setSensors, setActuators }: TProps) => {
           }
         }
       },
-      [actuators, onUpdateExtra, property],
+      [onUpdateExtra, property],
     )
   }
 

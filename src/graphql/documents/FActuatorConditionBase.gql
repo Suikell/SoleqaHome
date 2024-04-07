@@ -1,0 +1,7 @@
+fragment FActuatorConditionBase on ActuatorConditionType {
+  id
+  actuator {
+    id
+    name
+  }
+}

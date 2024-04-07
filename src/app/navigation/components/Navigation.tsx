@@ -9,6 +9,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TRootStackParamList } from '~navigation/types'
 import { ActuatorDetailScreen } from '~screens/ActuatorDetailScreen/ActuatorDetailScreen'
 import { ActuatorsScreen } from '~screens/ActuatorsScreen/ActuatorsScreen'
+import { CreateConditionScreen } from '~screens/CreateConditionScreen/CreateConditionScreen'
+import { GroupDetailScreen } from '~screens/GroupDetailScreen/GroupDetailScreen'
 import { GroupsScreen } from '~screens/GroupsScreen/GroupsScreen'
 import { HomeScreen } from '~screens/HomeScreen/HomeScreen'
 import { SensorDetailScreen } from '~screens/SensorDetailScreen/SensorDetailScreen'
@@ -69,7 +71,7 @@ function HomeTabs() {
         name="Home"
         component={HomeScreen}
         options={{
-          unmountOnBlur: true,
+          // unmountOnBlur: true,
           tabBarLabel: 'Home',
           // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({ color, size }) => {
@@ -81,7 +83,7 @@ function HomeTabs() {
         name="Sensors"
         component={SensorsScreen}
         options={{
-          unmountOnBlur: true,
+          // unmountOnBlur: true,
 
           tabBarLabel: 'Sensors',
           // eslint-disable-next-line react/no-unstable-nested-components
@@ -105,6 +107,7 @@ function HomeTabs() {
         name="Groups"
         component={GroupsScreen}
         options={{
+          unmountOnBlur: true,
           tabBarLabel: 'Groups',
           // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({ color, size }) => {
@@ -127,65 +130,8 @@ export const Navigation = () => {
       <Stack.Screen name="HomeTabs" component={HomeTabs} />
       <Stack.Screen name="SensorDetail" component={SensorDetailScreen} />
       <Stack.Screen name="ActuatorDetail" component={ActuatorDetailScreen} />
+      <Stack.Screen name="GroupDetail" component={GroupDetailScreen} />
+      <Stack.Screen name="CreateCondition" component={CreateConditionScreen} />
     </Stack.Navigator>
   )
 }
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-// import { CommonActions } from '@react-navigation/native'
-// import * as React from 'react'
-// import { BottomNavigation } from 'react-native-paper'
-// import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-
-// import { ActuatorsScreen } from '~screens/ActuatorsScreen/ActuatorsScreen'
-// import { GroupsScreen } from '~screens/GroupsScreen/GroupsScreen'
-// import { HomeScreen } from '~screens/HomeScreen/HomeScreen'
-// import { SensorDetailScreen } from '~screens/SensorsScreen/SensorDetailScreen'
-// import { SensorsScreen } from '~screens/SensorsScreen/SensorsScreen'
-
-// const Tab = createBottomTabNavigator()
-// export const Navigation = () => {
-
-//   )
-// }
-
-// // // // import { CommonActions } from '@react-navigation/native'
-// // // // import { createNativeStackNavigator } from '@react-navigation/native-stack'
-// // import * as React from 'react'
-// // import { BottomNavigation } from 'react-native-paper'
-
-// // import { ActuatorsScreen } from '~screens/ActuatorsScreen/ActuatorsScreen'
-// // import { GroupsScreen } from '~screens/GroupsScreen/GroupsScreen'
-// // import { HomeScreen } from '~screens/HomeScreen/HomeScreen'
-// // import { SensorScreen } from '~screens/SensorsScreen/SensorScreen'
-// // import { SensorsScreen } from '~screens/SensorsScreen/SensorsScreen'
-
-// // export const Navigation = () => {
-// //   const [index, setIndex] = React.useState(0)
-// //   const [routes] = React.useState([
-// //     {
-// //       key: 'home',
-// //       title: 'Home',
-// //       focusedIcon: 'heart',
-// //       unfocusedIcon: 'heart-outline',
-// //     },
-// //     { key: 'sensors', title: 'Sensors', focusedIcon: 'album' },
-// //     { key: 'actuators', title: 'Actuators', focusedIcon: 'album' },
-// //     { key: 'groups', title: 'Groups', focusedIcon: 'album' },
-// //   ])
-
-// //   const renderScene = BottomNavigation.SceneMap({
-// //     test: SensorScreen,
-// //     home: HomeScreen,
-// //     sensors: SensorsScreen,
-// //     actuators: ActuatorsScreen,
-// //     groups: GroupsScreen,
-// //   })
-
-// //   return (
-// //     <BottomNavigation
-// //       navigationState={{ index, routes }}
-// //       onIndexChange={setIndex}
-// //       renderScene={renderScene}
-// //     />
-// //   )
-// // }

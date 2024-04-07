@@ -1,0 +1,5 @@
+fragment FGroupBase on ThresholdGroupType {
+  id
+  name
+  active
+}

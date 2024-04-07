@@ -57,7 +57,7 @@ export const useDeviceUpdaters = () => {
   )
 
   const setManualOverride = React.useCallback(
-    (actuatorId: ID, state: boolean, until: Date) => {
+    (actuatorId: ID, state?: boolean, until?: Date) => {
       mManualOverride({
         variables: {
           actuatorId,

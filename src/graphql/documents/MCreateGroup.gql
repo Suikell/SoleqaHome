@@ -1,0 +1,8 @@
+mutation MCreateGroup($name: String!) {
+  result: createThresholdGroup(householdId: 1, name: $name) {
+    group: thresholdGroup {
+      id
+      name
+    }
+  }
+}

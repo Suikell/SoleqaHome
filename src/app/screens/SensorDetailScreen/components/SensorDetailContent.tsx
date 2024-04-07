@@ -20,6 +20,7 @@ import {
   useGraphControlCtx,
   useGraphValuesCtx,
 } from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
+import { SCROLL_PADDING_BOTTOM } from '~styles/spacing'
 import { Headline } from '~ui/Text/Headline'
 import { shrink } from '~utils/helpers/shrink'
 
@@ -65,7 +66,7 @@ export const SensorDetailContent: React.FC<TProps> = () => {
               contentContainerStyle={{
                 // scrollView doesnt count with height of the collapsible box,
                 // this extra padding helps it to scroll trough the whole content
-                paddingBottom: 200,
+                paddingBottom: SCROLL_PADDING_BOTTOM,
               }}
             >
               <Pressable

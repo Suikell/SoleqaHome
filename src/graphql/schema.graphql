@@ -3,7 +3,8 @@ type ActuatorConditionType {
   actuator: ActuatorNodeType!
   createdAt: DateTime!
   id: Int!
-  operator: ActuatorOperatorEnum
+  operator: ActuatorOperatorEnum!
+  operatorStr: String!
   thresholdGroup: ThresholdGroupType!
   updatedAt: DateTime!
   value: Boolean!
@@ -22,7 +23,7 @@ type ActuatorNodeSubscriptionType {
   manualOverride: Boolean!
   manualOverrideUntil: DateTime
   manualOverrideValue: Boolean
-  name: String
+  name: String!
   nodeType: NodeTypeEnum
   systemVersion: String
   type: Int!
@@ -241,6 +242,7 @@ type Mutation {
   removeActuatorCondition(actuatorConditionId: Int!): RemoveActuatorConditionMutation
   removeActuatorFromThresholdGroup(actuatorId: Int!, thresholdGroupId: Int!): RemoveActuatorFromThresholdGroupMutation
   removeSensorCondition(sensorConditionId: Int!): RemoveSensorConditionMutation
+  setActuatorChangeToStateThresholdGroup(actuatorId: Int!, changeToState: Boolean!, thresholdGroupId: Int!): SetActuatorChangeToStateThresholdGroupMutation
   setActuatorThresholdGroupPriority(actuatorId: Int!, priority: Int!, thresholdGroupId: Int!): SetActuatorThresholdGroupPriorityMutation
   setCriticalOverDisplay(sensorId: Int!, value: Boolean!): SetCriticalOverDisplayMutation
   setCriticalOverValue(sensorId: Int!, value: Float): SetCriticalOverMutation
@@ -303,6 +305,7 @@ type Refresh {
 type RemoveActuatorConditionMutation {
   message: String
   success: Boolean!
+  thresholdGroup: ThresholdGroupType
 }
 
 type RemoveActuatorFromThresholdGroupMutation {
@@ -314,13 +317,15 @@ type RemoveActuatorFromThresholdGroupMutation {
 type RemoveSensorConditionMutation {
   message: String
   success: Boolean!
+  thresholdGroup: ThresholdGroupType
 }
 
 type SensorConditionType {
   active: Boolean!
   createdAt: DateTime!
   id: Int!
-  operator: SensorOperatorEnum
+  operator: SensorOperatorEnum!
+  operatorStr: String!
   sensor: SensorNodeSubscriptionType!
   thresholdGroup: ThresholdGroupType!
   updatedAt: DateTime!
@@ -355,7 +360,7 @@ type SensorNodeSubscriptionType {
   isCritical: Boolean!
   isOnline: Boolean!
   lastOnline: DateTime
-  name: String
+  name: String!
   nodeType: NodeTypeEnum
   sensorType: Int!
   systemVersion: String
@@ -429,9 +434,16 @@ type SensorValueType {
   value: Float!
 }
 
+type SetActuatorChangeToStateThresholdGroupMutation {
+  message: String
+  success: Boolean!
+  thresholdGroupActuator: ThresholdGroupActuatorType
+}
+
 type SetActuatorThresholdGroupPriorityMutation {
   message: String
   success: Boolean!
+  thresholdGroupActuator: ThresholdGroupActuatorType
 }
 
 type SetCriticalOverDisplayMutation {
@@ -481,8 +493,11 @@ type Subscription {
 }
 
 enum SubscriptionResultType {
+  ACTUATOR_ONLINE_STATUS_CHANGED
   ACTUATOR_STATE_CHANGED
+  MAINFRAME_ONLINE_STATUS_CHANGED
   SENSOR_IS_CRITICAL_CHANGED
+  SENSOR_ONLINE_STATUS_CHANGED
   SENSOR_VALUE_LOGGED
 }
 
@@ -495,6 +510,7 @@ union SubscriptionUnionType = ActuatorNodeSubscriptionType | SensorNodeSubscript
 
 type ThresholdGroupActuatorType {
   actuator: ActuatorNodeType!
+  changeToState: Boolean!
   createdAt: DateTime!
   id: Int!
   priority: Int!

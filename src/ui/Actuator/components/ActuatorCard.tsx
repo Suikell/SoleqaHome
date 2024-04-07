@@ -3,6 +3,7 @@ import { useCategoriesUpdatersCtx } from 'src/app/shared/contexts/CategoriesUpda
 
 import { TFActuatorBase } from '~graphql/generated/graphql'
 import { useNavigation } from '~navigation/hooks/useNavigation'
+import { ManualControlModal } from '~ui/Actuator/components/ManualControlModal'
 import { DeviceCard } from '~ui/Cards/DeviceCard'
 import { Switch } from '~ui/Switch/Switch'
 import { isDefined } from '~utils/helpers/isDefined'
@@ -29,6 +30,15 @@ export const ActuatorCard: React.FC<TProps> = ({ actuator }) => {
     setFavoriteActuatorValue(actuator.id, !actuator.favorite)
   }
 
+  const [visible, setVisible] = React.useState(false)
+
+  const showModal = () => setVisible(true)
+  const hideModal = () => setVisible(false)
+
+  const currentState = actuator.manualOverride
+    ? actuator.manualOverrideValue
+    : actuator.currentState
+
   return (
     <DeviceCard
       onPress={onCardPress}
@@ -36,7 +46,13 @@ export const ActuatorCard: React.FC<TProps> = ({ actuator }) => {
       favorite={actuator.favorite}
       setFavorite={setFavorite}
     >
-      <Switch state={actuator.currentState} />
+      <Switch state={currentState} onChange={showModal} />
+      <ManualControlModal
+        visible={visible}
+        hideModal={hideModal}
+        actuatorId={actuator.id}
+        currentState={currentState}
+      />
     </DeviceCard>
   )
 }

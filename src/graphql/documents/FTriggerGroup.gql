@@ -1,0 +1,13 @@
+fragment FTriggerGroup on ThresholdGroupActuatorType {
+  group: thresholdGroup {
+    ...FGroupBase
+    actuatorConditions {
+      ...FActuatorConditionBase
+    }
+    sensorConditions {
+      ...FSensorConditionBase
+    }
+  }
+  priority
+  changeToState
+}

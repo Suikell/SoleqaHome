@@ -7,11 +7,7 @@ import { createContext } from '~utils/context/createContext'
 
 type TUpdatersContext = {
   selectCategoryIndex: (categoryId: ID) => void
-  setManualOverride: (
-    actuatorId: ID,
-    state: boolean,
-    until: Nullable<Date>,
-  ) => void
+  setManualOverride: (actuatorId: ID, state: boolean, until: Date) => void
   cancelManualOverride: (actuatorId: ID) => void
   setFavoriteActuatorValue: (
     actuatorId: ID,
@@ -83,10 +79,10 @@ const CategoriesUpdatersProvider: React.FC<TProps> = ({
   )
 
   const setManualOverride = React.useCallback(
-    (actuatorId: ID, state: boolean, until: Nullable<Date>) => {
-      setManualOverride(actuatorId, state, until)
+    (actuatorId: ID, state: boolean, until: Date) => {
+      setManualOverrideValue(actuatorId, state, until)
     },
-    [],
+    [setManualOverrideValue],
   )
 
   const updaters = React.useMemo<TUpdatersContext>(() => {
