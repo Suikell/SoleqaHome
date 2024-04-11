@@ -24,7 +24,7 @@ export const SetPassword: React.FC<TProps> = () => {
       <SettingInput
         label={`Old password`}
         secureTextEntry
-        originalValue={oldPassword}
+        originalValue={''}
         onEndEditing={(value) => {
           setOldPassword(value)
         }}
@@ -33,7 +33,7 @@ export const SetPassword: React.FC<TProps> = () => {
       <SettingInput
         label={`New password`}
         secureTextEntry
-        originalValue={newPassword}
+        originalValue={''}
         onEndEditing={(value) => {
           setNewPassword(value)
         }}

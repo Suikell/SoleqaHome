@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native'
 import { Button } from 'react-native-paper'
+import { useAuthCtx } from 'src/app/auth/contexts/AuthProvider'
 
 import { SetNames } from '~screens/SettingsScreen/components/SetNames'
 import { SetPassword } from '~screens/SettingsScreen/components/SetPassword'
@@ -19,6 +20,7 @@ type TProps = NoChildren
 // TODO - make this better, this is really weird solution
 
 export const SettingsScreen: React.FC<TProps> = () => {
+  const { logout } = useAuthCtx()
   return (
     <>
       <SimpleAppBar title={`Settings`} />
@@ -37,7 +39,9 @@ export const SettingsScreen: React.FC<TProps> = () => {
             <View style={styles.content}>
               <SetNames />
               <SetPassword />
-              <Button mode="contained">Logout</Button>
+              <Button onPress={logout} mode="contained">
+                Logout
+              </Button>
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -49,6 +53,7 @@ export const SettingsScreen: React.FC<TProps> = () => {
 const styles = StyleSheet.create({
   content: {
     top: -CONTENT_MARGIN,
+    padding: CONTENT_MARGIN,
     rowGap: CONTENT_MARGIN * 3,
     alignSelf: 'center',
   },
