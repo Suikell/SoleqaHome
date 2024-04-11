@@ -1,9 +1,12 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { useMSetGroupName } from '~graphql/generated/graphql'
 import { isDefined } from '~utils/helpers/isDefined'
 
 export const useGroupSetName = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [mSetGroupName] = useMSetGroupName()
 
   const [groupName, setName] = React.useState<Nullable<string>>(null)
@@ -20,11 +23,14 @@ export const useGroupSetName = () => {
           }
         })
         .catch((error) => {
-          console.log('error', error)
+          presentStatusToast(
+            'error',
+            `Failed to set group name. ${error.message}`,
+          )
           setName(null)
         })
     },
-    [mSetGroupName],
+    [mSetGroupName, presentStatusToast],
   )
 
   return { groupName, setGroupName }

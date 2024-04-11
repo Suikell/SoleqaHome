@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 // TODO - move to ui?
 import { useGraphValuesCtx } from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
@@ -14,6 +15,8 @@ type TData = Defined<TQSensorHistoricalValuesByDate['data']>
 type TValues = Defined<TData['values']>
 
 export const useLoadOverlayData = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [overlayValues, setOverlayValues] = React.useState<TValues>([])
 
   const { sensor } = useSensorCtx()
@@ -38,11 +41,12 @@ export const useLoadOverlayData = () => {
   })
 
   React.useEffect(() => {
-    if (error || !result || !result.data) {
+    if (error) {
+      presentStatusToast('error', error.message)
       return
     }
-    setOverlayValues(result.data.values || [])
-  }, [error, result])
+    setOverlayValues(result?.data?.values || [])
+  }, [error, presentStatusToast, result])
 
   React.useEffect(() => {
     if (!isOverlayVisible) {

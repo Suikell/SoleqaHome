@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 // TODO - move to ui?
 import { useGraphValuesCtx } from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
@@ -22,6 +23,8 @@ type TMinMax = {
 const REFETCH_TIME = 3 * 60 * 1000 // 3 minutes
 
 export const useLoadHistoricalValues = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [values, setValues] = React.useState<TValues>([])
   const [minMax, setMinMax] = React.useState<TMinMax>({ min: null, max: null })
 
@@ -59,13 +62,16 @@ export const useLoadHistoricalValues = () => {
   }, [selectedPeriod, refetch, overlayValues])
 
   React.useEffect(() => {
-    if (error || !result || !result.data) {
+    if (error) {
+      presentStatusToast('error', error.message)
+    }
+    if (!result || !result.data) {
       return
     }
 
     setValues(result.data.values || [])
     setMinMax({ min: result.data.minValue, max: result.data.maxValue })
-  }, [error, result])
+  }, [error, presentStatusToast, result])
 
   return { minMax, values, overlayValues, loading }
 }

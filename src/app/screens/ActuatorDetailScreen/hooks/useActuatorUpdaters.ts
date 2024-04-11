@@ -1,8 +1,11 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { useMSetGroupActuatorPriority } from '~graphql/generated/graphql'
 
 export const useActuatorUpdaters = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [mSetGroupActuatorPriority] = useMSetGroupActuatorPriority()
 
   const [success, setSuccess] = React.useState<Nullable<boolean>>(null)
@@ -25,7 +28,10 @@ export const useActuatorUpdaters = () => {
         setSuccess(success)
       })
       .catch((error) => {
-        console.log('error', error)
+        presentStatusToast(
+          'error',
+          `Failed to set actuator priority. ${error.message}`,
+        )
         setSuccess(false)
       })
   }

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useCategoriesUpdatersCtx } from 'src/app/shared/contexts/CategoriesUpdatersProvider'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   TActuatorNodeSubscriptionType,
@@ -35,6 +36,8 @@ const [ActuatorValueProvider, useActuatorValueCtx] =
   createContext<Nullable<TActuatorContext>>(`ActuatorValue`)
 
 const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const result = useSValues()
   const [sensorValue, setSensorValue] =
     React.useState<Nullable<TSensorContext>>(null)
@@ -48,8 +51,8 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
   } = useCategoriesUpdatersCtx()
 
   React.useEffect(() => {
-    console.log('result', result)
     if (result.error) {
+      presentStatusToast('error', result.error.message)
       return
     }
 
@@ -59,10 +62,6 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
       if (type === `ACTUATOR_STATE_CHANGED`) {
         const actuator = result.data.change.data as TActuatorSubscription
         const { id, currentState } = actuator
-
-        // TODO remove
-        if (!currentState) return
-        // TODO remove
 
         updateActuatorCurrentState(id, currentState)
         setActuatorValue({
@@ -89,8 +88,7 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
     }
   }, [
     result,
-    result.data,
-    result.error,
+    presentStatusToast,
     updateActuatorCurrentState,
     updateSensorCurrentValue,
     updateSensorFavoriteValue,

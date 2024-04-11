@@ -1,9 +1,12 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { useMSetActuatorName } from '~graphql/generated/graphql'
 import { isDefined } from '~utils/helpers/isDefined'
 
 export const useActuatorSetName = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [mSetActuatorName] = useMSetActuatorName()
 
   const [actuatorName, setName] = React.useState<Nullable<string>>(null)
@@ -20,11 +23,14 @@ export const useActuatorSetName = () => {
           }
         })
         .catch((error) => {
-          console.log('error', error)
+          presentStatusToast(
+            `error`,
+            `Failed to set actuator name. ${error.message}`,
+          )
           setName(null)
         })
     },
-    [mSetActuatorName],
+    [mSetActuatorName, presentStatusToast],
   )
 
   return { actuatorName, setActuatorName }

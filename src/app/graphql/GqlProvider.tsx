@@ -17,7 +17,7 @@ type TProps = RequiredChildren
 
 // !change when starting ngrok
 // !ngrok http http://localhost:8000 (port based on BE)
-const NGROK = `cfa6-83-240-63-190.ngrok-free.app`
+const NGROK = `4ced-83-240-63-190.ngrok-free.app`
 
 /**
  * GQL BE connection provider
@@ -55,7 +55,7 @@ export const GqlProvider: React.FC<TProps> = ({ children }) => {
         keepAlive: 60000,
         //     retryAttempts: 20,
         shouldRetry: (errOrClose) => {
-          console.log('errCl', errOrClose)
+          console.log(errOrClose)
           return true
         },
       }),

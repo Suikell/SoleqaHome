@@ -1,5 +1,6 @@
 import React from 'react'
 import { useActuatorValueCtx } from 'src/app/shared/components/ValueSubscriptionProvider'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   TQActuatorDetail,
@@ -8,9 +9,10 @@ import {
 
 export type TActuator = TQActuatorDetail['actuator']
 
-// todo error handling
 // add mutations for editing sensor and sensor values (optimal, critical, ...)
 export const useLoadActuatorDetail = (actuatorId: ID) => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const updatedValue = useActuatorValueCtx()
 
   const [actuator, setActuator] = React.useState<TActuator>(null)
@@ -20,12 +22,13 @@ export const useLoadActuatorDetail = (actuatorId: ID) => {
   })
 
   React.useEffect(() => {
-    if (error || !data) {
-      console.log('error', error)
+    if (error) {
+      presentStatusToast('error', error?.message)
       return
     }
+    if (!data) return
     setActuator(data.actuator)
-  }, [data, error])
+  }, [data, error, presentStatusToast])
 
   React.useEffect(() => {
     if (updatedValue) {

@@ -1,10 +1,12 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { TFGroup, useMSetGroupActive } from '~graphql/generated/graphql'
 import { TGroups } from '~screens/GroupsScreen/hooks/useLoadGroups'
 import { isDefined } from '~utils/helpers/isDefined'
 
 export const useGroupsUpdaters = (setGroups: ReactSetState<TGroups>) => {
+  const { presentStatusToast } = useStatusToastCtx()
   const [mSetGroupActive] = useMSetGroupActive()
 
   const updateGroup = React.useCallback(
@@ -39,16 +41,18 @@ export const useGroupsUpdaters = (setGroups: ReactSetState<TGroups>) => {
       })
         .then(({ data }) => {
           const updatedGroup = data?.result?.group
-          console.log('updatedGroup', updatedGroup)
           if (isDefined(updatedGroup)) {
             updateGroup(updatedGroup)
           }
         })
         .catch((error) => {
-          console.error('could not activate group', error)
+          presentStatusToast(
+            'error',
+            `Failed to activate group. ${error.message}`,
+          )
         })
     },
-    [mSetGroupActive, updateGroup],
+    [mSetGroupActive, presentStatusToast, updateGroup],
   )
 
   return { setGroupActive }

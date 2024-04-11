@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useDeviceUpdatersCtx } from 'src/app/shared/contexts/CategoriesProvider'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   useMSetFavoriteActuator,
@@ -9,7 +10,10 @@ import {
 import { isDefined } from '~utils/helpers/isDefined'
 
 export const useDeviceUpdaters = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const { updateSensor, updateActuator } = useDeviceUpdatersCtx()
+
   const [mFavoriteActuator] = useMSetFavoriteActuator()
   const [mFavoriteSensor] = useMSetFavoriteSensor()
   const [mManualOverride] = useMSetManualOverride()
@@ -29,10 +33,13 @@ export const useDeviceUpdaters = () => {
           }
         })
         .catch((error) => {
-          console.error('mFavoriteSensor threw an error', error)
+          presentStatusToast(
+            'error',
+            `Failed to set sensor favorite. ${error.message}`,
+          )
         })
     },
-    [mFavoriteSensor, updateSensor],
+    [mFavoriteSensor, presentStatusToast, updateSensor],
   )
 
   const setFavoriteActuator = React.useCallback(
@@ -50,10 +57,13 @@ export const useDeviceUpdaters = () => {
           }
         })
         .catch((error) => {
-          console.error('mFavoriteActuator threw an error', error)
+          presentStatusToast(
+            'error',
+            `Failed to set actuator favorite. ${error.message}`,
+          )
         })
     },
-    [mFavoriteActuator, updateActuator],
+    [mFavoriteActuator, presentStatusToast, updateActuator],
   )
 
   const setManualOverride = React.useCallback(
@@ -72,10 +82,13 @@ export const useDeviceUpdaters = () => {
           }
         })
         .catch((error) => {
-          console.error('mManualOverride threw an error', error)
+          presentStatusToast(
+            'error',
+            `Failed to set manual override. ${error.message}`,
+          )
         })
     },
-    [mManualOverride, updateActuator],
+    [mManualOverride, presentStatusToast, updateActuator],
   )
 
   return { setFavoriteSensor, setFavoriteActuator, setManualOverride }

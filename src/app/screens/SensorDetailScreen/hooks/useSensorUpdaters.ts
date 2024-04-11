@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   useMSetCriticalOver,
@@ -6,25 +7,26 @@ import {
 } from '~graphql/generated/graphql'
 
 export const useSensorUpdaters = (sensorId: ID) => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [mSetCriticalUnder] = useMSetCriticalUnder()
   const [mSetCriticalOver] = useMSetCriticalOver()
 
   const setCriticalOver = React.useCallback(
     async (value?: number) => {
-      const { data, errors } = await mSetCriticalOver({
+      const { errors, data } = await mSetCriticalOver({
         variables: { sensorId, value },
         refetchQueries: ['QSensorGraphValues'],
       })
 
-      if (errors || !data) {
-        // TODO - show toast
-        console.log('error', errors)
-        return
+      if (errors) {
+        presentStatusToast('error', errors[0].message)
       }
-
-      console.log('data', data.result?.success)
+      if (!data?.result?.success) {
+        presentStatusToast('error', 'Failed to set critical over value.')
+      }
     },
-    [mSetCriticalOver, sensorId],
+    [mSetCriticalOver, presentStatusToast, sensorId],
   )
 
   const setCriticalUnder = React.useCallback(
@@ -34,15 +36,14 @@ export const useSensorUpdaters = (sensorId: ID) => {
         refetchQueries: ['QSensorGraphValues'],
       })
 
-      if (errors || !data) {
-        // TODO - show toast
-        console.log('error', errors)
-        return
+      if (errors) {
+        presentStatusToast('error', errors[0].message)
       }
-
-      console.log('data', data.result?.success)
+      if (!data?.result?.success) {
+        presentStatusToast('error', 'Failed to set critical under value.')
+      }
     },
-    [mSetCriticalUnder, sensorId],
+    [mSetCriticalUnder, presentStatusToast, sensorId],
   )
 
   return { setCriticalOver, setCriticalUnder }

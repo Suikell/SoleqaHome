@@ -1,26 +1,28 @@
 import React from 'react'
 import { useSensorValueCtx } from 'src/app/shared/components/ValueSubscriptionProvider'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { TQSensorDetail, useQSensorDetail } from '~graphql/generated/graphql'
 
 type TSensor = TQSensorDetail['sensor']
 
-// TODO load in provider
 // add mutations for editing sensor and sensor values (optimal, critical, ...)
 export const useLoadSensorDetail = (sensorId: ID) => {
-  const [sensor, setSensor] = React.useState<TSensor>(null)
+  const { presentStatusToast } = useStatusToastCtx()
   const updatedValue = useSensorValueCtx()
+
+  const [sensor, setSensor] = React.useState<TSensor>(null)
   const { data, error, loading } = useQSensorDetail({
     variables: { sensorId },
   })
 
   React.useEffect(() => {
-    if (error || !data) {
-      console.log('error', error)
+    if (error) {
+      presentStatusToast('error', error?.message)
       return
     }
-    setSensor(data.sensor)
-  }, [data, error])
+    setSensor(data?.sensor || null)
+  }, [data, error, presentStatusToast])
 
   React.useEffect(() => {
     if (updatedValue) {

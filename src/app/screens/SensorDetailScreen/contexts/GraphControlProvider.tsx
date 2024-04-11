@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   TDateRangeTypeEnum,
@@ -42,6 +43,8 @@ export const GraphControlProvider: React.FC<TProps> = ({
   sensorId,
   children,
 }) => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [overlayDateTime, setOverlayDateTimeValue] = React.useState(new Date())
   const [isOverlayVisible, setIsOverlayVisibleValue] = React.useState(false)
 
@@ -58,13 +61,24 @@ export const GraphControlProvider: React.FC<TProps> = ({
   })
 
   React.useEffect(() => {
-    if (error || !data || !data.sensor) {
+    if (error) {
+      presentStatusToast('error', error.message)
+      return
+    }
+
+    if (!data || !data.sensor) {
       return
     }
     const sensor = data.sensor
     setCriticalOverValue(sensor.criticalOver)
     setCriticalUnderValue(sensor.criticalUnder)
-  }, [data, error, setCriticalOverValue, setCriticalUnderValue])
+  }, [
+    data,
+    error,
+    presentStatusToast,
+    setCriticalOverValue,
+    setCriticalUnderValue,
+  ])
 
   const { setCriticalOver, setCriticalUnder } = useSensorUpdaters(sensorId)
 

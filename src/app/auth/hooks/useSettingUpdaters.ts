@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   TFUser,
@@ -10,14 +11,13 @@ import { isDefined } from '~utils/helpers/isDefined'
 type TProps = {
   setUser: ReactSetState<Nullable<TFUser>>
 }
+
+const successMessage = `Your changes have been saved`
+
 export const useSettingUpdaters = ({ setUser }: TProps) => {
   const [mChangeUserProfile] = useMChangeUserProfile()
   const [mChangeUserPassword] = useMChangeUserPassword()
-
-  const [settingError, setSettingError] = React.useState<Nullable<string>>('')
-  const [userSuccess, setUserSuccess] = React.useState<Nullable<boolean>>(null)
-  const [passwordSuccess, setPasswordSuccess] =
-    React.useState<Nullable<boolean>>(null)
+  const { presentStatusToast } = useStatusToastCtx()
 
   const changeUserProfile = React.useCallback(
     (firstName: string, lastName: string) => {
@@ -27,18 +27,15 @@ export const useSettingUpdaters = ({ setUser }: TProps) => {
         .then(({ data }) => {
           const user = data?.result?.user
           if (isDefined(user)) {
-            setUserSuccess(true)
+            presentStatusToast(`success`, successMessage)
             setUser(user)
           }
         })
         .catch((error) => {
-          setUserSuccess(false)
-          setSettingError(error.message)
-          console.log('error', error)
+          presentStatusToast(`error`, error.message)
         })
-      setUserSuccess(null)
     },
-    [mChangeUserProfile, setUser],
+    [mChangeUserProfile, presentStatusToast, setUser],
   )
 
   const changeUserPassword = React.useCallback(
@@ -49,24 +46,18 @@ export const useSettingUpdaters = ({ setUser }: TProps) => {
         .then(({ data }) => {
           const success = data?.result?.success
           if (success) {
-            setPasswordSuccess(true)
+            presentStatusToast(`success`, successMessage)
           }
         })
         .catch((error) => {
-          console.log('error', error)
-          setPasswordSuccess(false)
-          setSettingError(error.message)
+          presentStatusToast(`error`, error.message)
         })
-      setPasswordSuccess(null)
     },
-    [mChangeUserPassword],
+    [mChangeUserPassword, presentStatusToast],
   )
 
   return {
     changeUserProfile,
     changeUserPassword,
-    userSuccess,
-    passwordSuccess,
-    settingError,
   }
 }

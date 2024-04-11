@@ -1,9 +1,12 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { useMAddControlledActuator } from '~graphql/generated/graphql'
 import { useNavigation } from '~navigation/hooks/useNavigation'
 
 export const useAddControlledActuator = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const navigation = useNavigation()
 
   const [mAddControlledActuator] = useMAddControlledActuator()
@@ -25,14 +28,17 @@ export const useAddControlledActuator = () => {
             if (isLast && success) {
               navigation.goBack()
             }
-            return success
+            presentStatusToast('success', 'Actuator added to group')
           })
           .catch((error) => {
-            return error
+            presentStatusToast(
+              'error',
+              `Failed to add actuator to group. ${error.message}`,
+            )
           })
       })
     },
-    [mAddControlledActuator, navigation],
+    [mAddControlledActuator, navigation, presentStatusToast],
   )
 
   return { addControlledActuators }
