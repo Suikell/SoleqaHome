@@ -1,50 +1,31 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
+import { useCriticalSensorsCtx } from 'src/app/shared/contexts/CriticalSensorsProvider'
 
-import { TFSensorBase } from '~graphql/generated/graphql'
 import { CONTENT_MARGIN } from '~styles/spacing'
+import { SensorCard } from '~ui/Sensor/components/SensorCard'
 import { isDefined } from '~utils/helpers/isDefined'
 import { shrink } from '~utils/helpers/shrink'
 
-import { SensorCard } from './SensorCard'
-
-type TProps = {
-  label?: Nullable<string>
+type TProps = NoChildren & {
   sensorIds?: RoA<ID>
-  onlyFavorite?: boolean
-  sensors: RoA<TFSensorBase>
 }
 
-export const SensorList: React.FC<TProps> = ({
-  label,
-  sensorIds,
-  sensors,
-  onlyFavorite,
-}) => {
-  if (sensors.length === 0) {
+export const CriticalSensorList: React.FC<TProps> = ({ sensorIds }) => {
+  const { criticalSensors } = useCriticalSensorsCtx()
+
+  if (criticalSensors.length === 0) {
     return null
   }
 
-  if (isDefined(sensorIds)) {
-    const hasSensorsInCategory = sensors.some((sensor) =>
-      sensorIds.includes(sensor.id),
-    )
-    if (!hasSensorsInCategory) {
-      return null
-    }
-  }
-
   return (
-    <View style={label ? styles.labelContainer : undefined}>
-      {label && <Text variant={`titleLarge`}>{label}</Text>}
+    <View style={styles.labelContainer}>
+      <Text variant={`titleLarge`}>{`Critical`}</Text>
       <View style={styles.sensors}>
-        {sensors.map((sensor) => {
+        {criticalSensors.map((sensor) => {
           // if no sensorIds => show all sensors as it's the All category
           if (isDefined(sensorIds) && !sensorIds.includes(sensor.id)) {
-            return null
-          }
-          if (onlyFavorite && !sensor.favorite) {
             return null
           }
           return <SensorCard key={sensor.id} sensor={sensor} />

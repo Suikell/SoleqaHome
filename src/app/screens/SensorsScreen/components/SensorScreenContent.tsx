@@ -9,7 +9,7 @@ import { shrink } from '~utils/helpers/shrink'
 type TProps = NoChildren
 
 export const SensorScreenContent: React.FC<TProps> = () => {
-  const { categories } = useCategoriesCtx()
+  const { categories, sensors } = useCategoriesCtx()
   return (
     <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
       <View style={styles.scrollContent}>
@@ -18,6 +18,7 @@ export const SensorScreenContent: React.FC<TProps> = () => {
           if (sensorIds.length === 0) return null
           return (
             <SensorList
+              sensors={sensors}
               key={category.id}
               label={category.name}
               sensorIds={sensorIds}

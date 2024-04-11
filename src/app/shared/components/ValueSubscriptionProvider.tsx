@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useCategoriesUpdatersCtx } from 'src/app/shared/contexts/CategoriesUpdatersProvider'
+import { useCriticalSensorsCtx } from 'src/app/shared/contexts/CriticalSensorsProvider'
 import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
@@ -50,6 +51,8 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
     updateSensorFavoriteValue,
   } = useCategoriesUpdatersCtx()
 
+  const { refetchCriticalSensors } = useCriticalSensorsCtx()
+
   React.useEffect(() => {
     if (result.error) {
       presentStatusToast('error', result.error.message)
@@ -74,9 +77,7 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
       const sensor = result.data.change.data as TSensorSubscription
 
       if (type === `SENSOR_IS_CRITICAL_CHANGED`) {
-        // TODO - what is this?
-        updateSensorFavoriteValue(sensor.id, sensor.isCritical)
-        return
+        refetchCriticalSensors()
       }
 
       updateSensorCurrentValue(sensor.id, sensor.currentValue)
@@ -92,6 +93,7 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
     updateActuatorCurrentState,
     updateSensorCurrentValue,
     updateSensorFavoriteValue,
+    refetchCriticalSensors,
   ])
 
   return (
