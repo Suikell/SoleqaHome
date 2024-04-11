@@ -73,7 +73,7 @@ const darkTheme = {
       level4: 'rgb(35, 51, 43)',
       level5: 'rgb(37, 55, 46)',
     },
-    surfaceDisabled: 'rgba(225, 227, 223, 0.12)',
+    surfaceDisabled: 'rgb(42, 48, 44)',
     onSurfaceDisabled: 'rgba(225, 227, 223, 0.38)',
     backdrop: 'rgba(17, 20, 19, 0.7)3)',
   },
