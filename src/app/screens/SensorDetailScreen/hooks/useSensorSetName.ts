@@ -1,9 +1,12 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { useMSetSensorName } from '~graphql/generated/graphql'
 import { isDefined } from '~utils/helpers/isDefined'
 
 export const useSensorSetName = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [mSetSensorName] = useMSetSensorName()
 
   const [sensorName, setName] = React.useState<Nullable<string>>(null)
@@ -20,11 +23,14 @@ export const useSensorSetName = () => {
           }
         })
         .catch((error) => {
-          console.log('error', error)
+          presentStatusToast(
+            'error',
+            `Failed to set sensor name. ${error.message}`,
+          )
           setName(null)
         })
     },
-    [mSetSensorName],
+    [mSetSensorName, presentStatusToast],
   )
 
   return { sensorName, setSensorName }

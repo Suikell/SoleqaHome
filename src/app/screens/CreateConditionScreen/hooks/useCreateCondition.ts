@@ -1,3 +1,5 @@
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
+
 import {
   useMCreateActuatorCondition,
   useMCreateSensorCondition,
@@ -6,7 +8,16 @@ import { useNavigation } from '~navigation/hooks/useNavigation'
 import { useCreateConditionCtx } from '~screens/CreateConditionScreen/contexts/CreateConditionProvider'
 import { isDefined } from '~utils/helpers/isDefined'
 
+const SUCCESS_MESSAGE = 'Condition created'
+const ERROR_MESSAGE = 'Failed to create condition.'
+
+const NO_DEVICE_SELECTED = 'You must select a device'
+const NO_CONDITION_SELECTED = 'You must select a condition'
+const NO_VALUE_SELECTED = 'You must select a value'
+
 export const useCreateCondition = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const navigation = useNavigation()
   const {
     groupId,
@@ -22,8 +33,17 @@ export const useCreateCondition = () => {
   const [mCreateActuatorCondition] = useMCreateActuatorCondition()
 
   const createSensorCondition = () => {
-    if (!selectedDevice || !selectedSensorCondition || !sensorValue) {
-      return 'Missing fields'
+    if (!selectedDevice) {
+      presentStatusToast('error', NO_DEVICE_SELECTED)
+      return
+    }
+    if (!selectedSensorCondition) {
+      presentStatusToast('error', NO_CONDITION_SELECTED)
+      return
+    }
+    if (!sensorValue) {
+      presentStatusToast('error', NO_VALUE_SELECTED)
+      return
     }
 
     mCreateSensorCondition({
@@ -33,7 +53,6 @@ export const useCreateCondition = () => {
         operator: selectedSensorCondition,
         value: sensorValue,
       },
-      // TODO maybe QGroups is not needed?
       refetchQueries: ['QGroupDetail', 'QGroups'],
     })
       .then(({ data }) => {
@@ -41,20 +60,26 @@ export const useCreateCondition = () => {
         if (success) {
           navigation.goBack()
         }
-        return success
+
+        presentStatusToast('success', SUCCESS_MESSAGE)
       })
       .catch((error) => {
-        return error
+        presentStatusToast('error', `${ERROR_MESSAGE} ${error.message}`)
       })
   }
 
   const crateActuatorCondition = () => {
-    if (
-      !selectedDevice ||
-      !selectedActuatorCondition ||
-      !isDefined(actuatorState)
-    ) {
-      return 'Missing fields'
+    if (!selectedDevice) {
+      presentStatusToast('error', NO_DEVICE_SELECTED)
+      return
+    }
+    if (!selectedActuatorCondition) {
+      presentStatusToast('error', NO_CONDITION_SELECTED)
+      return
+    }
+    if (!isDefined(actuatorState)) {
+      presentStatusToast('error', NO_VALUE_SELECTED)
+      return
     }
 
     mCreateActuatorCondition({
@@ -71,10 +96,10 @@ export const useCreateCondition = () => {
         if (success) {
           navigation.goBack()
         }
-        return success
+        presentStatusToast('success', SUCCESS_MESSAGE)
       })
       .catch((error) => {
-        return error
+        presentStatusToast('error', `${ERROR_MESSAGE} ${error.message}`)
       })
   }
 

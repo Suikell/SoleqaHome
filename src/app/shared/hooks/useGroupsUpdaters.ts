@@ -1,10 +1,13 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { useMCreateGroup } from '~graphql/generated/graphql'
 import { useNavigation } from '~navigation/hooks/useNavigation'
 import { isDefined } from '~utils/helpers/isDefined'
 
 export const useGroupsUpdaters = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const navigation = useNavigation()
 
   const [isCreatingGroup, setIsCreatingGroup] = React.useState(false)
@@ -32,11 +35,14 @@ export const useGroupsUpdaters = () => {
           setIsCreatingGroup(false)
         })
         .catch((error) => {
-          console.error('mFavoriteSensor threw an error', error)
+          presentStatusToast(
+            'error',
+            `Failed to create group. ${error.message}`,
+          )
           setIsCreatingGroup(false)
         })
     },
-    [mCreateGroup, navigation],
+    [mCreateGroup, navigation, presentStatusToast],
   )
 
   return { isCreatingGroup, createNewGroup }

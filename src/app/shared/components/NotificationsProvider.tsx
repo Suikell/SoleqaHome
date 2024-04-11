@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   useMReadNotifications,
@@ -19,21 +20,24 @@ const [
 type TProps = RequiredChildren
 
 export const NotificationsProvider: React.FC<TProps> = ({ children }) => {
-  const result = useSNotificationsCount()
+  const { presentStatusToast } = useStatusToastCtx()
+
+  const { data, error } = useSNotificationsCount()
   const [mReadNotifications] = useMReadNotifications()
 
   const [count, setCount] = React.useState<number>(0)
 
   React.useEffect(() => {
-    console.log('notif ..', result)
-    if (result.error) {
+    if (error) {
+      presentStatusToast('error', error.message)
+
       return
     }
 
-    if (result.data) {
-      setCount(result.data.notificationUnreadCount)
+    if (data) {
+      setCount(data.notificationUnreadCount)
     }
-  }, [result])
+  }, [data, error, presentStatusToast])
 
   const readNotifications = React.useCallback(() => {
     mReadNotifications()

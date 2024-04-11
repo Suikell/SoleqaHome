@@ -3,6 +3,7 @@ import { DimensionValue, StyleSheet, View } from 'react-native'
 import { Card as PaperCard, Text } from 'react-native-paper'
 
 import { shrink } from '~utils/helpers/shrink'
+import { toCapitalizedLowerCase } from '~utils/helpers/toCapitalizedLowerCase'
 
 type TProps = Children & {
   title?: Nullable<string>
@@ -41,7 +42,7 @@ export const Card: React.FC<TProps> = ({
               titleStyle,
             ]}
           >
-            {title}
+            {toCapitalizedLowerCase(title)}
           </Text>
           {rightAction}
         </View>

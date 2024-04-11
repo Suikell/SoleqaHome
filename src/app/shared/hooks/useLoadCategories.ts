@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   TFActuatorBase,
@@ -21,6 +22,8 @@ type TCategory = TCategoryInfo & {
 }
 
 export const useLoadCategories = () => {
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [categories, setCategories] = React.useState<TCategory[]>([])
   const [sensors, setSensors] = React.useState<TFSensorBase[]>([])
   const [actuators, setActuators] = React.useState<TFActuatorBase[]>([])
@@ -28,11 +31,12 @@ export const useLoadCategories = () => {
   const { data, loading, error } = useQCategories()
 
   React.useEffect(() => {
-    if (error || !data || !data.categories) {
+    if (error) {
+      presentStatusToast('error', error.message)
       return
     }
 
-    if (data) {
+    if (data && data.categories) {
       const newCategories: TCategory[] = []
       const newSensors: TFSensorBase[] = []
       const newActuators: TFActuatorBase[] = []
@@ -75,7 +79,7 @@ export const useLoadCategories = () => {
       setSensors(newSensors)
       setActuators(newActuators)
     }
-  }, [data, error, loading])
+  }, [data, error, loading, presentStatusToast])
 
   return {
     loading,

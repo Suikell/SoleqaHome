@@ -17,6 +17,7 @@ import { GqlProvider } from 'src/app/graphql/GqlProvider'
 import { NotificationsProvider } from 'src/app/shared/components/NotificationsProvider'
 import { ValueSubscriptionProvider } from 'src/app/shared/components/ValueSubscriptionProvider'
 import { CategoriesProvider } from 'src/app/shared/contexts/CategoriesProvider'
+import { StatusToastProvider } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { Navigation } from '~navigation/components/Navigation'
 
@@ -102,17 +103,19 @@ const App: React.FC = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer theme={navTheme}>
-        <GqlProvider>
-          <SafeAreaProvider>
-            <NotificationsProvider>
+        <StatusToastProvider>
+          <GqlProvider>
+            <SafeAreaProvider>
               <CategoriesProvider>
-                <ValueSubscriptionProvider>
-                  <Navigation />
-                </ValueSubscriptionProvider>
+                <NotificationsProvider>
+                  <ValueSubscriptionProvider>
+                    <Navigation />
+                  </ValueSubscriptionProvider>
+                </NotificationsProvider>
               </CategoriesProvider>
-            </NotificationsProvider>
-          </SafeAreaProvider>
-        </GqlProvider>
+            </SafeAreaProvider>
+          </GqlProvider>
+        </StatusToastProvider>
       </NavigationContainer>
     </PaperProvider>
   )

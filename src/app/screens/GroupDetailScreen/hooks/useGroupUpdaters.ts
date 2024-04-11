@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   TFControlledActuator,
@@ -15,8 +16,12 @@ import { isDefined } from '~utils/helpers/isDefined'
 
 type TGroup = Defined<ReturnType<typeof useLoadGroupDetail>['group']>
 
+const REMOVE_CONDITION_ERROR = 'Failed to remove condition'
+
 export const useGroupUpdaters = (setGroup: ReactSetState<Nullable<TGroup>>) => {
   const navigation = useNavigation()
+  const { presentStatusToast } = useStatusToastCtx()
+
   const [mSetGroupActive] = useMSetGroupActive()
   const [mRemoveControlledActuator] = useMRemoveControlledActuator()
   const [mRemoveSensorCondition] = useMRemoveSensorCondition()
@@ -39,11 +44,14 @@ export const useGroupUpdaters = (setGroup: ReactSetState<Nullable<TGroup>>) => {
           }
         })
         .catch((error) => {
-          console.error('could not remove group', error)
+          presentStatusToast(
+            'error',
+            `Failed to delete group. ${error.message}`,
+          )
         })
     },
 
-    [mDeleteGroup, navigation],
+    [mDeleteGroup, navigation, presentStatusToast],
   )
 
   const updateStoredGroup = React.useCallback(
@@ -80,10 +88,13 @@ export const useGroupUpdaters = (setGroup: ReactSetState<Nullable<TGroup>>) => {
           }
         })
         .catch((error) => {
-          console.error('could not activate group', error)
+          presentStatusToast(
+            'error',
+            `Failed to activate group. ${error.message}`,
+          )
         })
     },
-    [mSetGroupActive, updateStoredGroup],
+    [mSetGroupActive, presentStatusToast, updateStoredGroup],
   )
 
   // REMOVERS
@@ -115,10 +126,18 @@ export const useGroupUpdaters = (setGroup: ReactSetState<Nullable<TGroup>>) => {
           }
         })
         .catch((error) => {
-          console.error('could not remove actuator from group', error)
+          presentStatusToast(
+            'error',
+            `Failed to remove actuator from the group. ${error.message}`,
+          )
         })
     },
-    [mRemoveControlledActuator, setGroup, updateStoredGroup],
+    [
+      mRemoveControlledActuator,
+      presentStatusToast,
+      setGroup,
+      updateStoredGroup,
+    ],
   )
 
   const removeSensorCondition = React.useCallback(
@@ -147,10 +166,13 @@ export const useGroupUpdaters = (setGroup: ReactSetState<Nullable<TGroup>>) => {
           }
         })
         .catch((error) => {
-          console.error('could not remove sensor condition', error)
+          presentStatusToast(
+            'error',
+            `${REMOVE_CONDITION_ERROR} ${error.message}`,
+          )
         })
     },
-    [mRemoveSensorCondition, setGroup, updateStoredGroup],
+    [mRemoveSensorCondition, presentStatusToast, setGroup, updateStoredGroup],
   )
 
   const removeActuatorCondition = React.useCallback(
@@ -179,10 +201,13 @@ export const useGroupUpdaters = (setGroup: ReactSetState<Nullable<TGroup>>) => {
           }
         })
         .catch((error) => {
-          console.error('could not remove actuator condition', error)
+          presentStatusToast(
+            'error',
+            `${REMOVE_CONDITION_ERROR} ${error.message}`,
+          )
         })
     },
-    [mRemoveActuatorCondition, setGroup, updateStoredGroup],
+    [mRemoveActuatorCondition, presentStatusToast, setGroup, updateStoredGroup],
   )
 
   // CONTROLLED ACTUATOR UPDATERS
@@ -238,10 +263,13 @@ export const useGroupUpdaters = (setGroup: ReactSetState<Nullable<TGroup>>) => {
           }
         })
         .catch((error) => {
-          console.error('could not change actuator state', error)
+          presentStatusToast(
+            'error',
+            `Failed to change actuator state. ${error.message}`,
+          )
         })
     },
-    [mChangeGroupActuatorState, updateActuator],
+    [mChangeGroupActuatorState, presentStatusToast, updateActuator],
   )
 
   return {

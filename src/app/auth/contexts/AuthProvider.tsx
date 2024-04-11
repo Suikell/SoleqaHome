@@ -30,20 +30,6 @@ export const AuthProvider: React.FC<TProps> = ({ children, setToken }) => {
   })
   const updaters = useSettingUpdaters({ setUser })
 
-  // const onLogin = React.useCallback(
-  //   async ({ email, password }: TLogin) => {
-  //     const data = await validateUser({ email, password })
-
-  //     console.log('data', data)
-  //     const login = data?.login
-  //     if (!login) return
-
-  //     setToken(login.token)
-  //     setUser(login.user)
-  //   },
-  //   [setToken, validateUser],
-  // )
-
   if (loading) {
     return <LoadingIndicator />
   }

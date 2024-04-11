@@ -17,34 +17,10 @@ import { AddButtonRow } from '~ui/Group/Table/AddButtonRow'
 import { ConditionHeader } from '~ui/Group/Table/ConditionHeader'
 import { ConditionRow } from '~ui/Group/Table/ConditionRow'
 import { Headline } from '~ui/Text/Headline'
+import { toCapitalizedLowerCase } from '~utils/helpers/toCapitalizedLowerCase'
 import { useTableStyles } from '~utils/hooks/useTableStyles'
 
 type TProps = NoChildren
-
-// const actMock: TGroup['actuatorConditions'] = [
-//   {
-//     __typename: 'ActuatorConditionType',
-//     id: 1,
-//     actuator: {
-//       __typename: 'ActuatorNodeType',
-//       id: 1,
-//       name: 'Actuator 1',
-//     },
-//     operator: 'EQUAL',
-//     value: true,
-//   },
-//   {
-//     __typename: 'ActuatorConditionType',
-//     id: 2,
-//     actuator: {
-//       __typename: 'ActuatorNodeType',
-//       id: 2,
-//       name: 'Actuator 2',
-//     },
-//     operator: 'NOT_EQUAL',
-//     value: false,
-//   },
-// ]
 
 export const GroupConditions: React.FC<TProps> = () => {
   const navigation = useNavigation()
@@ -79,7 +55,7 @@ export const GroupConditions: React.FC<TProps> = () => {
                   sensorId={condition.sensor.id}
                   name={condition.sensor.name}
                 >
-                  {condition.sensor.name}
+                  {toCapitalizedLowerCase(condition.sensor.name)}
                 </SensorDetailLink>
               }
               // type={`sensor`}
@@ -106,7 +82,7 @@ export const GroupConditions: React.FC<TProps> = () => {
                   actuatorId={condition.actuator.id}
                   name={condition.actuator.name}
                 >
-                  {condition.actuator.name}
+                  {toCapitalizedLowerCase(condition.actuator.name)}
                 </ActuatorDetailLink>
               }
               // type={`actuator`}
