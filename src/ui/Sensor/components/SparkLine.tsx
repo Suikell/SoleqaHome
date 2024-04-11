@@ -15,6 +15,7 @@ import { shrink } from '~utils/helpers/shrink'
 type TSensorValues = TFSensorBase['values']
 
 type TProps = NoChildren & {
+  disabled?: boolean
   sensorValues: TSensorValues
 }
 
@@ -42,7 +43,7 @@ const getData = (values: TSensorValues) => {
   return filteredValues
 }
 
-export const SparkLine = ({ sensorValues }: TProps) => {
+export const SparkLine = ({ disabled = false, sensorValues }: TProps) => {
   const theme = useTheme()
 
   const windowWidth = Dimensions.get('window').width
@@ -78,7 +79,11 @@ export const SparkLine = ({ sensorValues }: TProps) => {
           encode: { x: 'time', y: name },
           showSymbol: false,
           lineStyle: { width: 1 },
-          itemStyle: { color: theme.colors.primary },
+          itemStyle: {
+            color: disabled
+              ? theme.colors.primaryContainer
+              : theme.colors.primary,
+          },
           areaStyle: { opacity: 0.15 },
         },
       ],
@@ -93,7 +98,13 @@ export const SparkLine = ({ sensorValues }: TProps) => {
       chart.setOption(option, true)
     }
     return () => chart?.dispose()
-  }, [sensorValues, theme.colors.primary, width])
+  }, [
+    disabled,
+    sensorValues,
+    theme.colors.primary,
+    theme.colors.primaryContainer,
+    width,
+  ])
 
   return (
     <View style={{ left: -shrink(width / 2) }}>

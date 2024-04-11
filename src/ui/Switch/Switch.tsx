@@ -2,7 +2,10 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Switch as UISwitch, Text } from 'react-native-paper'
 
+import { useDisabledStyles } from '~utils/hooks/useDisabledStyles'
+
 type TProps = NoChildren & {
+  disabled?: boolean
   label?: string
   state: Nullable<boolean>
   onChange: PropsOf<typeof UISwitch>['onChange']
@@ -11,12 +14,24 @@ type TProps = NoChildren & {
 export const Switch: React.FC<TProps> = ({
   label = `State`,
   state = false,
+  disabled = false,
   onChange,
 }) => {
+  const disabledStyles = useDisabledStyles()
+
   return (
     <View style={styles.content}>
-      <Text variant={`labelLarge`}>{label}:</Text>
-      <UISwitch value={state || false} onChange={onChange} />
+      <Text
+        style={disabled ? disabledStyles.onSurface : undefined}
+        variant={`labelLarge`}
+      >
+        {label}:
+      </Text>
+      <UISwitch
+        disabled={disabled}
+        value={state || false}
+        onChange={onChange}
+      />
     </View>
   )
 }

@@ -2,6 +2,8 @@ fragment FSensorBase on SensorNodeType {
   id
   name
   favorite
+  isCritical
+  isOnline
   unitType: unitTypeStr
   currentValue
   values {

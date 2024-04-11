@@ -28,17 +28,19 @@ export const SensorCard: React.FC<TProps> = ({ sensor }) => {
 
   return (
     <DeviceCard
+      isOnline={sensor.isOnline}
       onPress={onCardPress}
       label={sensor.name}
       favorite={sensor.favorite}
       setFavorite={setFavorite}
     >
       <SensorValue
+        disabled={!sensor.isOnline}
         value={sensor.currentValue}
         unitType={sensor.unitType}
         valueFontWeight={`600`}
       />
-      <SparkLine sensorValues={sensor.values} />
+      <SparkLine disabled={!sensor.isOnline} sensorValues={sensor.values} />
     </DeviceCard>
   )
 }

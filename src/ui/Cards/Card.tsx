@@ -4,8 +4,10 @@ import { Card as PaperCard, Text } from 'react-native-paper'
 
 import { shrink } from '~utils/helpers/shrink'
 import { toCapitalizedLowerCase } from '~utils/helpers/toCapitalizedLowerCase'
+import { useDisabledStyles } from '~utils/hooks/useDisabledStyles'
 
 type TProps = Children & {
+  disabled?: boolean
   title?: Nullable<string>
   titleWidth?: DimensionValue
   titleStyle?: PropsOf<typeof Text>['style']
@@ -21,12 +23,14 @@ export const Card: React.FC<TProps> = ({
   titleStyle,
   children,
   rightAction,
+  disabled = false,
   titleWidth = `65%`,
 }) => {
+  const disabledStyles = useDisabledStyles()
   return (
     <PaperCard
       mode={`contained`}
-      style={[styles.container, cardStyle]}
+      style={[cardStyle, styles.container, disabled && disabledStyles.surface]}
       onPress={onPress}
     >
       {title && (
@@ -40,6 +44,8 @@ export const Card: React.FC<TProps> = ({
                 overflow: `hidden`,
               },
               titleStyle,
+
+              disabled && disabledStyles.onSurface,
             ]}
           >
             {toCapitalizedLowerCase(title)}

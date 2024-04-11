@@ -5,6 +5,7 @@ import { Card } from '~ui/Cards/Card'
 import { isDefined } from '~utils/helpers/isDefined'
 
 type TProps = Children & {
+  isOnline: boolean
   favorite?: boolean
   setFavorite: () => void
   label: PropsOf<typeof Card>['title']
@@ -12,6 +13,7 @@ type TProps = Children & {
 }
 
 export const DeviceCard: React.FC<TProps> = ({
+  isOnline,
   label,
   onPress,
   favorite,
@@ -23,14 +25,20 @@ export const DeviceCard: React.FC<TProps> = ({
 
     return (
       <IconButton
+        disabled={!isOnline}
         onPress={setFavorite}
         icon={`cards-heart${favorite ? `` : `-outline`}`}
       />
     )
-  }, [favorite, setFavorite])
+  }, [favorite, isOnline, setFavorite])
 
   return (
-    <Card onPress={onPress} title={label} rightAction={rightAction}>
+    <Card
+      disabled={!isOnline}
+      onPress={onPress}
+      title={label}
+      rightAction={rightAction}
+    >
       {children}
     </Card>
   )

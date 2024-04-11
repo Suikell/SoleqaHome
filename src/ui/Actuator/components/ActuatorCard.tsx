@@ -22,7 +22,6 @@ export const ActuatorCard: React.FC<TProps> = ({ actuator }) => {
     navigation.navigate('ActuatorDetail', {
       actuatorId: actuator.id,
       name: actuator.name,
-      state: actuator.currentState,
     })
   }
 
@@ -41,12 +40,17 @@ export const ActuatorCard: React.FC<TProps> = ({ actuator }) => {
 
   return (
     <DeviceCard
+      isOnline={actuator.isOnline}
       onPress={onCardPress}
       label={actuator.name}
       favorite={actuator.favorite}
       setFavorite={setFavorite}
     >
-      <Switch state={currentState} onChange={showModal} />
+      <Switch
+        disabled={!actuator.isOnline}
+        state={currentState}
+        onChange={showModal}
+      />
       <ManualControlModal
         visible={visible}
         hideModal={hideModal}
