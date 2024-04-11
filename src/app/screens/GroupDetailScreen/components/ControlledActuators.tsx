@@ -8,6 +8,7 @@ import { useGroupDetailCtx } from '~screens/GroupDetailScreen/contexts/GroupDeta
 import { AddButtonRow } from '~ui/Group/Table/AddButtonRow'
 import { RemoveItemCell } from '~ui/Group/Table/RemoveItemCell'
 import { Headline } from '~ui/Text/Headline'
+import { toCapitalizedLowerCase } from '~utils/helpers/toCapitalizedLowerCase'
 import { useTableStyles } from '~utils/hooks/useTableStyles'
 
 type TProps = NoChildren
@@ -41,7 +42,7 @@ export const ControlledActuators: React.FC<TProps> = () => {
                   actuatorId={actuator.id}
                   name={actuator.name}
                 >
-                  {actuator.name}
+                  {toCapitalizedLowerCase(actuator.name)}
                 </ActuatorDetailLink>
               </DataTable.Cell>
               <DataTable.Cell
