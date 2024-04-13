@@ -17,6 +17,7 @@ import { GqlProvider } from 'src/app/graphql/GqlProvider'
 import { NotificationsProvider } from 'src/app/shared/components/NotificationsProvider'
 import { ValueSubscriptionProvider } from 'src/app/shared/components/ValueSubscriptionProvider'
 import { CategoriesProvider } from 'src/app/shared/contexts/CategoriesProvider'
+import { CriticalSensorsProvider } from 'src/app/shared/contexts/CriticalSensorsProvider'
 import { StatusToastProvider } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { Navigation } from '~navigation/components/Navigation'
@@ -107,11 +108,13 @@ const App: React.FC = () => {
           <GqlProvider>
             <SafeAreaProvider>
               <CategoriesProvider>
-                <NotificationsProvider>
-                  <ValueSubscriptionProvider>
-                    <Navigation />
-                  </ValueSubscriptionProvider>
-                </NotificationsProvider>
+                <CriticalSensorsProvider>
+                  <NotificationsProvider>
+                    <ValueSubscriptionProvider>
+                      <Navigation />
+                    </ValueSubscriptionProvider>
+                  </NotificationsProvider>
+                </CriticalSensorsProvider>
               </CategoriesProvider>
             </SafeAreaProvider>
           </GqlProvider>

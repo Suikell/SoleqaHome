@@ -32,9 +32,33 @@ export const useLoadCriticalSensors = () => {
     setCriticalSensors(sensors)
   }, [data, error, presentStatusToast])
 
+  const updateSensorCurrentValue = React.useCallback(
+    (sensorId: ID, value: TFSensorBase['currentValue']) => {
+      if (!value) return
+      // update sensor value
+      setCriticalSensors((prevSensors) => {
+        const sensorIndex = prevSensors.findIndex((s) => s.id === sensorId)
+        if (sensorIndex === -1) return prevSensors
+
+        const updatedSensor = {
+          ...prevSensors[sensorIndex],
+          currentValue: value,
+        }
+
+        return [
+          ...prevSensors.slice(0, sensorIndex),
+          updatedSensor,
+          ...prevSensors.slice(sensorIndex + 1),
+        ]
+      })
+    },
+    [],
+  )
+
   return {
     criticalSensors,
     loading,
     refetch,
+    updateSensorCurrentValue,
   }
 }

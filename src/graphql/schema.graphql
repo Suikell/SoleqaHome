@@ -303,6 +303,10 @@ enum NotificationTypeEnum {
   SENSOR_NOT_CRITICAL
 }
 
+type NotificationsUnreadCountType {
+  unreadCount: Int!
+}
+
 type ObtainJSONWebToken {
   households: [HouseholdType!]
   payload: GenericScalar!
@@ -407,6 +411,7 @@ type SensorNodeSubscriptionType {
   type: Int!
   uid: UUID!
   unitType: UnitTypeEnum
+  unitTypeStr: String!
 }
 
 type SensorNodeType {
@@ -538,6 +543,7 @@ enum SubscriptionResultType {
   ACTUATOR_ONLINE_STATUS_CHANGED
   ACTUATOR_STATE_CHANGED
   MAINFRAME_ONLINE_STATUS_CHANGED
+  NOTIFICATIONS_UNREAD_COUNT
   SENSOR_IS_CRITICAL_CHANGED
   SENSOR_ONLINE_STATUS_CHANGED
   SENSOR_VALUE_LOGGED
@@ -548,7 +554,7 @@ type SubscriptionType {
   type: SubscriptionResultType!
 }
 
-union SubscriptionUnionType = ActuatorNodeSubscriptionType | SensorNodeSubscriptionType
+union SubscriptionUnionType = ActuatorNodeSubscriptionType | NotificationsUnreadCountType | SensorNodeSubscriptionType
 
 type ThresholdGroupActuatorType {
   actuator: ActuatorNodeType!

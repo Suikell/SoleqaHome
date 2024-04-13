@@ -30,19 +30,6 @@
       "tsconfigPaths": true
     },
     "plugins": [
-      [
-        "expo-sensors",
-        {
-          "motionPermission": "Allow $(PRODUCT_NAME) to access your device motion."
-        }
-      ],
-      [
-        "expo-screen-orientation",
-        {
-          "initialOrientation": "LANDSCAPE",
-          "orientation": "LANDSCAPE"
-        }
-      ],
       ["expo-build-properties", { "android": { "usesCleartextTraffic": true } }]
     ]
   }

@@ -1,12 +1,15 @@
 import * as React from 'react'
 import { useLoadCriticalSensors } from 'src/app/shared/hooks/useLoadCriticalSensors'
 
-import { TFSensorBase } from '~graphql/generated/graphql'
 import { LoadingIndicator } from '~ui/Loading/LoadingIndicator'
 import { createContext } from '~utils/context/createContext'
 
-type TContextValue = {
-  criticalSensors: RoA<TFSensorBase>
+type TReturnLoadSensors = Pick<
+  ReturnType<typeof useLoadCriticalSensors>,
+  'criticalSensors' | 'updateSensorCurrentValue'
+>
+
+type TContextValue = TReturnLoadSensors & {
   refetchCriticalSensors: () => void
 }
 
@@ -18,14 +21,16 @@ const [
 type TProps = RequiredChildren
 
 export const CriticalSensorsProvider: React.FC<TProps> = ({ children }) => {
-  const { criticalSensors, loading, refetch } = useLoadCriticalSensors()
+  const { criticalSensors, loading, refetch, updateSensorCurrentValue } =
+    useLoadCriticalSensors()
 
   const value = React.useMemo(() => {
     return {
       criticalSensors,
+      updateSensorCurrentValue,
       refetchCriticalSensors: refetch,
     }
-  }, [criticalSensors, refetch])
+  }, [criticalSensors, refetch, updateSensorCurrentValue])
 
   if (loading) {
     return <LoadingIndicator />

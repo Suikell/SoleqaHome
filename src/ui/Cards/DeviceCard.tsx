@@ -1,3 +1,4 @@
+import { useAppTheme } from 'App'
 import * as React from 'react'
 import { IconButton } from 'react-native-paper'
 
@@ -20,17 +21,21 @@ export const DeviceCard: React.FC<TProps> = ({
   children,
   setFavorite,
 }) => {
+  const theme = useAppTheme()
+
   const rightAction = React.useMemo(() => {
     if (!isDefined(favorite)) return null
 
     return (
       <IconButton
-        disabled={!isOnline}
+        iconColor={
+          isOnline ? theme.colors.onBackground : theme.colors.onSurfaceDisabled
+        }
         onPress={setFavorite}
         icon={`cards-heart${favorite ? `` : `-outline`}`}
       />
     )
-  }, [favorite, isOnline, setFavorite])
+  }, [favorite, isOnline, setFavorite, theme])
 
   return (
     <Card

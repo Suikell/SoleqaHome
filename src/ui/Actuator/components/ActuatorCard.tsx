@@ -6,7 +6,6 @@ import { useNavigation } from '~navigation/hooks/useNavigation'
 import { ManualControlModal } from '~ui/Actuator/components/ManualControlModal'
 import { DeviceCard } from '~ui/Cards/DeviceCard'
 import { Switch } from '~ui/Switch/Switch'
-import { isDefined } from '~utils/helpers/isDefined'
 
 type TProps = NoChildren & {
   actuator: TFActuatorBase
@@ -17,8 +16,6 @@ export const ActuatorCard: React.FC<TProps> = ({ actuator }) => {
   const { setFavoriteActuatorValue } = useCategoriesUpdatersCtx()
 
   const onCardPress = () => {
-    if (!isDefined(actuator.currentState)) return null
-
     navigation.navigate('ActuatorDetail', {
       actuatorId: actuator.id,
       name: actuator.name,

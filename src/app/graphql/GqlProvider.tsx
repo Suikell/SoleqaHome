@@ -15,9 +15,7 @@ import { AuthProvider } from 'src/app/auth/contexts/AuthProvider'
 
 type TProps = RequiredChildren
 
-// !change when starting ngrok
-// !ngrok http http://localhost:8000 (port based on BE)
-const NGROK = `4ced-83-240-63-190.ngrok-free.app`
+const BE_URL = `greenhouse.soleqa.cz`
 
 /**
  * GQL BE connection provider
@@ -31,7 +29,7 @@ export const GqlProvider: React.FC<TProps> = ({ children }) => {
 
   React.useEffect(() => {
     const httpLink = createHttpLink({
-      uri: `http://${NGROK}/graphql/`,
+      uri: `https://${BE_URL}/graphql/`,
     })
 
     const authLink = setContext((_, { headers }) => {
@@ -48,7 +46,7 @@ export const GqlProvider: React.FC<TProps> = ({ children }) => {
     // https://medium.com/simform-engineering/apollo-graphql-with-react-native-part-2-3d845f1b006
     const wsLink = new GraphQLWsLink(
       createClient({
-        url: `wss://${NGROK}/subscriptions/?token=${token}`,
+        url: `wss://${BE_URL}/subscriptions/?token=${token}`,
         //     connectionParams: {
         //       authToken: token,
         //     },
