@@ -1,4 +1,4 @@
-import { SkiaChart, SVGRenderer } from '@wuba/react-native-echarts'
+import { SvgChart, SVGRenderer } from '@wuba/react-native-echarts'
 import { CustomChart, LineChart } from 'echarts/charts'
 import { GridComponent, ToolboxComponent } from 'echarts/components'
 import * as echarts from 'echarts/core'
@@ -92,9 +92,11 @@ export const SparkLine = ({ disabled = false, sensorValues }: TProps) => {
     width,
   ])
 
+  // TODO - change to skia chart after the bug is fixed
+  // https://github.com/wuba/react-native-echarts/issues/161
   return (
     <View style={{ left: -shrink(width / 2) }}>
-      <SkiaChart ref={skiaRef} />
+      <SvgChart ref={skiaRef} />
     </View>
   )
 }

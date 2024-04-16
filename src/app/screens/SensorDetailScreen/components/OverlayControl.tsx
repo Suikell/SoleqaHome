@@ -2,10 +2,12 @@ import { TAppTheme } from 'App'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import Collapsible from 'react-native-collapsible'
-import { Button, Text } from 'react-native-paper'
+import { Button } from 'react-native-paper'
 
 // TODO - move to ui?
-import { OverlayControlContent } from '~screens/SensorDetailScreen/components/OverlayControlContent'
+import {
+  OverlayControlContent,
+} from '~screens/SensorDetailScreen/components/OverlayControlContent'
 import {
   useGraphControlCtx,
   useGraphValuesCtx,
@@ -51,12 +53,6 @@ export const OverlayControl: React.FC<TProps> = ({
           <Button onPress={onToggleButton}>
             {isOverlayVisible ? `Hide` : `Show`}
           </Button>
-        </FlexRow>
-      )}
-
-      {isCollapsed && isOverlayVisible && (
-        <FlexRow>
-          <Text>TODO </Text>
         </FlexRow>
       )}
 

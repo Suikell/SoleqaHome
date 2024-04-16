@@ -1,4 +1,4 @@
-import { SkiaChart, SVGRenderer } from '@wuba/react-native-echarts'
+import { SvgChart, SVGRenderer } from '@wuba/react-native-echarts'
 import { useAppTheme } from 'App'
 import { CustomChart, LineChart } from 'echarts/charts'
 import {
@@ -18,8 +18,12 @@ import {
 import React, { useRef } from 'react'
 import { Dimensions } from 'react-native'
 
-import { useGraphValuesCtx } from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
-import { useSensorCtx } from '~screens/SensorDetailScreen/contexts/SensorDetailProvider'
+import {
+  useGraphValuesCtx,
+} from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
+import {
+  useSensorCtx,
+} from '~screens/SensorDetailScreen/contexts/SensorDetailProvider'
 import {
   getAverage,
   getDateValues,
@@ -144,13 +148,13 @@ export const DetailedGraph: React.FC<TProps> = ({
 
           if (!Array.isArray(minMaxObject.data)) return
 
-          const min = minMaxObject.data[1]
-          const max = minMaxObject.data[2]
-          const average = averageObject.value
+          const min = minMaxObject.data[1] || ``
+          const max = minMaxObject.data[2] || ``
+          const average = averageObject.value || ``
 
           const formattedMin = getFormattedToolTipValue(min)
           const formattedMax = getFormattedToolTipValue(max)
-          // .value can be even more types than the value from data -_-
+          // .value can be even more types than the value from data
           const formattedAverage = getFormattedToolTipValue(average.toString())
 
           const minMaxText = `Min: ${formattedMin}${sensor.unitType}\nMax: ${formattedMax}${sensor.unitType}\n`
@@ -161,7 +165,7 @@ export const DetailedGraph: React.FC<TProps> = ({
 
           if (params.length === 3) {
             const overlayObject = params[2]
-            const overlayAverageValue = overlayObject.value
+            const overlayAverageValue = overlayObject.value || ``
             const overlayAverage = getFormattedToolTipValue(
               overlayAverageValue.toString(),
             )
@@ -314,7 +318,10 @@ export const DetailedGraph: React.FC<TProps> = ({
     windowWidth,
   ])
 
-  return <SkiaChart ref={skiaRef} />
+
+  // TODO - change to skia chart after the bug is fixed
+  // https://github.com/wuba/react-native-echarts/issues/161
+  return <SvgChart ref={skiaRef} />
 }
 
 //* HELPERS
