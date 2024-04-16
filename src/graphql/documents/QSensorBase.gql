@@ -1,0 +1,5 @@
+query QSensorBase($sensorId: Int!) {
+  sensor: sensorNode(id: $sensorId) {
+   ...FSensorBase
+  }
+}

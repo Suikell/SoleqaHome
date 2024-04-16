@@ -10,6 +10,10 @@ subscription SValues {
       ... on ActuatorNodeSubscriptionType {
         id
         currentState
+        isOnline
+      }
+      ... on NotificationsUnreadCountType {
+        unreadCount
       }
     }
   }

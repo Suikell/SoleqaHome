@@ -8,7 +8,7 @@ import { SettingInput } from '~screens/SettingsScreen/components/SettingInput'
 type TProps = NoChildren
 
 export const SetPassword: React.FC<TProps> = () => {
-  const { user, changeUserPassword } = useAuthCtx()
+  const { changeUserPassword } = useAuthCtx()
 
   const [oldPassword, setOldPassword] = React.useState('')
   const [newPassword, setNewPassword] = React.useState('')
@@ -24,7 +24,7 @@ export const SetPassword: React.FC<TProps> = () => {
       <SettingInput
         label={`Old password`}
         secureTextEntry
-        originalValue={user.firstName}
+        originalValue={''}
         onEndEditing={(value) => {
           setOldPassword(value)
         }}
@@ -33,7 +33,7 @@ export const SetPassword: React.FC<TProps> = () => {
       <SettingInput
         label={`New password`}
         secureTextEntry
-        originalValue={user.lastName}
+        originalValue={''}
         onEndEditing={(value) => {
           setNewPassword(value)
         }}

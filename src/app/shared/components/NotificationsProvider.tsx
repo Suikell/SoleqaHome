@@ -3,13 +3,14 @@ import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   useMReadNotifications,
-  useSNotificationsCount,
+  useQNotificationsCount,
 } from '~graphql/generated/graphql'
 import { createContext } from '~utils/context/createContext'
 
 type TContextValue = {
   count: number
   readNotifications: () => void
+  setUnreadNotificationsCount: (count: number) => void
 }
 
 const [
@@ -21,23 +22,28 @@ type TProps = RequiredChildren
 
 export const NotificationsProvider: React.FC<TProps> = ({ children }) => {
   const { presentStatusToast } = useStatusToastCtx()
-
-  const { data, error } = useSNotificationsCount()
-  const [mReadNotifications] = useMReadNotifications()
-
   const [count, setCount] = React.useState<number>(0)
 
+  const [mReadNotifications] = useMReadNotifications()
+  const { data, error } = useQNotificationsCount()
+
   React.useEffect(() => {
+    const unreadCount = data?.notifications?.unreadCount
+    if (unreadCount) {
+      setCount(unreadCount)
+    }
+
     if (error) {
-      presentStatusToast('error', error.message)
-
-      return
+      presentStatusToast(
+        'error',
+        `Failed to fetch notifications count. ${error.message}`,
+      )
     }
+  }, [data?.notifications?.unreadCount, error, presentStatusToast])
 
-    if (data) {
-      setCount(data.notificationUnreadCount)
-    }
-  }, [data, error, presentStatusToast])
+  const setUnreadNotificationsCount = React.useCallback((count: number) => {
+    setCount(count)
+  }, [])
 
   const readNotifications = React.useCallback(() => {
     mReadNotifications()
@@ -48,11 +54,18 @@ export const NotificationsProvider: React.FC<TProps> = ({ children }) => {
         }
       })
       .catch((error) => {
-        console.log('error', error)
+        presentStatusToast(
+          'error',
+          `Failed to read notifications. ${error.message}`,
+        )
       })
-  }, [mReadNotifications])
+  }, [mReadNotifications, presentStatusToast])
 
-  return <Provider value={{ count, readNotifications }}>{children}</Provider>
+  return (
+    <Provider value={{ count, readNotifications, setUnreadNotificationsCount }}>
+      {children}
+    </Provider>
+  )
 }
 
 export { useNotificationsCtx }

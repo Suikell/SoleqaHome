@@ -63,13 +63,18 @@ export const StatusToastProvider: React.FC<TProps> = ({ children }) => {
             top: 60,
           }}
           style={{
-            borderColor: isError ? theme.colors.error : theme.colors.primary,
+            borderColor: isError
+              ? theme.colors.errorContainer
+              : theme.colors.primaryContainer,
             borderWidth: 2,
           }}
           visible={isVisible}
           onDismiss={() => setIsVisible(false)}
           action={{
             label: 'Ok',
+            textColor: isError
+              ? theme.colors.errorContainer
+              : theme.colors.primaryContainer,
           }}
         >
           {message}

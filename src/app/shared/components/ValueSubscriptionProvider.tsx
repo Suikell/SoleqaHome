@@ -1,9 +1,12 @@
 import * as React from 'react'
+import { useNotificationsCtx } from 'src/app/shared/components/NotificationsProvider'
 import { useCategoriesUpdatersCtx } from 'src/app/shared/contexts/CategoriesUpdatersProvider'
+import { useCriticalSensorsCtx } from 'src/app/shared/contexts/CriticalSensorsProvider'
 import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
   TActuatorNodeSubscriptionType,
+  TNotificationsUnreadCountType,
   TSensorNodeSubscriptionType,
   useSValues,
 } from '~graphql/generated/graphql'
@@ -22,6 +25,8 @@ type TSensorContext = {
 type TActuator = TActuatorNodeSubscriptionType
 type TActuatorSubscription = Pick<TActuator, 'id' | 'currentState'>
 
+type TNotificationsCount = Pick<TNotificationsUnreadCountType, 'unreadCount'>
+
 type TActuatorContext = {
   actuatorId: TActuatorSubscription['id']
   newValue: TActuatorSubscription['currentState']
@@ -39,6 +44,7 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
   const { presentStatusToast } = useStatusToastCtx()
 
   const result = useSValues()
+
   const [sensorValue, setSensorValue] =
     React.useState<Nullable<TSensorContext>>(null)
   const [actuatorValue, setActuatorValue] =
@@ -50,6 +56,13 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
     updateSensorFavoriteValue,
   } = useCategoriesUpdatersCtx()
 
+  const {
+    updateSensorCurrentValue: updateCriticalSensorCurrentValue,
+    updateCriticalSensor,
+  } = useCriticalSensorsCtx()
+
+  const { setUnreadNotificationsCount } = useNotificationsCtx()
+
   React.useEffect(() => {
     if (result.error) {
       presentStatusToast('error', result.error.message)
@@ -58,6 +71,12 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
 
     if (result.data && result.data.change) {
       const type = result.data.change.type
+
+      if (type === `NOTIFICATIONS_UNREAD_COUNT`) {
+        const { unreadCount } = result.data.change.data as TNotificationsCount
+        setUnreadNotificationsCount(unreadCount)
+        return
+      }
 
       if (type === `ACTUATOR_STATE_CHANGED`) {
         const actuator = result.data.change.data as TActuatorSubscription
@@ -74,17 +93,19 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
       const sensor = result.data.change.data as TSensorSubscription
 
       if (type === `SENSOR_IS_CRITICAL_CHANGED`) {
-        // TODO - what is this?
-        updateSensorFavoriteValue(sensor.id, sensor.isCritical)
+        updateCriticalSensor(sensor.id, sensor.isCritical)
         return
       }
 
-      updateSensorCurrentValue(sensor.id, sensor.currentValue)
+      if (type === `SENSOR_VALUE_LOGGED`) {
+        updateSensorCurrentValue(sensor.id, sensor.currentValue)
+        updateCriticalSensorCurrentValue(sensor.id, sensor.currentValue)
 
-      setSensorValue({
-        sensorId: sensor.id,
-        newValue: sensor.currentValue,
-      })
+        setSensorValue({
+          sensorId: sensor.id,
+          newValue: sensor.currentValue,
+        })
+      }
     }
   }, [
     result,
@@ -92,6 +113,9 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
     updateActuatorCurrentState,
     updateSensorCurrentValue,
     updateSensorFavoriteValue,
+    updateCriticalSensor,
+    setUnreadNotificationsCount,
+    updateCriticalSensorCurrentValue,
   ])
 
   return (

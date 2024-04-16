@@ -4,6 +4,7 @@ import {
   DefaultTheme as NavTheme,
   NavigationContainer,
 } from '@react-navigation/native'
+import { StatusBar } from 'expo-status-bar'
 import * as React from 'react'
 import {
   adaptNavigationTheme,
@@ -17,6 +18,7 @@ import { GqlProvider } from 'src/app/graphql/GqlProvider'
 import { NotificationsProvider } from 'src/app/shared/components/NotificationsProvider'
 import { ValueSubscriptionProvider } from 'src/app/shared/components/ValueSubscriptionProvider'
 import { CategoriesProvider } from 'src/app/shared/contexts/CategoriesProvider'
+import { CriticalSensorsProvider } from 'src/app/shared/contexts/CriticalSensorsProvider'
 import { StatusToastProvider } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { Navigation } from '~navigation/components/Navigation'
@@ -73,7 +75,7 @@ const darkTheme = {
       level4: 'rgb(35, 51, 43)',
       level5: 'rgb(37, 55, 46)',
     },
-    surfaceDisabled: 'rgba(225, 227, 223, 0.12)',
+    surfaceDisabled: 'rgb(42, 48, 44)',
     onSurfaceDisabled: 'rgba(225, 227, 223, 0.38)',
     backdrop: 'rgba(17, 20, 19, 0.7)3)',
   },
@@ -101,23 +103,29 @@ export const useAppTheme = () => useTheme<TAppTheme>()
 const App: React.FC = () => {
   registerTranslation('cs', cs)
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer theme={navTheme}>
-        <StatusToastProvider>
-          <GqlProvider>
-            <SafeAreaProvider>
-              <CategoriesProvider>
-                <NotificationsProvider>
-                  <ValueSubscriptionProvider>
-                    <Navigation />
-                  </ValueSubscriptionProvider>
-                </NotificationsProvider>
-              </CategoriesProvider>
-            </SafeAreaProvider>
-          </GqlProvider>
-        </StatusToastProvider>
-      </NavigationContainer>
-    </PaperProvider>
+    <>
+      {/* eslint-disable-next-line react/style-prop-object */}
+      <StatusBar style={`dark`} />
+      <PaperProvider theme={theme}>
+        <NavigationContainer theme={navTheme}>
+          <StatusToastProvider>
+            <GqlProvider>
+              <SafeAreaProvider>
+                <CategoriesProvider>
+                  <CriticalSensorsProvider>
+                    <NotificationsProvider>
+                      <ValueSubscriptionProvider>
+                        <Navigation />
+                      </ValueSubscriptionProvider>
+                    </NotificationsProvider>
+                  </CriticalSensorsProvider>
+                </CategoriesProvider>
+              </SafeAreaProvider>
+            </GqlProvider>
+          </StatusToastProvider>
+        </NavigationContainer>
+      </PaperProvider>
+    </>
   )
 }
 

@@ -1,27 +1,37 @@
 {
   "expo": {
-    "name": "IoT-frontend",
-    "slug": "IoT-frontend",
-    "version": "1.0.0",
+    "name": "Soleqa home",
+    "slug": "soleqa-home",
+    "version": "0.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#191C1A"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "requireFullScreen": true
     },
+    "androidStatusBar": {
+      "backgroundColor": "#191C1A",
+      "barStyle": "light-content"
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "#191C1A",
+      "barStyle": "light-content"
+    },
     "android": {
+      "versionCode": 3,
       "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#191C1A"
+      },
+      "package": "soleqa.home"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,19 +41,18 @@
     },
     "plugins": [
       [
-        "expo-sensors",
+        "expo-build-properties",
         {
-          "motionPermission": "Allow $(PRODUCT_NAME) to access your device motion."
+          "android": {
+            "usesCleartextTraffic": true
+          }
         }
-      ],
-      [
-        "expo-screen-orientation",
-        {
-          "initialOrientation": "LANDSCAPE",
-          "orientation": "LANDSCAPE"
-        }
-      ],
-      ["expo-build-properties", { "android": { "usesCleartextTraffic": true } }]
-    ]
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "81b81d20-bc28-4d06-9d1b-328760051f8d"
+      }
+    }
   }
 }

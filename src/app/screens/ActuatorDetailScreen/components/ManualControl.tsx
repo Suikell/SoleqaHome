@@ -52,7 +52,7 @@ export const ManualControl: React.FC<TProps> = ({
             </Text>
           </View>
 
-          <Button onPress={onTurnOnOff}>
+          <Button disabled={!actuator.isOnline} onPress={onTurnOnOff}>
             Turn {hasManualOverride ? 'off' : 'on'}
           </Button>
         </FlexRow>

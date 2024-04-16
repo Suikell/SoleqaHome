@@ -1,3 +1,0 @@
-subscription SNotificationsCount {
-  notificationUnreadCount
-}

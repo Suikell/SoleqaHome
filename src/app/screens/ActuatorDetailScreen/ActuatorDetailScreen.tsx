@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import * as React from 'react'
 import { Pressable } from 'react-native'
 
@@ -10,6 +11,9 @@ import { DetailAppBar } from '~ui/Appbar/DetailAppBar'
 type TProps = TNavigationProps<'ActuatorDetail'>
 
 export const ActuatorDetailScreen: React.FC<TProps> = ({ route }) => {
+  // This hook returns `true` if the screen is focused, `false` otherwise
+  const isFocused = useIsFocused()
+
   const { name, actuatorId } = route.params
   const { actuatorName, setActuatorName } = useActuatorSetName()
 
@@ -21,6 +25,10 @@ export const ActuatorDetailScreen: React.FC<TProps> = ({ route }) => {
     },
     [actuatorId, setActuatorName],
   )
+
+  if (!isFocused) {
+    return null
+  }
 
   return (
     <>

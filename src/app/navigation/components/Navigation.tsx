@@ -91,7 +91,7 @@ function HomeTabs() {
           tabBarLabel: 'Sensors',
           // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({ color, size }) => {
-            return <Icon name="cog" size={size} color={color} />
+            return <Icon name="access-point" size={size} color={color} />
           },
         }}
       />
@@ -102,7 +102,7 @@ function HomeTabs() {
           tabBarLabel: 'Actuators',
           // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({ color, size }) => {
-            return <Icon name="cog" size={size} color={color} />
+            return <Icon name="electric-switch" size={size} color={color} />
           },
         }}
       />
@@ -114,7 +114,7 @@ function HomeTabs() {
           tabBarLabel: 'Groups',
           // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({ color, size }) => {
-            return <Icon name="cog" size={size} color={color} />
+            return <Icon name="group" size={size} color={color} />
           },
         }}
       />

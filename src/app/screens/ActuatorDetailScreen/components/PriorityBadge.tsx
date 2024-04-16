@@ -35,6 +35,10 @@ export const PriorityBadge: React.FC<TProps> = ({
     priority?.toString() || '',
   )
 
+  React.useEffect(() => {
+    setSelectedPriority(priority?.toString() || '')
+  }, [priority])
+
   const onConfirm = React.useCallback(() => {
     setActuatorPriority(groupId, actuatorId, Number(selectedPriority))
 

@@ -1,6 +1,7 @@
 fragment FActuatorBase on ActuatorNodeType {
   id
   name
+  isOnline
   favorite
   currentState
   manualOverride

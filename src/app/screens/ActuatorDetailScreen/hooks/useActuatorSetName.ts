@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useCategoriesUpdatersCtx } from 'src/app/shared/contexts/CategoriesUpdatersProvider'
 import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { useMSetActuatorName } from '~graphql/generated/graphql'
@@ -6,6 +7,8 @@ import { isDefined } from '~utils/helpers/isDefined'
 
 export const useActuatorSetName = () => {
   const { presentStatusToast } = useStatusToastCtx()
+
+  const { updateActuatorName } = useCategoriesUpdatersCtx()
 
   const [mSetActuatorName] = useMSetActuatorName()
 
@@ -20,6 +23,7 @@ export const useActuatorSetName = () => {
           const actuator = data?.result?.actuator
           if (isDefined(actuator)) {
             setName(actuator.name)
+            updateActuatorName(actuator.id, actuator.name)
           }
         })
         .catch((error) => {
@@ -30,7 +34,7 @@ export const useActuatorSetName = () => {
           setName(null)
         })
     },
-    [mSetActuatorName, presentStatusToast],
+    [mSetActuatorName, presentStatusToast, updateActuatorName],
   )
 
   return { actuatorName, setActuatorName }

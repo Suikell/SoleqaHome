@@ -29,6 +29,8 @@ type TUpdatersContext = {
     actuatorId: ID,
     state: Defined<TFActuatorBase['currentState']>,
   ) => void
+  updateSensorName: (sensorId: ID, name: TFSensorBase['name']) => void
+  updateActuatorName: (actuatorId: ID, name: TFActuatorBase['name']) => void
 }
 
 const [
@@ -62,6 +64,9 @@ const CategoriesUpdatersProvider: React.FC<TProps> = ({
 
   const updateActuatorCurrentState = useCreateActuatorUpdater('currentState')
 
+  const updateSensorName = useCreateSensorUpdater('name')
+  const updateActuatorName = useCreateActuatorUpdater('name')
+
   const setFavoriteSensorValue = useCreateSensorUpdater(
     'favorite',
     setFavoriteSensor,
@@ -87,6 +92,8 @@ const CategoriesUpdatersProvider: React.FC<TProps> = ({
 
   const updaters = React.useMemo<TUpdatersContext>(() => {
     return {
+      updateSensorName,
+      updateActuatorName,
       selectCategoryIndex,
       updateSensorCurrentValue,
       setFavoriteActuatorValue,
@@ -97,6 +104,8 @@ const CategoriesUpdatersProvider: React.FC<TProps> = ({
       updateSensorFavoriteValue,
     }
   }, [
+    updateSensorName,
+    updateActuatorName,
     selectCategoryIndex,
     setFavoriteActuatorValue,
     updateSensorFavoriteValue,

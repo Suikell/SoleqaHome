@@ -21,14 +21,26 @@ type TCategory = TCategoryInfo & {
   }>
 }
 
+const REFETCH_TIME = 60 * 60 * 1000
+
 export const useLoadCategories = () => {
   const { presentStatusToast } = useStatusToastCtx()
 
-  const [categories, setCategories] = React.useState<TCategory[]>([])
-  const [sensors, setSensors] = React.useState<TFSensorBase[]>([])
-  const [actuators, setActuators] = React.useState<TFActuatorBase[]>([])
+  const [categories, setCategories] = React.useState<RoA<TCategory>>([])
+  const [sensors, setSensors] = React.useState<RoA<TFSensorBase>>([])
+  const [actuators, setActuators] = React.useState<RoA<TFActuatorBase>>([])
 
-  const { data, loading, error } = useQCategories()
+  const { data, loading, error, refetch } = useQCategories()
+
+  // refetch every hour
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      refetch()
+    }, REFETCH_TIME)
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [refetch])
 
   React.useEffect(() => {
     if (error) {
@@ -48,6 +60,7 @@ export const useLoadCategories = () => {
         const categorySensors =
           category.sensors?.map((sensor) => {
             newSensors.push(sensor)
+
             return {
               id: sensor.id,
               name: sensor.name,
