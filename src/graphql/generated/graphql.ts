@@ -943,7 +943,7 @@ export type TFGroup = { readonly __typename?: 'ThresholdGroupType', readonly id:
 
 export type TFGroupBase = { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean };
 
-export type TFSensorBase = { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly isCritical: boolean, readonly isOnline: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null };
+export type TFSensorBase = { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly isCritical: boolean, readonly isOnline: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly startDate: any, readonly average: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null };
 
 export type TFSensorCondition = { readonly __typename?: 'SensorConditionType', readonly operator: TSensorOperatorEnum, readonly value: number, readonly id: number, readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string } };
 
@@ -1093,7 +1093,7 @@ export type TMSetFavoriteSensorVariables = Exact<{
 }>;
 
 
-export type TMSetFavoriteSensor = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'SetFavoriteSensorMutation', readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly isCritical: boolean, readonly isOnline: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null } | null } | null };
+export type TMSetFavoriteSensor = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'SetFavoriteSensorMutation', readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly isCritical: boolean, readonly isOnline: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly startDate: any, readonly average: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null } | null } | null };
 
 export type TMSetGroupActiveVariables = Exact<{
   groupId: Scalars['Int']['input'];
@@ -1147,12 +1147,12 @@ export type TQActuatorDetail = { readonly __typename?: 'Query', readonly actuato
 export type TQCategoriesVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TQCategories = { readonly __typename?: 'Query', readonly categories: ReadonlyArray<{ readonly __typename?: 'MainframeType', readonly id: number, readonly name: string, readonly isOnline: boolean, readonly batteryLevel: number | null, readonly sensors: ReadonlyArray<{ readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly isCritical: boolean, readonly isOnline: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null, readonly actuators: ReadonlyArray<{ readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string, readonly isOnline: boolean, readonly favorite: boolean, readonly currentState: boolean | null, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null }> | null };
+export type TQCategories = { readonly __typename?: 'Query', readonly categories: ReadonlyArray<{ readonly __typename?: 'MainframeType', readonly id: number, readonly name: string, readonly isOnline: boolean, readonly batteryLevel: number | null, readonly sensors: ReadonlyArray<{ readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly isCritical: boolean, readonly isOnline: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly startDate: any, readonly average: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null, readonly actuators: ReadonlyArray<{ readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string, readonly isOnline: boolean, readonly favorite: boolean, readonly currentState: boolean | null, readonly manualOverride: boolean, readonly manualOverrideValue: boolean | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null }> | null };
 
 export type TQCriticalSensorsVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TQCriticalSensors = { readonly __typename?: 'Query', readonly categories: ReadonlyArray<{ readonly __typename?: 'MainframeType', readonly sensors: ReadonlyArray<{ readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly isCritical: boolean, readonly isOnline: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly avgValue: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null }> | null };
+export type TQCriticalSensors = { readonly __typename?: 'Query', readonly categories: ReadonlyArray<{ readonly __typename?: 'MainframeType', readonly sensors: ReadonlyArray<{ readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly isCritical: boolean, readonly isOnline: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly startDate: any, readonly average: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null }> | null }> | null };
 
 export type TQGroupDetailVariables = Exact<{
   groupId: Scalars['Int']['input'];
@@ -1170,6 +1170,18 @@ export type TQNotificationsVariables = Exact<{ [key: string]: never; }>;
 
 
 export type TQNotifications = { readonly __typename?: 'Query', readonly result: { readonly __typename?: 'NotificationListType', readonly unreadCount: number, readonly notifications: ReadonlyArray<{ readonly __typename?: 'NotificationType', readonly id: number, readonly read: boolean, readonly createdAt: any, readonly title: string, readonly body: string } | null> } | null };
+
+export type TQNotificationsCountVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TQNotificationsCount = { readonly __typename?: 'Query', readonly notifications: { readonly __typename?: 'NotificationListType', readonly unreadCount: number } | null };
+
+export type TQSensorBaseVariables = Exact<{
+  sensorId: Scalars['Int']['input'];
+}>;
+
+
+export type TQSensorBase = { readonly __typename?: 'Query', readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string, readonly favorite: boolean, readonly isCritical: boolean, readonly isOnline: boolean, readonly currentValue: number | null, readonly unitType: string | null, readonly values: ReadonlyArray<{ readonly __typename?: 'SensorDateRangeValuesType', readonly startDate: any, readonly average: number | null } | null> | null, readonly category: { readonly __typename?: 'MainframeType', readonly id: number } | null } | null };
 
 export type TQSensorDetailVariables = Exact<{
   sensorId: Scalars['Int']['input'];
@@ -1205,7 +1217,7 @@ export type TQSensorHistoricalValuesByDate = { readonly __typename?: 'Query', re
 export type TSValuesVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TSValues = { readonly __typename?: 'Subscription', readonly change: { readonly __typename?: 'SubscriptionType', readonly type: TSubscriptionResultType, readonly data: { readonly __typename?: 'ActuatorNodeSubscriptionType', readonly id: number, readonly currentState: boolean, readonly isOnline: boolean } | { readonly __typename?: 'NotificationsUnreadCountType', readonly unreadCount: number } | { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly currentValue: number | null } } };
+export type TSValues = { readonly __typename?: 'Subscription', readonly change: { readonly __typename?: 'SubscriptionType', readonly type: TSubscriptionResultType, readonly data: { readonly __typename?: 'ActuatorNodeSubscriptionType', readonly id: number, readonly currentState: boolean, readonly isOnline: boolean } | { readonly __typename?: 'NotificationsUnreadCountType', readonly unreadCount: number } | { readonly __typename?: 'SensorNodeSubscriptionType', readonly id: number, readonly currentValue: number | null, readonly isCritical: boolean } } };
 
 export const FActuatorBase = gql`
     fragment FActuatorBase on ActuatorNodeType {
@@ -1289,7 +1301,8 @@ export const FSensorBase = gql`
   unitType: unitTypeStr
   currentValue
   values {
-    avgValue
+    startDate
+    average: avgValue
   }
   category: mainframe {
     id
@@ -2462,6 +2475,85 @@ export type QNotificationsHookResult = ReturnType<typeof useQNotifications>;
 export type QNotificationsLazyQueryHookResult = ReturnType<typeof useQNotificationsLazyQuery>;
 export type QNotificationsSuspenseQueryHookResult = ReturnType<typeof useQNotificationsSuspenseQuery>;
 export type QNotificationsQueryResult = ApolloReactCommon.QueryResult<TQNotifications, TQNotificationsVariables>;
+export const QNotificationsCountDocument = gql`
+    query QNotificationsCount {
+  notifications: getNotifications {
+    unreadCount
+  }
+}
+    `;
+
+/**
+ * __useQNotificationsCount__
+ *
+ * To run a query within a React component, call `useQNotificationsCount` and pass it any options that fit your needs.
+ * When your component renders, `useQNotificationsCount` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQNotificationsCount({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useQNotificationsCount(baseOptions?: ApolloReactHooks.QueryHookOptions<TQNotificationsCount, TQNotificationsCountVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<TQNotificationsCount, TQNotificationsCountVariables>(QNotificationsCountDocument, options);
+      }
+export function useQNotificationsCountLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TQNotificationsCount, TQNotificationsCountVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<TQNotificationsCount, TQNotificationsCountVariables>(QNotificationsCountDocument, options);
+        }
+export function useQNotificationsCountSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<TQNotificationsCount, TQNotificationsCountVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<TQNotificationsCount, TQNotificationsCountVariables>(QNotificationsCountDocument, options);
+        }
+export type QNotificationsCountHookResult = ReturnType<typeof useQNotificationsCount>;
+export type QNotificationsCountLazyQueryHookResult = ReturnType<typeof useQNotificationsCountLazyQuery>;
+export type QNotificationsCountSuspenseQueryHookResult = ReturnType<typeof useQNotificationsCountSuspenseQuery>;
+export type QNotificationsCountQueryResult = ApolloReactCommon.QueryResult<TQNotificationsCount, TQNotificationsCountVariables>;
+export const QSensorBaseDocument = gql`
+    query QSensorBase($sensorId: Int!) {
+  sensor: sensorNode(id: $sensorId) {
+    ...FSensorBase
+  }
+}
+    ${FSensorBase}`;
+
+/**
+ * __useQSensorBase__
+ *
+ * To run a query within a React component, call `useQSensorBase` and pass it any options that fit your needs.
+ * When your component renders, `useQSensorBase` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQSensorBase({
+ *   variables: {
+ *      sensorId: // value for 'sensorId'
+ *   },
+ * });
+ */
+export function useQSensorBase(baseOptions: ApolloReactHooks.QueryHookOptions<TQSensorBase, TQSensorBaseVariables> & ({ variables: TQSensorBaseVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<TQSensorBase, TQSensorBaseVariables>(QSensorBaseDocument, options);
+      }
+export function useQSensorBaseLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TQSensorBase, TQSensorBaseVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<TQSensorBase, TQSensorBaseVariables>(QSensorBaseDocument, options);
+        }
+export function useQSensorBaseSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<TQSensorBase, TQSensorBaseVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<TQSensorBase, TQSensorBaseVariables>(QSensorBaseDocument, options);
+        }
+export type QSensorBaseHookResult = ReturnType<typeof useQSensorBase>;
+export type QSensorBaseLazyQueryHookResult = ReturnType<typeof useQSensorBaseLazyQuery>;
+export type QSensorBaseSuspenseQueryHookResult = ReturnType<typeof useQSensorBaseSuspenseQuery>;
+export type QSensorBaseQueryResult = ApolloReactCommon.QueryResult<TQSensorBase, TQSensorBaseVariables>;
 export const QSensorDetailDocument = gql`
     query QSensorDetail($sensorId: Int!) {
   sensor: sensorNode(id: $sensorId) {
@@ -2656,6 +2748,7 @@ export const SValuesDocument = gql`
       ... on SensorNodeSubscriptionType {
         id
         currentValue
+        isCritical
       }
       ... on ActuatorNodeSubscriptionType {
         id

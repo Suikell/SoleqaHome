@@ -57,8 +57,8 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
   } = useCategoriesUpdatersCtx()
 
   const {
-    refetchCriticalSensors,
     updateSensorCurrentValue: updateCriticalSensorCurrentValue,
+    updateCriticalSensor,
   } = useCriticalSensorsCtx()
 
   const { setUnreadNotificationsCount } = useNotificationsCtx()
@@ -93,7 +93,7 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
       const sensor = result.data.change.data as TSensorSubscription
 
       if (type === `SENSOR_IS_CRITICAL_CHANGED`) {
-        refetchCriticalSensors()
+        updateCriticalSensor(sensor.id, sensor.isCritical)
         return
       }
 
@@ -113,7 +113,7 @@ const ValueSubscriptionProvider: React.FC<TProps> = ({ children }) => {
     updateActuatorCurrentState,
     updateSensorCurrentValue,
     updateSensorFavoriteValue,
-    refetchCriticalSensors,
+    updateCriticalSensor,
     setUnreadNotificationsCount,
     updateCriticalSensorCurrentValue,
   ])

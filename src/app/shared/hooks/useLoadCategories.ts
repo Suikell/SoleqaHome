@@ -21,7 +21,7 @@ type TCategory = TCategoryInfo & {
   }>
 }
 
-const REFETCH_INTERVAL = 60 * 60 * 1000
+const REFETCH_TIME = 60 * 60 * 1000
 
 export const useLoadCategories = () => {
   const { presentStatusToast } = useStatusToastCtx()
@@ -34,11 +34,12 @@ export const useLoadCategories = () => {
 
   // refetch every hour
   React.useEffect(() => {
-    const interval = setInterval(() => {
+    const timeout = setTimeout(() => {
       refetch()
-    }, REFETCH_INTERVAL)
-
-    return () => clearInterval(interval)
+    }, REFETCH_TIME)
+    return () => {
+      clearTimeout(timeout)
+    }
   }, [refetch])
 
   React.useEffect(() => {

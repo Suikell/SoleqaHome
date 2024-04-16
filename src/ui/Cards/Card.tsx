@@ -30,7 +30,7 @@ export const Card: React.FC<TProps> = ({
   return (
     <PaperCard
       mode={`contained`}
-      style={[cardStyle, styles.container, disabled && disabledStyles.surface]}
+      style={[styles.container, disabled && disabledStyles.surface, cardStyle]}
       onPress={onPress}
     >
       {title && (

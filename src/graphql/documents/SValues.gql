@@ -5,6 +5,7 @@ subscription SValues {
       ... on SensorNodeSubscriptionType {
         id
         currentValue
+        isCritical
       }
       ... on ActuatorNodeSubscriptionType {
         id

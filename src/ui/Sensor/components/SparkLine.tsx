@@ -9,7 +9,7 @@ import { Dimensions, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
 import { TFSensorBase } from '~graphql/generated/graphql'
-import { isDefined } from '~utils/helpers/isDefined'
+import { getAverage, getDateValues } from '~ui/Sensor/helpers/getGraphValues'
 import { shrink } from '~utils/helpers/shrink'
 
 type TSensorValues = TFSensorBase['values']
@@ -27,21 +27,7 @@ echarts.use([
   ToolboxComponent,
 ])
 
-const time = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-]
-
-const name = 'testName'
-
-const getData = (values: TSensorValues) => {
-  if (!values) return []
-
-  const filteredValues = values.map((value) => {
-    if (!isDefined(value)) return null
-    return value.avgValue
-  })
-  return filteredValues
-}
+const name = 'averageValues'
 
 export const SparkLine = ({ disabled = false, sensorValues }: TProps) => {
   const theme = useTheme()
@@ -56,7 +42,7 @@ export const SparkLine = ({ disabled = false, sensorValues }: TProps) => {
 
       xAxis: {
         show: false,
-        data: time,
+        data: getDateValues(sensorValues || [], 'HOUR'),
       },
       yAxis: [
         {
@@ -73,7 +59,7 @@ export const SparkLine = ({ disabled = false, sensorValues }: TProps) => {
       series: [
         {
           name,
-          data: getData(sensorValues),
+          data: getAverage(sensorValues || []),
 
           type: 'line',
           encode: { x: 'time', y: name },
@@ -112,9 +98,3 @@ export const SparkLine = ({ disabled = false, sensorValues }: TProps) => {
     </View>
   )
 }
-
-// // const styles = StyleSheet.create({
-// //   container: {
-// //     // marginRight: shrink(48),
-// //   },
-// // })
