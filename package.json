@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "start": "yarn gql:generate && expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "gql:schema": "graphql-codegen --config src/graphql/config/codegen-schema.ts",
     "gql:generate": "graphql-codegen --config src/graphql/config/codegen-generate.ts",
     "dev": "yarn gql:schema && yarn gql:generate && yarn start"
@@ -50,7 +50,8 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
     "react-native-vector-icons": "^10.0.3",
-    "subscriptions-transport-ws": "^0.11.0"
+    "subscriptions-transport-ws": "^0.11.0",
+    "expo-splash-screen": "~0.20.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

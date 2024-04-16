@@ -50,7 +50,7 @@ export const GqlProvider: React.FC<TProps> = ({ children }) => {
         //     connectionParams: {
         //       authToken: token,
         //     },
-        keepAlive: 60000,
+        keepAlive: 20000,
         //     retryAttempts: 20,
         shouldRetry: (errOrClose) => {
           console.log(errOrClose)

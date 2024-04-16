@@ -4,6 +4,7 @@ import {
   DefaultTheme as NavTheme,
   NavigationContainer,
 } from '@react-navigation/native'
+import { StatusBar } from 'expo-status-bar'
 import * as React from 'react'
 import {
   adaptNavigationTheme,
@@ -102,25 +103,29 @@ export const useAppTheme = () => useTheme<TAppTheme>()
 const App: React.FC = () => {
   registerTranslation('cs', cs)
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer theme={navTheme}>
-        <StatusToastProvider>
-          <GqlProvider>
-            <SafeAreaProvider>
-              <CategoriesProvider>
-                <CriticalSensorsProvider>
-                  <NotificationsProvider>
-                    <ValueSubscriptionProvider>
-                      <Navigation />
-                    </ValueSubscriptionProvider>
-                  </NotificationsProvider>
-                </CriticalSensorsProvider>
-              </CategoriesProvider>
-            </SafeAreaProvider>
-          </GqlProvider>
-        </StatusToastProvider>
-      </NavigationContainer>
-    </PaperProvider>
+    <>
+      {/* eslint-disable-next-line react/style-prop-object */}
+      <StatusBar style={`dark`} />
+      <PaperProvider theme={theme}>
+        <NavigationContainer theme={navTheme}>
+          <StatusToastProvider>
+            <GqlProvider>
+              <SafeAreaProvider>
+                <CategoriesProvider>
+                  <CriticalSensorsProvider>
+                    <NotificationsProvider>
+                      <ValueSubscriptionProvider>
+                        <Navigation />
+                      </ValueSubscriptionProvider>
+                    </NotificationsProvider>
+                  </CriticalSensorsProvider>
+                </CategoriesProvider>
+              </SafeAreaProvider>
+            </GqlProvider>
+          </StatusToastProvider>
+        </NavigationContainer>
+      </PaperProvider>
+    </>
   )
 }
 
