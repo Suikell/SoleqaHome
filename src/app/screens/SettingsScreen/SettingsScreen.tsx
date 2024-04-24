@@ -17,8 +17,6 @@ import { SimpleAppBar } from '~ui/Appbar/SimpleAppBar'
 
 type TProps = NoChildren
 
-// TODO - make this better, this is really weird solution
-
 export const SettingsScreen: React.FC<TProps> = () => {
   const { logout } = useAuthCtx()
   return (

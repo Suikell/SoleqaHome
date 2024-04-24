@@ -74,7 +74,6 @@ function HomeTabs() {
         name="Home"
         component={HomeScreen}
         options={{
-          // unmountOnBlur: true,
           tabBarLabel: 'Home',
           // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({ color, size }) => {
@@ -86,8 +85,6 @@ function HomeTabs() {
         name="Sensors"
         component={SensorsScreen}
         options={{
-          // unmountOnBlur: true,
-
           tabBarLabel: 'Sensors',
           // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({ color, size }) => {

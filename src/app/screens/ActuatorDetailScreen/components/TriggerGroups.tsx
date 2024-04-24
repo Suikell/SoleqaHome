@@ -26,7 +26,6 @@ export const TriggerGroups: React.FC<TProps> = () => {
           />
         ))}
       </GroupListContainer>
-      {/* <GroupListContainerGroupListContainer groups={actuator.groups.map(({ group }) => group)} setGroupActive={} /> */}
     </View>
   )
 }

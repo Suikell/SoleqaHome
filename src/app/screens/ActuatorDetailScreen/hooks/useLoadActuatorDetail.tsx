@@ -9,7 +9,6 @@ import {
 
 export type TActuator = TQActuatorDetail['actuator']
 
-// add mutations for editing sensor and sensor values (optimal, critical, ...)
 export const useLoadActuatorDetail = (actuatorId: ID) => {
   const { presentStatusToast } = useStatusToastCtx()
 

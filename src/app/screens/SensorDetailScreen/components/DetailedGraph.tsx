@@ -18,12 +18,8 @@ import {
 import React, { useRef } from 'react'
 import { Dimensions } from 'react-native'
 
-import {
-  useGraphValuesCtx,
-} from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
-import {
-  useSensorCtx,
-} from '~screens/SensorDetailScreen/contexts/SensorDetailProvider'
+import { useGraphValuesCtx } from '~screens/SensorDetailScreen/contexts/GraphControlProvider'
+import { useSensorCtx } from '~screens/SensorDetailScreen/contexts/SensorDetailProvider'
 import {
   getAverage,
   getDateValues,
@@ -185,7 +181,6 @@ export const DetailedGraph: React.FC<TProps> = ({
           },
           label: {
             backgroundColor: theme.colors.surfaceVariant,
-            // color: 'green',
           },
         },
         trigger: 'axis',
@@ -204,11 +199,8 @@ export const DetailedGraph: React.FC<TProps> = ({
 
           name: 'Overlay time axis',
           nameLocation: 'center',
-          // nameGap: 15,
           nameTextStyle: {
             color: theme.custom.overlay,
-            // verticalAlign: 'bottom',
-
             padding: 10,
             backgroundColor: theme.colors.surface,
           },
@@ -284,14 +276,10 @@ export const DetailedGraph: React.FC<TProps> = ({
 
           // TODO - is sensor updated - animation:false
           // animation: false,
-          // itemStyle: {
-          //   // color: theme.colors.,
-          // },
           showSymbol: false,
           lineStyle: {
             color: theme.custom.overlay,
           },
-          // areaStyle: { color: theme.colors.primary, opacity: 0.15 },
           data: getAverage(overlayValues),
         },
       ],
@@ -317,7 +305,6 @@ export const DetailedGraph: React.FC<TProps> = ({
     windowHeight,
     windowWidth,
   ])
-
 
   // TODO - change to skia chart after the bug is fixed
   // https://github.com/wuba/react-native-echarts/issues/161

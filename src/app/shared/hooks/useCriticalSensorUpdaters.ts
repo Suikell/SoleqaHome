@@ -53,7 +53,7 @@ export const useCriticalSensorUpdaters = ({ setCriticalSensors }: TProps) => {
           )
         })
     },
-    [],
+    [presentStatusToast, qSensorBase, setCriticalSensors],
   )
 
   const updateSensorCurrentValue = React.useCallback(
@@ -76,7 +76,7 @@ export const useCriticalSensorUpdaters = ({ setCriticalSensors }: TProps) => {
         ]
       })
     },
-    [],
+    [setCriticalSensors],
   )
 
   return {

@@ -39,14 +39,13 @@ export const SensorDetailLink: React.FC<SensorDetailProps> = ({
   return <NavigationLink onLinkPress={onLinkPress}>{children}</NavigationLink>
 }
 
-/**
- * NavigationLink component with styled text and onPress handler
- */
-
 type TProps = RequiredChildren & {
   onLinkPress: () => void
 }
 
+/**
+ * NavigationLink component with styled text and onPress handler.
+ */
 const NavigationLink: React.FC<TProps> = ({ onLinkPress, children }) => {
   const [isPressed, setIsPressed] = React.useState(false)
 

@@ -15,8 +15,7 @@ export type LazyQueryHookOptions<
 > = ApolloLazyQueryHookOptions<TData, TVariables>
 
 /**
- * Apollo Client’s `useLazyQuery` wrapper with custom error handling
- * and some additional features (getStash, return Promise, ...)
+ * Apollo Client’s `useLazyQuery` wrapper.
  */
 export const useLazyQuery = <
   TData = unknown,

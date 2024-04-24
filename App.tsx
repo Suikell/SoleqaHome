@@ -98,8 +98,6 @@ export type TAppTheme = typeof theme
 
 export const useAppTheme = () => useTheme<TAppTheme>()
 
-// TODO ? - https://reactnative.dev/docs/statusbar
-
 const App: React.FC = () => {
   registerTranslation('cs', cs)
   return (

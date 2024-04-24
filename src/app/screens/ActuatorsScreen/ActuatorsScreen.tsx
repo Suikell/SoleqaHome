@@ -12,7 +12,6 @@ export const ActuatorsScreen = () => {
         <Text variant={`headlineSmall`} style={styles.label}>
           Actuators
         </Text>
-        {/* TODO <Appbar.Action icon="magnify" onPress={() => {}} /> */}
       </Appbar.Header>
       <ActuatorsScreenContent />
     </>

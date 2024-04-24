@@ -12,7 +12,6 @@ export const SensorsScreen = () => {
         <Text variant={`headlineSmall`} style={styles.label}>
           Sensors
         </Text>
-        {/* TODO <Appbar.Action icon="magnify" onPress={() => {}} /> */}
       </Appbar.Header>
       <SensorScreenContent />
     </>

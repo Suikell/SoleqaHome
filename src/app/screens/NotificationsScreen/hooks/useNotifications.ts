@@ -1,8 +1,6 @@
 import { useQNotifications } from '~graphql/generated/graphql'
 import { isDefined } from '~utils/helpers/isDefined'
 
-// type TNotifications = Defined<TQNotifications['result']>['notifications']
-
 export const useNotifications = () => {
   const { data, loading } = useQNotifications()
 

@@ -11,9 +11,6 @@ type TProps = NoChildren
 
 export const GroupDetailScreenContent: React.FC<TProps> = () => {
   return (
-    // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    // <KeyboardAvoidingView style={{ flex: 1 }} behavior={'position'}>
-
     <ScrollView
       style={styles.content}
       showsVerticalScrollIndicator={false}
@@ -40,16 +37,12 @@ export const GroupDetailScreenContent: React.FC<TProps> = () => {
         <DeleteGroup />
       </View>
     </ScrollView>
-    // </KeyboardAvoidingView>
-    // </TouchableWithoutFeedback>
   )
 }
 
 const styles = StyleSheet.create({
   content: {
-    // flex: 1,
     margin: CONTENT_MARGIN,
-    // paddingBottom: SCROLL_PADDING_BOTTOM,
   },
 
   stateDescription: {

@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Soleqa home",
-    "slug": "soleqa-home",
-    "version": "0.1.1",
+    "slug": "IoT-frontend",
+    "version": "0.1.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -25,13 +25,13 @@
       "barStyle": "light-content"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#191C1A"
       },
-      "package": "soleqa.home"
+      "package": "com.suikell.IoTfrontend"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -51,7 +51,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "81b81d20-bc28-4d06-9d1b-328760051f8d"
+        "projectId": "766dfee8-a28a-4cd6-bf37-8eec04fc5543"
       }
     }
   }

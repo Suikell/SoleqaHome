@@ -21,7 +21,6 @@ type TProps = NoChildren & {
   hideModal: () => void
 }
 
-// TODO - repair this
 const MAX_NAME_LENGTH = 128
 
 export const ChooseNameModal: React.FC<TProps> = ({ visible, hideModal }) => {

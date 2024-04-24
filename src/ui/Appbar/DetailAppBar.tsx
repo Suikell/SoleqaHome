@@ -54,29 +54,15 @@ export const DetailAppBar: React.FC<TProps> = ({ title, onNameChange }) => {
             }}
           />
         )}
-
-        {/* <Menu
-        visible={visible}
-        onDismiss={closeMenu}
-        anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}
-      >
-        <Menu.Item onPress={() => {}} title="Item 1" />
-        <Menu.Item onPress={() => {}} title="Item 2" />
-        <Divider />
-        <Menu.Item onPress={() => {}} title="Item 3" />
-      </Menu> */}
       </Appbar.Header>
       {isEditing && (
         <Pressable
           onPress={() => setIsEditing(false)}
           style={{
             zIndex: 10,
-            // width: 500,
-            // height: 500,
             width: '100%',
             height: `88%`,
             bottom: 0,
-            // top: 120,
             position: 'absolute',
           }}
         />

@@ -55,7 +55,7 @@ export const CreateConditionContent: React.FC<TProps> = () => {
         style={{ flex: 1 }}
       >
         <ScrollView style={{ marginVertical: shrink(24) }}>
-          {/* Because of the keyboard */}
+          {/* paddingBottom is here because of the keyboard */}
           <View style={{ paddingBottom: 140 }}>
             <SectionHeader
               title={`Choose ${selectedType}`}

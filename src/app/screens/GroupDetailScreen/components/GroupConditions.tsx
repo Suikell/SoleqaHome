@@ -58,8 +58,6 @@ export const GroupConditions: React.FC<TProps> = () => {
                   {toCapitalizedLowerCase(condition.sensor.name)}
                 </SensorDetailLink>
               }
-              // type={`sensor`}
-              // onConditionSelect={() => console.log('select click')}
             />
           )
         })}
@@ -85,8 +83,6 @@ export const GroupConditions: React.FC<TProps> = () => {
                   {toCapitalizedLowerCase(condition.actuator.name)}
                 </ActuatorDetailLink>
               }
-              // type={`actuator`}
-              // onConditionSelect={() => console.log('select click')}
             />
           )
         })}

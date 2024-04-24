@@ -14,7 +14,6 @@ export const GroupsScreen = () => {
         <Text variant={`headlineSmall`} style={styles.label}>
           Groups
         </Text>
-        {/* TODO <Appbar.Action icon="magnify" onPress={() => {}} /> */}
       </Appbar.Header>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
         <View style={styles.extraPadding}>
@@ -29,7 +28,6 @@ const styles = StyleSheet.create({
   content: {
     marginHorizontal: CONTENT_MARGIN,
     marginTop: CONTENT_MARGIN,
-    // margin: CONTENT_MARGIN,
     gap: CONTENT_MARGIN,
   },
   header: {

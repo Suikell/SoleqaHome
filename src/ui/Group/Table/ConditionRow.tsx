@@ -17,65 +17,45 @@ type TProps = NoChildren &
     value: PropsOf<typeof InputValueCell>['value']
     operatorString: string
     linkComponent: React.ReactNode
-    // onConditionSelect: (operator: string) => void
-    // type: PropsOf<typeof ChooseConditionModal>['type']
   }
 
 export const ConditionRow: React.FC<TProps> = ({
   value,
   operatorString,
   linkComponent,
-  // onConditionSelect,
   onRemove,
   name,
 }) => {
   const styles = useTableStyles()
 
-  // const [isModalVisible, setIsModalVisible] = React.useState(false)
-  // const [selectedOperator, setSelectedOperator] = React.useState(operatorString)
-
   return (
-    <>
-      <DataTable.Row>
-        <DataTable.Cell style={[styles.flex2, styles.column]}>
-          {linkComponent}
-        </DataTable.Cell>
-        <DataTable.Cell
-          // onPress={() => {
-          //   onConditionSelect(operatorString)
-          //   setIsModalVisible(true)
-          // }}
-          style={[
-            styles.flex3,
-            styles.center,
-            styles.column,
-            styles.verticalPadding,
-          ]}
+    <DataTable.Row>
+      <DataTable.Cell style={[styles.flex2, styles.column]}>
+        {linkComponent}
+      </DataTable.Cell>
+      <DataTable.Cell
+        style={[
+          styles.flex3,
+          styles.center,
+          styles.column,
+          styles.verticalPadding,
+        ]}
+      >
+        <FlexRow
+          width={`100%`}
+          justifyContent={`center`}
+          paddingVertical={TABLE_ROW_PADDING}
         >
-          <FlexRow
-            width={`100%`}
-            justifyContent={`center`}
-            paddingVertical={TABLE_ROW_PADDING}
-          >
-            <Text>{operatorString}</Text>
-            {/* <Icon source={`chevron-down`} size={20} /> */}
-          </FlexRow>
-        </DataTable.Cell>
-        <InputValueCell value={value} />
-        <RemoveItemCell
-          name={name}
-          onRemove={onRemove}
-          modalTitle={`Remove condition`}
-          modalTextBehindName={`condition from this group`}
-        />
-      </DataTable.Row>
-      {/* <ChooseConditionModal
-        hideModal={() => setIsModalVisible(false)}
-        visible={isModalVisible}
-        type={type}
-        onSelect={(operator) => setSelectedOperator(operator)}
-        selected={selectedOperator}
-      /> */}
-    </>
+          <Text>{operatorString}</Text>
+        </FlexRow>
+      </DataTable.Cell>
+      <InputValueCell value={value} />
+      <RemoveItemCell
+        name={name}
+        onRemove={onRemove}
+        modalTitle={`Remove condition`}
+        modalTextBehindName={`condition from this group`}
+      />
+    </DataTable.Row>
   )
 }

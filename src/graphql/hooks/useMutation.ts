@@ -12,7 +12,7 @@ export type MutationHookOptions<TData, TVariables> = ApolloMutationHookOptions<
   TVariables
 >
 /**
- * Apollo Client’s `useMutation` wrapper=
+ * Apollo Client’s `useMutation` wrapper.
  */
 export const useMutation = <
   TData,

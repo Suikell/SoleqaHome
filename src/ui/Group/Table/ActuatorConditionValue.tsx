@@ -29,11 +29,7 @@ export const ActuatorConditionValue: React.FC<TProps> = ({
         }}
         onPressIn={() => setIsFocused(true)}
       >
-        <FlexRow
-          paddingHorizontal={shrink(16)}
-          width={`100%`}
-          //   justifyContent={`space-between`}
-        >
+        <FlexRow paddingHorizontal={shrink(16)} width={`100%`}>
           <Text>{value}</Text>
           {!isVisible && <Icon source={`chevron-down`} size={20} />}
         </FlexRow>

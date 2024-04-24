@@ -35,8 +35,6 @@ export const SensorValue: React.FC<TProps> = () => {
         value={inputValue}
         mode={`outlined`}
         maxLength={20}
-        // onFocus={() => setIsFocused(true)}
-        // onBlur={() => setIsFocused(false)}
         keyboardType={keyboardType}
         onChangeText={(text) => {
           const isValid = isTextValid(text)

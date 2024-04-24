@@ -13,7 +13,7 @@ export type SubscriptionHookOptions<
 > = ApolloSubscriptionHookOptions<TData, TVariables>
 
 /**
- * Apollo Client’s `useSubscription` wrapper with custom error handling
+ * Apollo Client’s `useSubscription` wrapper.
  */
 export const useSubscription = <
   TData,

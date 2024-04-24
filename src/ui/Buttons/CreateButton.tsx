@@ -21,7 +21,6 @@ export const CreateButton: React.FC<TProps> = ({ onPress }) => {
         },
       }}
       variant={`primary`}
-      // size={`medium`}
       label={'Confirm'}
       customSize={70}
       style={styles.fab}

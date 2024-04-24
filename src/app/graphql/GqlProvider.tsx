@@ -19,7 +19,8 @@ const BE_URL = `greenhouse.soleqa.cz`
 
 /**
  * GQL BE connection provider
- * currently Apollo client context that allows us to use all of the GQL operations we write (Q/M/S) in the component tree bellow this provider
+ * currently Apollo client context that allows us to use all of the GQL operations (Q/M/S)
+ * in the component tree bellow this provider.
  */
 export const GqlProvider: React.FC<TProps> = ({ children }) => {
   const [token, setToken] = React.useState<Nullable<string>>(null)

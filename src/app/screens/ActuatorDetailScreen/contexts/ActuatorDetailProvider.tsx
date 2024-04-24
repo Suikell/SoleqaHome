@@ -18,7 +18,7 @@ type TProps = RequiredChildren & {
 }
 
 /**
- * Context provider getting the sensor detail.
+ * Context provider getting the actuator detail.
  */
 const ActuatorDetailProvider: React.FC<TProps> = ({ actuatorId, children }) => {
   const { actuator, loading } = useLoadActuatorDetail(actuatorId)

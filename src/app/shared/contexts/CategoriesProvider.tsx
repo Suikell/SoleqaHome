@@ -34,9 +34,7 @@ type TProps = RequiredChildren
 const allEmptyCategoryId: ID = 0
 
 /**
- * provides state & data for ProductDetail
- *  - `useProductDetailStateCtx` returns dynamic state of the detail, like selected addons
- *  - `useProductDetailUpdatersCtx` returns memoized functions used to update the state
+ * Context provider for categories, sensors and actuators.
  */
 const CategoriesProvider: React.FC<TProps> = ({ children }) => {
   const { loading, categories, actuators, sensors, setSensors, setActuators } =

@@ -79,8 +79,6 @@ export const SensorDetailContent: React.FC<TProps> = () => {
                 <SensorGraph />
               </Pressable>
 
-              {/* TODO - better tooltip, with icon (i) */}
-
               {/* OVERLAY */}
               <OverlayControl
                 isCollapsed={isPeriodOverlayCollapsed}
@@ -88,7 +86,6 @@ export const SensorDetailContent: React.FC<TProps> = () => {
               />
 
               {/* CRITICAL */}
-
               <Pressable
                 style={styles.critical}
                 pointerEvents={!isPeriodOverlayCollapsed ? `none` : undefined}

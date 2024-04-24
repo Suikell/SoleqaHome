@@ -34,7 +34,6 @@ export const AuthProvider: React.FC<TProps> = ({ children, setToken }) => {
     return <LoadingIndicator />
   }
 
-  // pass login func from useLoginUser
   if (!user) {
     return <LoginScreen onSubmit={validateUser} isLoading={false} />
   }

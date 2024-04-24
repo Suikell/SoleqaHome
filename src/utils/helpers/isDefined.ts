@@ -1,5 +1,5 @@
 /**
- * returns true if the provided `value` is NOT `null` or `undefined`
+ * Returns true if the provided `value` is NOT `null` or `undefined`
  * in a way that also the TS understands
  * can be passed to `Array.filter` to clear that array of not-defined values
  * https://stackoverflow.com/a/57989288

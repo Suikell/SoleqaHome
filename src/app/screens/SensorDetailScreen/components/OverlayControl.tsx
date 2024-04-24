@@ -5,9 +5,7 @@ import Collapsible from 'react-native-collapsible'
 import { Button } from 'react-native-paper'
 
 // TODO - move to ui?
-import {
-  OverlayControlContent,
-} from '~screens/SensorDetailScreen/components/OverlayControlContent'
+import { OverlayControlContent } from '~screens/SensorDetailScreen/components/OverlayControlContent'
 import {
   useGraphControlCtx,
   useGraphValuesCtx,
