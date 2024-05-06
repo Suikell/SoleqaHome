@@ -308,7 +308,7 @@ type NotificationsUnreadCountType {
 }
 
 type ObtainJSONWebToken {
-  households: [HouseholdType!]
+  households: [HouseholdType!]!
   payload: GenericScalar!
   refreshExpiresIn: Int!
   token: String!

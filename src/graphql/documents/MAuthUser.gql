@@ -4,5 +4,8 @@ mutation MAuthUser($email: String!, $password: String!) {
     user {
       ...FUser
     }
+    households {
+      id
+    }
   }
 }

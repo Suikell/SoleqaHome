@@ -3,13 +3,13 @@ import { LoginScreen } from 'src/app/auth/components/LoginScreen'
 import { useAuthUser } from 'src/app/auth/hooks/useAuthUser'
 import { useSettingUpdaters } from 'src/app/auth/hooks/useSettingUpdaters'
 
-import { TFUser, TMAuthUserVariables } from '~graphql/generated/graphql'
+import { TMAuthUserVariables } from '~graphql/generated/graphql'
 import { LoadingIndicator } from '~ui/Loading/LoadingIndicator'
 import { createContext } from '~utils/context/createContext'
 
 type TUpdaters = ReturnType<typeof useSettingUpdaters>
 type TContext = TUpdaters & {
-  user: TFUser
+  user: ReturnType<typeof useAuthUser>['user']
   logout: () => void
 }
 

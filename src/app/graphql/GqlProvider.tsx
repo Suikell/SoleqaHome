@@ -52,7 +52,7 @@ export const GqlProvider: React.FC<TProps> = ({ children }) => {
         //       authToken: token,
         //     },
         keepAlive: 20000,
-        //     retryAttempts: 20,
+        retryAttempts: 20,
         shouldRetry: (errOrClose) => {
           console.log(errOrClose)
           return true

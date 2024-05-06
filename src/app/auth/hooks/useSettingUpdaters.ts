@@ -1,15 +1,15 @@
 import * as React from 'react'
+import { useAuthUser } from 'src/app/auth/hooks/useAuthUser'
 import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import {
-  TFUser,
   useMChangeUserPassword,
   useMChangeUserProfile,
 } from '~graphql/generated/graphql'
 import { isDefined } from '~utils/helpers/isDefined'
 
 type TProps = {
-  setUser: ReactSetState<Nullable<TFUser>>
+  setUser: ReturnType<typeof useAuthUser>['setUser']
 }
 
 const successMessage = `Your changes have been saved`
@@ -28,7 +28,12 @@ export const useSettingUpdaters = ({ setUser }: TProps) => {
           const user = data?.result?.user
           if (isDefined(user)) {
             presentStatusToast(`success`, successMessage)
-            setUser(user)
+            setUser((prev) => {
+              if (prev) {
+                return { ...prev, ...user }
+              }
+              return null
+            })
           }
         })
         .catch((error) => {

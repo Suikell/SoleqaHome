@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useAuthCtx } from 'src/app/auth/contexts/AuthProvider'
 import { useStatusToastCtx } from 'src/app/shared/contexts/StatusToastProvider'
 
 import { useMCreateGroup } from '~graphql/generated/graphql'
@@ -10,15 +11,22 @@ export const useGroupsUpdaters = () => {
 
   const navigation = useNavigation()
 
+  const { user } = useAuthCtx()
   const [isCreatingGroup, setIsCreatingGroup] = React.useState(false)
 
   const [mCreateGroup] = useMCreateGroup()
 
   const createNewGroup = React.useCallback(
     (name: string) => {
+      // this wont ever happen, however TS is not smart enough to understand that
+      if (!user) return
+
       setIsCreatingGroup(true)
+      console.log('Creating group', name)
+
       mCreateGroup({
         variables: {
+          householdId: user.householdId,
           name,
         },
         refetchQueries: ['QGroups'],
@@ -42,7 +50,7 @@ export const useGroupsUpdaters = () => {
           setIsCreatingGroup(false)
         })
     },
-    [mCreateGroup, navigation, presentStatusToast],
+    [mCreateGroup, navigation, presentStatusToast, user],
   )
 
   return { isCreatingGroup, createNewGroup }

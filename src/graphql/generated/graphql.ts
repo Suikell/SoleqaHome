@@ -522,7 +522,7 @@ export type TNotificationsUnreadCountType = {
 
 export type TObtainJsonWebToken = {
   readonly __typename?: 'ObtainJSONWebToken';
-  readonly households: Maybe<ReadonlyArray<THouseholdType>>;
+  readonly households: ReadonlyArray<THouseholdType>;
   readonly payload: Scalars['GenericScalar']['output'];
   readonly refreshExpiresIn: Scalars['Int']['output'];
   readonly token: Scalars['String']['output'];
@@ -967,7 +967,7 @@ export type TMAuthUserVariables = Exact<{
 }>;
 
 
-export type TMAuthUser = { readonly __typename?: 'Mutation', readonly login: { readonly __typename?: 'ObtainJSONWebToken', readonly token: string, readonly user: { readonly __typename?: 'UserType', readonly id: number, readonly email: string, readonly firstName: string, readonly lastName: string, readonly profileImage: string | null } | null } | null };
+export type TMAuthUser = { readonly __typename?: 'Mutation', readonly login: { readonly __typename?: 'ObtainJSONWebToken', readonly token: string, readonly user: { readonly __typename?: 'UserType', readonly id: number, readonly email: string, readonly firstName: string, readonly lastName: string, readonly profileImage: string | null } | null, readonly households: ReadonlyArray<{ readonly __typename?: 'HouseholdType', readonly id: number }> } | null };
 
 export type TMChangeGroupActuatorStateVariables = Exact<{
   groupId: Scalars['Int']['input'];
@@ -1005,6 +1005,7 @@ export type TMCreateActuatorConditionVariables = Exact<{
 export type TMCreateActuatorCondition = { readonly __typename?: 'Mutation', readonly result: { readonly __typename?: 'AddActuatorConditionMutation', readonly success: boolean } | null };
 
 export type TMCreateGroupVariables = Exact<{
+  householdId: Scalars['Int']['input'];
   name: Scalars['String']['input'];
 }>;
 
@@ -1161,7 +1162,9 @@ export type TQGroupDetailVariables = Exact<{
 
 export type TQGroupDetail = { readonly __typename?: 'Query', readonly group: { readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly controlledActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly priority: number, readonly changeToState: boolean, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }>, readonly sensorConditions: ReadonlyArray<{ readonly __typename?: 'SensorConditionType', readonly operator: TSensorOperatorEnum, readonly value: number, readonly id: number, readonly sensor: { readonly __typename?: 'SensorNodeType', readonly id: number, readonly name: string } }>, readonly actuatorConditions: ReadonlyArray<{ readonly __typename?: 'ActuatorConditionType', readonly value: boolean, readonly operator: TActuatorOperatorEnum, readonly id: number, readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }> } | null };
 
-export type TQGroupsVariables = Exact<{ [key: string]: never; }>;
+export type TQGroupsVariables = Exact<{
+  householdId: Scalars['Int']['input'];
+}>;
 
 
 export type TQGroups = { readonly __typename?: 'Query', readonly groups: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupType', readonly id: number, readonly name: string, readonly active: boolean, readonly controlledActuators: ReadonlyArray<{ readonly __typename?: 'ThresholdGroupActuatorType', readonly actuator: { readonly __typename?: 'ActuatorNodeType', readonly id: number, readonly name: string } }> }> | null };
@@ -1395,6 +1398,9 @@ export const MAuthUserDocument = gql`
     user {
       ...FUser
     }
+    households {
+      id
+    }
   }
 }
     ${FUser}`;
@@ -1578,8 +1584,8 @@ export type MCreateActuatorConditionHookResult = ReturnType<typeof useMCreateAct
 export type MCreateActuatorConditionMutationResult = ApolloReactCommon.MutationResult<TMCreateActuatorCondition>;
 export type MCreateActuatorConditionMutationOptions = ApolloReactCommon.BaseMutationOptions<TMCreateActuatorCondition, TMCreateActuatorConditionVariables>;
 export const MCreateGroupDocument = gql`
-    mutation MCreateGroup($name: String!) {
-  result: createThresholdGroup(householdId: 1, name: $name) {
+    mutation MCreateGroup($householdId: Int!, $name: String!) {
+  result: createThresholdGroup(householdId: $householdId, name: $name) {
     group: thresholdGroup {
       id
       name
@@ -1602,6 +1608,7 @@ export type TMCreateGroupMutationFn = ApolloReactCommon.MutationFunction<TMCreat
  * @example
  * const [mCreateGroup, { data, loading, error }] = useMCreateGroup({
  *   variables: {
+ *      householdId: // value for 'householdId'
  *      name: // value for 'name'
  *   },
  * });
@@ -2391,8 +2398,8 @@ export type QGroupDetailLazyQueryHookResult = ReturnType<typeof useQGroupDetailL
 export type QGroupDetailSuspenseQueryHookResult = ReturnType<typeof useQGroupDetailSuspenseQuery>;
 export type QGroupDetailQueryResult = ApolloReactCommon.QueryResult<TQGroupDetail, TQGroupDetailVariables>;
 export const QGroupsDocument = gql`
-    query QGroups {
-  groups: allThresholdGroups(householdId: 1) {
+    query QGroups($householdId: Int!) {
+  groups: allThresholdGroups(householdId: $householdId) {
     ...FGroup
   }
 }
@@ -2410,10 +2417,11 @@ export const QGroupsDocument = gql`
  * @example
  * const { data, loading, error } = useQGroups({
  *   variables: {
+ *      householdId: // value for 'householdId'
  *   },
  * });
  */
-export function useQGroups(baseOptions?: ApolloReactHooks.QueryHookOptions<TQGroups, TQGroupsVariables>) {
+export function useQGroups(baseOptions: ApolloReactHooks.QueryHookOptions<TQGroups, TQGroupsVariables> & ({ variables: TQGroupsVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return ApolloReactHooks.useQuery<TQGroups, TQGroupsVariables>(QGroupsDocument, options);
       }

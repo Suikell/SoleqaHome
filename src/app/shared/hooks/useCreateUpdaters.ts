@@ -3,6 +3,7 @@ import { useCategoriesCtx } from 'src/app/shared/contexts/CategoriesProvider'
 import { useLoadCategories } from 'src/app/shared/hooks/useLoadCategories'
 
 import { TFActuatorBase, TFSensorBase } from '~graphql/generated/graphql'
+import { formatSensorValue } from '~ui/Sensor/helpers/formatSensorValue'
 
 type TProps = Pick<
   ReturnType<typeof useLoadCategories>,
@@ -48,6 +49,21 @@ export const useCreateUpdaters = ({ setSensors, setActuators }: TProps) => {
           (s) => s.id === sensorId,
         )
         if (sensorIndex !== -1) {
+          const currentSensor = sensorsRef.current[sensorIndex]
+
+          if (currentSensor[property] === value) {
+            return
+          }
+
+          if (property === 'currentValue') {
+            const currentValue = formatSensorValue(currentSensor.currentValue)
+            const formattedNewValue = formatSensorValue(value as number)
+
+            if (currentValue === formattedNewValue) {
+              return
+            }
+          }
+
           const updatedSensor = {
             ...sensorsRef.current[sensorIndex],
             [property]: value,

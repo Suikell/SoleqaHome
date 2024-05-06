@@ -9,6 +9,10 @@ import {
 
 export type TLogin = TMAuthUserVariables
 
+type TUser = TFUser & {
+  householdId: ID
+}
+
 type TProps = {
   setToken: ReactSetState<Nullable<string>>
 }
@@ -17,7 +21,7 @@ type TProps = {
  * Handles login in form submit & validation
  */
 export const useAuthUser = ({ setToken }: TProps) => {
-  const [user, setUser] = React.useState<Nullable<TFUser>>(null)
+  const [user, setUser] = React.useState<Nullable<TUser>>(null)
 
   const [mLogin, { data, error, loading }] = useMAuthUser()
   const { presentStatusToast } = useStatusToastCtx()
@@ -31,9 +35,14 @@ export const useAuthUser = ({ setToken }: TProps) => {
 
     const login = data.login
     if (!login) return
+    if (login.households.length < 1) return
 
     setToken(login.token)
-    setUser(login.user)
+
+    const householdId = login.households[0].id
+
+    const newUser = { ...login.user, householdId } as TUser
+    setUser(newUser)
   }, [data, error, presentStatusToast, setToken])
 
   const logoutUser = React.useCallback(() => {

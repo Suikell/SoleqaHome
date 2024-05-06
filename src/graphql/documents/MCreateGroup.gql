@@ -1,5 +1,5 @@
-mutation MCreateGroup($name: String!) {
-  result: createThresholdGroup(householdId: 1, name: $name) {
+mutation MCreateGroup($householdId: Int!, $name: String!) {
+  result: createThresholdGroup(householdId: $householdId, name: $name) {
     group: thresholdGroup {
       id
       name

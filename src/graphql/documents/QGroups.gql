@@ -1,5 +1,5 @@
-query QGroups {
-  groups: allThresholdGroups(householdId: 1) {
+query QGroups($householdId: Int!) {
+  groups: allThresholdGroups(householdId: $householdId) {
     ...FGroup
   }
 }
